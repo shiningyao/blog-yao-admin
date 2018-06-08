@@ -1,0 +1,16 @@
+logging:
+  level:
+    ROOT: DEBUG
+    com.yao.blog: DEBUG
+spring:
+  application:
+    name: BlogYao
+  profiles:
+    active: dev
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: blogyao
+
+server:
+  port: 8080

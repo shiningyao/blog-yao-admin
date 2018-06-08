@@ -1,0 +1,28 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "BlogYaoAdmin",
+                "projectName": "BlogYaoAdmin",
+                "workingDirectory": "/Users/shining3/Workspaces/MyProjects/BlogYaoAdmin",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "BlogYaoAdmin",
+                "projectName": "BlogYaoAdmin",
+                "workingDirectory": "/Users/shining3/Workspaces/MyProjects/BlogYaoAdmin",
+                "args": [],
+                "vmargs": [],
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}
