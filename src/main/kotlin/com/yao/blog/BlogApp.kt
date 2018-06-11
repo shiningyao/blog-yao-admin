@@ -16,7 +16,6 @@ class BlogApp {
 }
 
 fun main(args: Array<String>) {
-  System.out.println(123123)
   val log = LoggerFactory.getLogger(BlogApp::class.java)
   val app = SpringApplication(BlogApp::class.java)
   DefaultProfileUtil.addDefaultProfile(app)
