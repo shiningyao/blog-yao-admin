@@ -1,3 +1,5 @@
+package com.yao.blog.repository;
+
 import static org.junit.Assert.assertThat;
 
 import com.yao.blog.domain.Article;
