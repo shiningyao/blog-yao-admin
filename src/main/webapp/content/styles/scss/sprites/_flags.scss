@@ -1,0 +1,134 @@
+// SCSS variables are information about icon's compiled state, stored under its original file name
+//
+// .icon-home {
+//   width: $icon-home-width;
+// }
+//
+// The large array-like variables contain all information about a single icon
+// $icon-home: x y offset_x offset_y width height total_width total_height image_path;
+//
+// At the bottom of this section, we provide information about the spritesheet itself
+// $spritesheet: width height image $spritesheet-sprites;
+$-c-n-name: 'CN';
+$-c-n-x: 0px;
+$-c-n-y: 0px;
+$-c-n-offset-x: 0px;
+$-c-n-offset-y: 0px;
+$-c-n-width: 24px;
+$-c-n-height: 24px;
+$-c-n-total-width: 72px;
+$-c-n-total-height: 48px;
+$-c-n-image: '~flags.png';
+$-c-n: (0px, 0px, 0px, 0px, 24px, 24px, 72px, 48px, '~flags.png', 'CN', );
+$-e-s-name: 'ES';
+$-e-s-x: 24px;
+$-e-s-y: 0px;
+$-e-s-offset-x: -24px;
+$-e-s-offset-y: 0px;
+$-e-s-width: 24px;
+$-e-s-height: 24px;
+$-e-s-total-width: 72px;
+$-e-s-total-height: 48px;
+$-e-s-image: '~flags.png';
+$-e-s: (24px, 0px, -24px, 0px, 24px, 24px, 72px, 48px, '~flags.png', 'ES', );
+$-f-r-name: 'FR';
+$-f-r-x: 0px;
+$-f-r-y: 24px;
+$-f-r-offset-x: 0px;
+$-f-r-offset-y: -24px;
+$-f-r-width: 24px;
+$-f-r-height: 24px;
+$-f-r-total-width: 72px;
+$-f-r-total-height: 48px;
+$-f-r-image: '~flags.png';
+$-f-r: (0px, 24px, 0px, -24px, 24px, 24px, 72px, 48px, '~flags.png', 'FR', );
+$-g-b-name: 'GB';
+$-g-b-x: 24px;
+$-g-b-y: 24px;
+$-g-b-offset-x: -24px;
+$-g-b-offset-y: -24px;
+$-g-b-width: 24px;
+$-g-b-height: 24px;
+$-g-b-total-width: 72px;
+$-g-b-total-height: 48px;
+$-g-b-image: '~flags.png';
+$-g-b: (24px, 24px, -24px, -24px, 24px, 24px, 72px, 48px, '~flags.png', 'GB', );
+$-p-t-name: 'PT';
+$-p-t-x: 48px;
+$-p-t-y: 0px;
+$-p-t-offset-x: -48px;
+$-p-t-offset-y: 0px;
+$-p-t-width: 24px;
+$-p-t-height: 24px;
+$-p-t-total-width: 72px;
+$-p-t-total-height: 48px;
+$-p-t-image: '~flags.png';
+$-p-t: (48px, 0px, -48px, 0px, 24px, 24px, 72px, 48px, '~flags.png', 'PT', );
+$spritesheet-width: 72px;
+$spritesheet-height: 48px;
+$spritesheet-image: '~flags.png';
+$spritesheet-sprites: ($-c-n, $-e-s, $-f-r, $-g-b, $-p-t, );
+$spritesheet: (72px, 48px, '~flags.png', $spritesheet-sprites, );
+
+// The provided mixins are intended to be used with the array-like variables
+//
+// .icon-home {
+//   @include sprite-width($icon-home);
+// }
+//
+// .icon-email {
+//   @include sprite($icon-email);
+// }
+//
+// Example usage in HTML:
+//
+// `display: block` sprite:
+// <div class="icon-home"></div>
+//
+// To change `display` (e.g. `display: inline-block;`), we suggest using a common CSS class:
+//
+// // CSS
+// .icon {
+//   display: inline-block;
+// }
+//
+// // HTML
+// <i class="icon icon-home"></i>
+@mixin sprite-width($sprite) {
+  width: nth($sprite, 5);
+}
+
+@mixin sprite-height($sprite) {
+  height: nth($sprite, 6);
+}
+
+@mixin sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3);
+  $sprite-offset-y: nth($sprite, 4);
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin sprite-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+@mixin sprite($sprite) {
+  @include sprite-image($sprite);
+  @include sprite-position($sprite);
+  @include sprite-width($sprite);
+  @include sprite-height($sprite);
+}
+
+// The `sprites` mixin generates identical output to the CSS template
+//   but can be overridden inside of SCSS
+//
+// @include sprites($spritesheet-sprites);
+@mixin sprites($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}
