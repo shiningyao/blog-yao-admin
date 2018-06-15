@@ -7,13 +7,25 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "module": "commonjs",
+    "jsx": "react",
     "target": "es5",
+    "paths": {
+      "@/*": ["src/main/webapp/app/*"],
+      "#/*": ["src/main/webapp/content/*"]
+    },
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
       "es2017",
       "dom"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
     ]
   }
 }
