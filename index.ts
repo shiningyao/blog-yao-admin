@@ -13,6 +13,7 @@ import logger from './src/main/node/config/logging';
 // webpack
 import * as webpack from 'webpack';
 import * as webpackDevMiddleware from 'webpack-dev-middleware';
+import * as webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from './src/main/node/config/webpack';
 
 // routes & config files
@@ -44,8 +45,15 @@ app.use('/api', apiRoutes);
 logger.info('Launching webpack dev server.');
 
 app.use(webpackDevMiddleware(compiler, () => {
-    
 }));
+
+const hotMiddleware = webpackHotMiddleware(compiler);
+
+app.use(webpackHotMiddleware(compiler));
+
+compiler.hooks.compilation.tap('html-webpack-plugin-after-emit', function(data, cb) {
+    hotMiddleware.publish({ action: 'reload' });
+});
 
 app.listen(port, () => {
     console.log(`Server is started on port ${port}.`);
