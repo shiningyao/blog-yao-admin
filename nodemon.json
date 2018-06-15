@@ -1,6 +1,6 @@
 {
     "verbose": true,
-    "ignore": ["*.test.js", "*.spec.js"],
+    "ignore": ["*.test.js", "*.spec.js", "*.class", "*.java"],
     "execMap": {
         "ts": "ts-node"
     }
