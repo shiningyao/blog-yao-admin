@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as _ from 'lodash';
 
 // server & middleware
 import * as express from 'express';
@@ -44,8 +45,10 @@ app.use('/api', apiRoutes);
 
 logger.info('Launching webpack dev server.');
 
-app.use(webpackDevMiddleware(compiler, () => {
-}));
+const devMiddleware = webpackDevMiddleware(compiler, () => {
+});
+
+app.use(devMiddleware);
 
 const hotMiddleware = webpackHotMiddleware(compiler);
 
@@ -53,6 +56,16 @@ app.use(webpackHotMiddleware(compiler));
 
 compiler.hooks.compilation.tap('html-webpack-plugin-after-emit', function(data, cb) {
     hotMiddleware.publish({ action: 'reload' });
+});
+
+app.use((req, res, next) => {
+    const reqPath = req.url;
+    const file = _.last(reqPath.split('/'));
+    if (file.indexOf('.') === -1) {
+        res.end(devMiddleware.fileSystem.readFileSync(path.join(webpackConfig.output.path, 'index.html')));
+    } else {
+        next();
+    }
 });
 
 app.listen(port, () => {

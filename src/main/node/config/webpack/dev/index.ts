@@ -18,7 +18,8 @@ module.exports = function(_path) {
         devServer: {
             info: true,
             hot: true,
-            inline: true
+            inline: true,
+            historyApiFallback: true
         },
         plugins: [
             new webpack.optimize.OccurrenceOrderPlugin(true),
