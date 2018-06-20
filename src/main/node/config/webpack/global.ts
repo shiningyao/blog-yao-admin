@@ -16,7 +16,7 @@ module.exports = function(_path) {
         output: {
             path: path.join(_path, 'build', 'www'),
             filename: '[name].js',
-            chunkFilename: '[id].chunk.js'
+            chunkFilename: 'lib/[name].js'
         },
         resolve: {
             extensions: [".ts", ".tsx", ".js", ".json"],
@@ -60,7 +60,8 @@ module.exports = function(_path) {
                     vendors: {
                       test: /[\\/]node_modules[\\/]/,
                       name: 'vendors',
-                      chunks: 'all'
+                      priority: -10,
+                      chunks: 'initial'
                     },
                     default: {
                         minChunks: 2,
