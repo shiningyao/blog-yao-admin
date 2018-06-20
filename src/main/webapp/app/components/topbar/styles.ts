@@ -59,6 +59,7 @@ export const Navbar = styled.nav`
         & > li {
             float: left;
             padding: 0 10px;
+            position: relative;
         }
 
         a {
@@ -86,16 +87,58 @@ export const Navbar = styled.nav`
 
     .header-notification {
 
+        perspective: 1000px;
+        z-index: 99;
+
         a > img {
             margin-right: 10px;
             width: 25px;
         }
 
         .show-notification {
-            display: none;
+            background-color: #FFFFFF;
+            box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.03), 0 -2px 1px -2px rgba(0, 0, 0, 0.02), 0 0 0 -1px rgba(0, 0, 0, 0.03);
             list-style: none;
+            opacity: 0;
             padding: 0;
             margin: 0;
+            position: absolute;
+            right: 0;
+            transform: translateY(30px);
+            transition: all 0.3s ease-in-out;
+            visibility: hidden;
+            width: 24rem;
+            & > li:hover {
+                background-color: #f1f1f1;
+            }
+
+            a {
+                color: #666;
+            }
+        }
+        
+        &:hover {
+            .show-notification {
+                opacity: 1;
+                transform: translateY(0);
+                visibility: visible;
+            }
+        }
+
+        ul.profile-notification {
+            width: 17em;
+            & > li {
+                padding: .7em 20px;
+                line-height: initial;
+                
+                a {
+                    font-size: 15px;
+                }
+
+                i {
+                    margin-right: 10px;
+                }
+            }
         }
 
     }

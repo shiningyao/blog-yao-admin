@@ -111,6 +111,33 @@ export class Topbar extends Component<{}, {}> {
                                     <span>Shining Yao</span>
                                     <i className="ti-angle-down"></i>
                                 </a>
+                                <ul className="show-notification profile-notification">
+                                    <li>
+                                        <a href="javascript: void(0)">
+                                            <i className="ti-settings"></i>Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0)">
+                                            <i className="ti-user"></i>Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0)">
+                                            <i className="ti-email"></i>My Messages
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0)">
+                                            <i className="ti-lock"></i>Lock Screen
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript: void(0)">
+                                            <i className="ti-layout-sidebar-left"></i>Logout
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
