@@ -61,6 +61,11 @@ module.exports = function(_path) {
                       test: /[\\/]node_modules[\\/]/,
                       name: 'vendors',
                       chunks: 'all'
+                    },
+                    default: {
+                        minChunks: 2,
+                        priority: -20,
+                        reuseExistingChunk: true
                     }
                 }
             }
