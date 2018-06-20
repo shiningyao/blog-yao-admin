@@ -1,5 +1,7 @@
 import '#/styles/scss/main.scss';
 
+import './index.polyfills';
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
