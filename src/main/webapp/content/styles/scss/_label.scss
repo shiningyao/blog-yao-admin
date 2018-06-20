@@ -1,0 +1,36 @@
+.label {
+    border-radius: 4px;
+    font-size: 75%;
+    padding: 4px 7px;
+    margin-right: 5px;
+    font-weight: 400;
+    color: #fff!important;
+}
+
+.label-primary {
+    background-color: $primary;
+}
+
+.label-warning {
+    background-color: $warning;
+}
+
+.label-default {
+    background-color: #e0e0e0
+}
+
+.label-danger {
+    background-color: $danger;
+}
+
+.label-success {
+    background-color: $success;
+}
+
+.label-inverse {
+    background-color: $dark;
+}
+
+.label-info {
+    background-color: $info;
+}
