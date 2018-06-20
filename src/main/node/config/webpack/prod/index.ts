@@ -6,7 +6,7 @@ import { Configuration } from 'webpack';
 module.exports = function(_path) {
 
     const WEB_ROOT = path.join(_path, 'src/main/webapp');
-    const OUTPUT_ROOT = path.join(WEB_ROOT, 'build/www');
+    const OUTPUT_ROOT = path.join(_path, 'build/www');
 
     const config: Configuration = {
         entry: {

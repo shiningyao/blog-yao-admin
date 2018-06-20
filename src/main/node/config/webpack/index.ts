@@ -4,8 +4,8 @@ const _configs = {
 
     global: require(__dirname + '/global'),
 
-    production: require(__dirname + '/dev'),
-    development: require(__dirname + '/prod')
+    production: require(__dirname + '/prod'),
+    development: require(__dirname + '/dev')
 };
 
 const projectRoot = process.cwd();
