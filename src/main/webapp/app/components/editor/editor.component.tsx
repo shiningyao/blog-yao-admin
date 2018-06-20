@@ -12,12 +12,17 @@ export class ArticleEditor extends Component {
     }
 
     componentDidMount() {
-        import(
-            /* webpackChunkName: "vendors.async" */
-            /* webpackMode: "lazy" */
-            '@ckeditor/ckeditor5-build-classic').then(ClassicEditor => {
+        require.ensure([
+             '@ckeditor/ckeditor5-build-classic'], (require) => {
+            const ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
             ClassicEditor.create(this.editorRef.current);
-        });
+        }, null, 'ckeditor');
+        // import(
+        //     /* webpackChunkName: "vendors.async" */
+        //     /* webpackMode: "lazy" */
+        //     '@ckeditor/ckeditor5-build-classic').then(ClassicEditor => {
+        //     ClassicEditor.create(this.editorRef.current);
+        // });
     }
 
     render() {
