@@ -21,9 +21,11 @@ export class SidebarNav extends Component<{}, {
     }
 
     componentDidMount() {
-        this.http.get<Menu>('/api/menus').then(res => {
+        this.http.getData<{
+             [category: string]: [Menu]
+        }>('/api/menus').subscribe(data => {
             this.setState({
-                menus: res.data
+                menus: data
             });
         });
     }
