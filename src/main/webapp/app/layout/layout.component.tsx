@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import PrivateRoute from '@/auth/route/private-route';
 import * as Loadable from 'react-loadable';
 import { AppLayout as Layout } from './styles';
 import { Topbar } from '@/components/topbar/topbar.component';
@@ -37,7 +38,7 @@ export class AppLayout extends Component<LayoutProps, {}> {
                     <div className="main-content">
                         <Switch>
                             <Route exact path="/" component={Home}></Route>
-                            <Route path="/editor" component={EditorPage}></Route>
+                            <PrivateRoute path="/editor" component={EditorPage}></PrivateRoute>
                         </Switch>
                     </div>
                 </main>
