@@ -15,13 +15,12 @@ const fakeAuth = {
 };
 
 export default function PrivateRoute ({component: Component, ...rest}) {
-    
     return (
         <Route
         {...rest}
         render={
             props => 
-                fakeAuth.authenticate ? 
+                fakeAuth.isAuthenticated ? 
                 (<Component {...props} />) :
                 <Redirect
                     to={{

@@ -6,6 +6,7 @@ import { AppLayout as Layout } from './styles';
 import { Topbar } from '@/components/topbar/topbar.component';
 import { Sidebar } from '@/components/sidebar/sidebar.component';
 import { Home } from '@/pages/home/home.component';
+import { LoginPage } from '@/auth/login/login.component';
 
 const { Component } = React;
 
@@ -38,6 +39,7 @@ export class AppLayout extends Component<LayoutProps, {}> {
                     <div className="main-content">
                         <Switch>
                             <Route exact path="/" component={Home}></Route>
+                            <Route path="/login" component={LoginPage}></Route>
                             <PrivateRoute path="/editor" component={EditorPage}></PrivateRoute>
                         </Switch>
                     </div>
