@@ -95,6 +95,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    compile "org.springframework.security:spring-security-web"
+    compile "org.springframework.security:spring-security-config"
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
