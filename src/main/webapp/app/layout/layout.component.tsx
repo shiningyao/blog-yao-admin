@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import PrivateRoute from '@/auth/route/private-route';
+import PrivateRoute from '@/shared/auth/route/private-route';
 import * as Loadable from 'react-loadable';
 import { AppLayout as Layout } from './styles';
-import { Topbar } from '@/components/topbar/topbar.component';
+import Topbar from '@/components/topbar/topbar.container';
 import { Sidebar } from '@/components/sidebar/sidebar.component';
 import { Home } from '@/pages/home/home.component';
-import { LoginPage } from '@/auth/login/login.component';
+import LoginPage from '@/shared/auth/login/login.container';
 
 const { Component } = React;
 

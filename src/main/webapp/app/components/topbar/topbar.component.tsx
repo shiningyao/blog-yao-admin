@@ -5,7 +5,11 @@ import Logo from '../logo/logo.component';
 const { Component } = React;
 const { Navbar } = styles;
 
-export class Topbar extends Component<{}, {}> {
+interface TopbarProps {
+    [key: string]: any
+}
+
+export class Topbar extends Component<TopbarProps, {}> {
 
     render() {
 
@@ -133,7 +137,7 @@ export class Topbar extends Component<{}, {}> {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript: void(0)">
+                                        <a href="javascript: void(0)" onClick={this.props.logout}>
                                             <i className="ti-layout-sidebar-left"></i>Logout
                                         </a>
                                     </li>

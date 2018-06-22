@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component, SyntheticEvent } from "react";
-import Http from '@/utils/http';
+import Http from '@/shared/utils/http';
 import * as classNames from 'classnames';
 import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { NavLink } from 'react-router-dom';

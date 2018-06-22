@@ -133,6 +133,7 @@ export const Navbar = styled.nav`
                 
                 a {
                     font-size: 15px;
+                    display: block;
                 }
 
                 i {
