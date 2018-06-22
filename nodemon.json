@@ -1,6 +1,12 @@
 {
     "verbose": true,
-    "ignore": ["*.test.js", "*.spec.js", "*.class", "*.java"],
+    "ignore": [
+        "*.test.js", 
+        "*.spec.js", 
+        "*.class", 
+        "*.java",
+        "src/main/webapp/*"
+    ],
     "execMap": {
         "ts": "ts-node"
     }
