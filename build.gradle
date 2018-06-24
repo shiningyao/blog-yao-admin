@@ -84,6 +84,17 @@ repositories {
     mavenCentral()
 }
 
+configurations.all {
+	resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+		if (details.requested.group == 'org.springframework') {
+			details.useVersion '5.0.7.RELEASE'
+		}
+		if (details.requested.group == 'org.springframework.boot') {
+			details.useVersion '2.0.2.RELEASE'
+		}
+	}
+}
+
 // In this section you declare the dependencies for your production and test code
 dependencies {
     // The production code uses the SLF4J logging API at compile time
@@ -92,11 +103,13 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compile "org.springframework.boot:spring-boot-starter-logging"
+    compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-    compile "org.springframework.security:spring-security-web"
-    compile "org.springframework.security:spring-security-config"
+    compile "org.apache.commons:commons-lang3"
+    compile "com.github.mongobee:mongobee:0.13"
+    compile group: 'org.zalando', name: 'problem-spring-web', version: '0.23.0'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
