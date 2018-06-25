@@ -10,7 +10,7 @@ export default class Http {
         });
     }
 
-    get<T = any>(url, config?: AxiosRequestConfig): Observable<AxiosResponse<T>> {
+    get<T = any>(url: string, config?: AxiosRequestConfig): Observable<AxiosResponse<T>> {
         const observable: Observable<AxiosResponse<T>> = Observable.create((observer: Observer<AxiosResponse<T>>) => {
             this.axiosInstance.get(url, config).then((res) => {
                 observer.next(res);
@@ -22,12 +22,24 @@ export default class Http {
         return observable;
     }
 
-    getData<T = any>(url, config?: AxiosRequestConfig): Observable<T> {
+    getData<T = any>(url: string, config?: AxiosRequestConfig): Observable<T> {
         const observable: Observable<T> = Observable.create((observer: Observer<T>) => {
             this.get(url, config).subscribe((res) => {
                 observer.next(res.data);
                 observer.complete();
             }, (error) => {
+                observer.error(error);
+            });
+        });
+        return observable;
+    }
+
+    post<T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Observable<AxiosResponse<T>> {
+        const observable: Observable<AxiosResponse<T>> = Observable.create((observer: Observer<AxiosResponse<T>>) => {
+            this.axiosInstance.post(url, data, config).then((res) => {
+                observer.next(res);
+                observer.complete();
+            }).catch((error) => {
                 observer.error(error);
             });
         });

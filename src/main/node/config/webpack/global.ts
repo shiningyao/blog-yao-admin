@@ -1,7 +1,9 @@
 import * as path from 'path';
 import * as HtmlWebpackPlugin from 'html-webpack-plugin';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import * as WebpackPwaManifest from 'webpack-pwa-manifest';
 import * as SpritesmithPlugin from 'webpack-spritesmith';
+import * as webpack from 'webpack';
 import { Configuration } from 'webpack';
 
 const MODE = process.env.NODE_ENV === 'production'? process.env.NODE_ENV : 'development';
@@ -31,7 +33,7 @@ module.exports = function(_path) {
         },
         module: {
             rules: [{
-                test: /\.tsx?$/,
+                test: /\.(tsx|ts)?$/,
                 use: 'awesome-typescript-loader'
             }, {
                 test: /\.(sa|sc|c)ss$/,
@@ -72,7 +74,21 @@ module.exports = function(_path) {
             }
         },
         plugins: [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: `'${MODE}'`,
+                    BUILD_TIMESTAMP: `'${new Date().getTime()}'`,
+                    VERSION: `'${'1.0.0'}'`,
+                    DEBUG_INFO_ENABLED: MODE === 'development',
+                    // The root URL for API calls, ending with a '/' - for example: `"http://www.jhipster.tech:8081/myservice/"`.
+                    // If this URL is left empty (""), then it will be relative to the current context.
+                    // If you use an API server, in `prod` mode, you will need to enable CORS
+                    // (see the `jhipster.cors` common JHipster property in the `application-*.yml` configurations)
+                    SERVER_API_URL: `''`
+                }
+            }),
             new HtmlWebpackPlugin({
+                title: "BlogYao App",
                 template: path.join(WEB_ROOT, 'index.ejs'),
                 filename: 'index.html',
                 favicon: path.join(WEB_ROOT, 'favicon.ico')
@@ -89,6 +105,17 @@ module.exports = function(_path) {
                 apiOptions: {
                     cssImageRef: "~flags.png"
                 }
+            }),
+            new WebpackPwaManifest({
+                filename: "manifest.webapp",
+                name: "BlogYao",
+                short_name: "BlogYao",
+                icons: [],
+                theme_color: "#000000",
+                background_color: "#e0e0e0",
+                start_url: "/index.html",
+                display: "standalone",
+                orientation: "portrait"
             }),
             new MiniCssExtractPlugin({
                 filename: devMode ? '[name].css' : '[name].[hash].css',

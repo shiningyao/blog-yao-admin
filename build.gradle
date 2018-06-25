@@ -104,11 +104,16 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-cache"
     compile "org.springframework.boot:spring-boot-autoconfigure"
+    compile "org.springframework:spring-context-support"
+    compile "javax.cache:cache-api"
+    compile "org.ehcache:ehcache"
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     compile "org.apache.commons:commons-lang3"
     compile "com.github.mongobee:mongobee:0.13"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin"
     compile group: 'org.zalando', name: 'problem-spring-web', version: '0.23.0'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     // Declare the dependency for your favourite test framework you want to use in your tests.

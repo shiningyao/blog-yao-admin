@@ -51,7 +51,7 @@ public class BlogYaoProperties {
 
         public static class Ehcache {
 
-            private int timeToLiveSeconds = 3600;
+            private long timeToLiveSeconds = 3600;
             private long maxEntries = 100;
 
             /**
@@ -71,7 +71,7 @@ public class BlogYaoProperties {
             /**
              * @return the timeToLiveSeconds
              */
-            public int getTimeToLiveSeconds() {
+            public long getTimeToLiveSeconds() {
                 return timeToLiveSeconds;
             }
 

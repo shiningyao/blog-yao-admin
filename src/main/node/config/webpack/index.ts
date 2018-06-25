@@ -14,7 +14,6 @@ function _load() {
     const ENV = process.env.NODE_ENV
     ? process.env.NODE_ENV
     : 'production';
-
     return _configs && webpackMerge(
             _configs.global(projectRoot),
             _configs[ENV](projectRoot)

@@ -6,7 +6,7 @@ import { AppLayout as Layout } from './styles';
 import Topbar from '@/components/topbar/topbar.container';
 import { Sidebar } from '@/components/sidebar/sidebar.component';
 import { Home } from '@/pages/home/home.component';
-import LoginPage from '@/shared/auth/login/login.container';
+import LoginPage from '@/shared/login/login.container';
 
 const { Component } = React;
 

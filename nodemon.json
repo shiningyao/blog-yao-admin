@@ -3,8 +3,9 @@
     "ignore": [
         "*.test.js", 
         "*.spec.js", 
-        "*.class", 
-        "*.java",
+        "**/*.class", 
+        "**/*.java",
+        "build/**/*.*",
         "src/main/webapp/*"
     ],
     "execMap": {

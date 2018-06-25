@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as BrowserSyncPlugin from 'browser-sync-webpack-plugin';
 import * as webpack from 'webpack';
 import { Configuration } from 'webpack';
 
@@ -19,10 +20,29 @@ module.exports = function(_path) {
             info: true,
             hot: true,
             inline: true,
-            historyApiFallback: true
+            historyApiFallback: true,
+            proxy: [{
+                context: [
+                    '/api'
+                ],
+                target: 'http://127.0.0.1:8080',
+                secure: false
+            }],
+            watchOptions: {
+                ignored: /node_modules/
+            }
         },
         plugins: [
-            new webpack.optimize.OccurrenceOrderPlugin(true),
+            new BrowserSyncPlugin({
+                host: 'localhost',
+                port: 9000,
+                proxy: {
+                    target: 'http://localhost:4000',
+                    ws: true
+                }
+            }, {
+                reload: false
+            }),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.LoaderOptionsPlugin({
                 debug: true

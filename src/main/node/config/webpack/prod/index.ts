@@ -12,6 +12,7 @@ module.exports = function(_path) {
         entry: {
             app: path.join(WEB_ROOT, 'app/index.bootstrap.tsx')
         },
+        devtool: 'source-map',
         context: _path,
         output: {
             path: OUTPUT_ROOT,
