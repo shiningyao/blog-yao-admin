@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Observable, Observer, Subscriber } from 'rxjs';
+import * as Cookie from 'js-cookie';
 
 export default class Http {
 
@@ -7,6 +8,15 @@ export default class Http {
 
     constructor() {
         this.axiosInstance = axios.create({
+            xsrfCookieName: 'XSRF-TOKEN',
+            xsrfHeaderName: 'X-XSRF-TOKEN'
+        });
+        this.axiosInstance.interceptors.request.use((config) => {
+            const xsrfToken = Cookie.get('XSRF-TOKEN');
+            config.headers['X-XSRF-TOKEN'] = xsrfToken;
+            return config;
+        }, (error) => {
+            return Promise.reject(error)
         });
     }
 
