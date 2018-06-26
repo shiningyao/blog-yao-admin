@@ -10,12 +10,21 @@ import { AppLayout } from '@/layout/layout.component';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { createLogger } from 'redux-logger';
+
+const logoText = require('raw-loader!../../resources/banner.txt').replace(/(\$\{.*?\})/g, '').replace(/Running Spring Boot/g, 'Authored By Shining Yao');
+
+const middlewares = [
+    thunkMiddleware
+];
+
+if(process.env.NODE_ENV === 'development') {
+    middlewares.push(createLogger());
+}
 
 const store = createStore(
     reducers,
-    applyMiddleware(
-        thunkMiddleware
-    )
+    applyMiddleware(...middlewares)
 );
 
 ReactDOM.render(
@@ -24,5 +33,8 @@ ReactDOM.render(
             <AppLayout compiler='typescript' framework='react'></AppLayout>
         </Router>
     </Provider>,
-    document.getElementById('blog-yao-admin')
+    document.getElementById('blog-yao-admin'),
+    () => {
+        console.log(`%c${logoText}`, `color: #fc6180`);
+    }
 );
