@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Component } from "react";
-import { authenticate } from '@/shared/actions';
 import { Redirect } from 'react-router';
 import { AuthServerProvider } from '@/shared/auth/auth-session';
 
@@ -11,6 +10,11 @@ interface LoginPageProps {
 export class LoginPage extends Component<LoginPageProps, {}> {
 
     private authServerProvider: AuthServerProvider;
+    private credentials = {
+        username: 'admin',
+        password: 'admin',
+        rememberMe: false
+    };
 
     constructor(props, context) {
         super(props, context);
@@ -26,18 +30,9 @@ export class LoginPage extends Component<LoginPageProps, {}> {
             );
         } else {
             return (
-                <button onClick={this.login.bind(this)}>Sign in{': ' + this.props.isAuthenticated}</button>
+                <button onClick={this.props.login.bind(this, this.credentials)}>Sign in{': ' + this.props.isAuthenticated}</button>
             );
         }
     }
 
-    login() {
-        this.authServerProvider.login({
-            username: 'admin',
-            password: 'admin',
-            rememberMe: false
-        }).subscribe(res => {
-            console.log(res.data);
-        });
-    }
 }

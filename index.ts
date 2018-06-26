@@ -1,10 +1,12 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as _ from 'lodash';
+import * as queryString from 'querystring';
 
 // server & middleware
 import * as express from 'express';
 import * as compression from 'compression';
+import * as proxy from 'http-proxy-middleware';
 process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 
 import * as bodyParser from 'body-parser';
@@ -59,12 +61,38 @@ compiler.hooks.compilation.tap('html-webpack-plugin-after-emit', function(data, 
     hotMiddleware.publish({ action: 'reload' });
 });
 
+const proxyMiddleware = proxy('/api', {
+    target: 'http://localhost:8080',
+    changeOrigin: true,
+    onProxyReq: (proxyReq, req, res) => {
+        if (!req.body || !Object.keys(req.body).length) {
+            return;
+          }
+        
+          var contentType = proxyReq.getHeader('Content-Type');
+          var bodyData;
+        
+          if (contentType === 'application/json') {
+            bodyData = JSON.stringify(req.body);
+          }
+        
+          if (contentType === 'application/x-www-form-urlencoded') {
+            bodyData = queryString.stringify(req.body);
+          }
+        
+          if (bodyData) {
+            proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+            proxyReq.write(bodyData);
+          }
+    }
+});
+
+app.use('/api', proxyMiddleware);
+
 app.use((req, res, next) => {
     const reqPath = req.url;
     const file = _.last(reqPath.split('/'));
-    if(reqPath.indexOf('/api') > -1) {
-        next();
-    } else if (file.indexOf('.') === -1) {
+    if (file.indexOf('.') === -1) {
         res.end(devMiddleware.fileSystem.readFileSync(path.join(webpackConfig.output.path, 'index.html')));
     } else {
         next();

@@ -8,9 +8,15 @@ import reducers from './shared/reducers';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AppLayout } from '@/layout/layout.component';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 
-const store = createStore(reducers);
+const store = createStore(
+    reducers,
+    applyMiddleware(
+        thunkMiddleware
+    )
+);
 
 ReactDOM.render(
     <Provider store={store}>

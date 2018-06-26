@@ -44,7 +44,7 @@ export default class Http {
         return observable;
     }
 
-    post<T = any, D = any>(url: string, data?: D, config?: AxiosRequestConfig): Observable<AxiosResponse<T>> {
+    post<D = any, T = any>(url: string, data?: D, config?: AxiosRequestConfig): Observable<AxiosResponse<T>> {
         const observable: Observable<AxiosResponse<T>> = Observable.create((observer: Observer<AxiosResponse<T>>) => {
             this.axiosInstance.post(url, data, config).then((res) => {
                 observer.next(res);

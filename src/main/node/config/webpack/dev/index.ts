@@ -1,9 +1,15 @@
 import * as path from 'path';
 import * as BrowserSyncPlugin from 'browser-sync-webpack-plugin';
+import * as proxy from 'http-proxy-middleware';
 import * as webpack from 'webpack';
 import { Configuration } from 'webpack';
 
 const hotMiddlewareScript = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true';
+
+const proxyMiddleware = proxy('/api', {
+    target: 'http://localhost:8080',
+    changeOrigin: true
+});
 
 module.exports = function(_path) {
     
@@ -36,6 +42,7 @@ module.exports = function(_path) {
             new BrowserSyncPlugin({
                 host: 'localhost',
                 port: 9000,
+                open: false,
                 proxy: {
                     target: 'http://localhost:4000',
                     ws: true

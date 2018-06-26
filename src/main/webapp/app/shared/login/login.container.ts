@@ -1,6 +1,6 @@
 import { LoginPage } from './login.component';
 import { connect } from 'react-redux';
-import { authenticate } from '@/shared/actions';
+import { authenticate, logout, login } from '@/shared/actions';
 import { bindActionCreators } from 'redux';
 
 const mapStateToProps = state => {
@@ -8,7 +8,8 @@ const mapStateToProps = state => {
 };
   
 const mapDispatchToProps = dispatch => ({
-    authenticate: bindActionCreators(authenticate, dispatch)
+    authenticate: bindActionCreators(authenticate, dispatch),
+    login: bindActionCreators(login, dispatch)
 });
 
 export default connect(
