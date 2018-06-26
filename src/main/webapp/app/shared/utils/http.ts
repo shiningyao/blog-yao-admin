@@ -4,7 +4,7 @@ import * as Cookie from 'js-cookie';
 
 export default class Http {
 
-    axiosInstance: AxiosInstance;
+    private axiosInstance: AxiosInstance;
 
     constructor() {
         this.axiosInstance = axios.create({

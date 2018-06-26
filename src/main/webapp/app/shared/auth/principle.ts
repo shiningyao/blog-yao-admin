@@ -1,9 +1,12 @@
+import { AccountProvider } from './account';
 import { Subject } from "rxjs";
 
 class Principle {
+
     private userIdentity: any;
     private authenticated = false;
     private authenticationState = new Subject<any>();
+    private account: AccountProvider = new AccountProvider();
 
     authenticate(identity) {
         this.userIdentity = identity;
@@ -21,6 +24,7 @@ class Principle {
             Promise.resolve(this.userIdentity);
         }
         
+        return this.account.get();
     }
 
     isAuthenticated(): boolean {
