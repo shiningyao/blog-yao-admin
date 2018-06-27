@@ -30,21 +30,33 @@ export class AppLayout extends Component<LayoutProps, {}> {
 
     render() {
         return (
-            <Layout className="app-layout">
-                <header>
-                    <Topbar></Topbar>
-                </header>
-                <main className="main-container">
-                    <Sidebar></Sidebar>
-                    <div className="main-content">
-                        <Switch>
-                            <Route exact path="/" component={Home}></Route>
-                            <Route path="/login" component={LoginPage}></Route>
-                            <PrivateRoute path="/editor" component={EditorPage}></PrivateRoute>
-                        </Switch>
-                    </div>
-                </main>
-            </Layout>
+            <Route path="*" render={
+                props => {
+                    if(props.match.url === '/login') {
+                        return (
+                            <LoginPage {...props}></LoginPage>
+                        );
+                    } else {
+                        return (
+                            <Layout className="app-layout">
+                                <header>
+                                    <Topbar></Topbar>
+                                </header>
+                                <main className="main-container">
+                                    <Sidebar></Sidebar>
+                                    <div className="main-content">
+                                        <Switch>
+                                            <PrivateRoute exact path="/" component={Home}></PrivateRoute>
+                                            <PrivateRoute path="/editor" component={EditorPage}></PrivateRoute>
+                                        </Switch>
+                                    </div>
+                                </main>
+                            </Layout>
+                        );
+                    }
+                }
+            }>
+            </Route>
         )
     }
 

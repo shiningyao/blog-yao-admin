@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import principle from '@/shared/auth/principle';
 import { authenticate } from '@/shared/actions';
 import { bindActionCreators } from 'redux';
-import { identity } from 'rxjs';
+import { identity } from '@/shared/actions';
 
 interface PrivateRouteProps extends RouteProps {
     [key: string]: any
@@ -25,12 +25,10 @@ class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<Priva
     }
 
     componentDidMount() {
-        this.props.identity(false).subscribe((account) => {
-            if(account) {
-                this.setState({
-                    isIdentity: true
-                });
-            }
+        this.props.identity().then((account) => {
+            this.setState({
+                isIdentity: true
+            });
         });
     }
 
