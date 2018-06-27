@@ -30,7 +30,7 @@ export class LoginPage extends Component<LoginPageProps, {}> {
             );
         } else {
             return (
-                <button onClick={this.props.login.bind(this, this.credentials)}>Sign in{': ' + this.props.isAuthenticated}</button>
+                <button onClick={this.props.login.bind(this, this.credentials, null)}>Sign in{': ' + this.props.isAuthenticated}</button>
             );
         }
     }

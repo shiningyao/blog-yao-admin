@@ -3,6 +3,7 @@ import { SERVER_API_URL } from "@/app.constants";
 import { Observable } from "rxjs";
 import { AxiosResponse } from "axios";
 import { ThemeProvider } from "styled-components";
+import { map } from "rxjs/operators";
 
 export class AuthServerProvider {
 
@@ -23,9 +24,9 @@ export class AuthServerProvider {
     }
 
     logout() {
-        return this.http.post(SERVER_API_URL + 'api/logout').pipe((res) => {
+        return this.http.post(SERVER_API_URL + 'api/logout').pipe(map((res) => {
             this.http.get(SERVER_API_URL + 'api/account').subscribe(() => {}, () => {});
             return res;
-        });
+        }));
     }
 }

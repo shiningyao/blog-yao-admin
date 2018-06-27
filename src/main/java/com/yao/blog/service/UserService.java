@@ -6,8 +6,6 @@ import com.yao.blog.domain.User;
 import com.yao.blog.repository.UserRepository;
 import com.yao.blog.security.SecurityUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserService {
-
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
 

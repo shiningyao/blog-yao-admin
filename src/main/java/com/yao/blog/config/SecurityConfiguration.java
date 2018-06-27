@@ -106,6 +106,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .key(blogYaoProperties.getSecurity().getRememberMe().getKey())
         .and()
             .formLogin()
+            .loginPage("/login")
             .loginProcessingUrl("/api/authentication")
             .successHandler(ajaxAuthenticationSuccessHandler())
             .failureHandler(ajaxAuthenticationFailureHandler())

@@ -14,8 +14,6 @@ import com.yao.blog.config.Constants;
 import com.yao.blog.domain.Authority;
 import com.yao.blog.domain.User;
 
-import org.springframework.beans.BeanUtils;
-
 /**
  * UserDTO
  */
@@ -60,7 +58,18 @@ public class UserDTO {
     }
 
     public UserDTO(User user) {
-        BeanUtils.copyProperties(this, user, "authorities");
+        this.id = user.getId();
+        this.login = user.getLogin();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.activated = user.isActivated();
+        this.langKey = user.getLangKey();
+        this.imageUrl = user.getImageUrl();
+        this.createdBy = user.getCreatedBy();
+        this.createdDate = user.getCreatedDate();
+        this.lastModifiedBy = user.getLastModifiedBy();
+        this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());

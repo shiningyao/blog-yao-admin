@@ -2,15 +2,36 @@ import * as React from 'react';
 import { Component } from 'react';
 import { Route, RouteProps, Redirect } from "react-router";
 import { connect } from 'react-redux';
+import principle from '@/shared/auth/principle';
+import { authenticate } from '@/shared/actions';
+import { bindActionCreators } from 'redux';
+import { identity } from 'rxjs';
 
 interface PrivateRouteProps extends RouteProps {
     [key: string]: any
 }
 
-class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<PrivateRouteProps, any> {
+interface PrivateRouteStates {
+    isIdentity: boolean
+}
+
+class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<PrivateRouteProps, PrivateRouteStates> {
 
     constructor(props, context) {
         super(props, context);
+        this.state = {
+            isIdentity: false
+        };
+    }
+
+    componentDidMount() {
+        this.props.identity(false).subscribe((account) => {
+            if(account) {
+                this.setState({
+                    isIdentity: true
+                });
+            }
+        });
     }
 
     render() {
@@ -20,16 +41,19 @@ class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<Priva
             {...rest}
             render={
                 props => {
-                    if(this.props.isAuthenticated) {
-                        return (<Component {...props} />);
-                    } else {
-                        return <Redirect
-                            to={{
-                                pathname: "/login",
-                                state: { from: props.location }
-                            }}
-                        />
+                    if(this.state.isIdentity) {
+                        if(this.props.isAuthenticated) {
+                            return (<Component {...props} />);
+                        } else {
+                            return <Redirect
+                                to={{
+                                    pathname: "/login",
+                                    state: { from: props.location }
+                                }}
+                            />
+                        }
                     }
+                    return null;
                 }
             }
             />
@@ -43,10 +67,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispath) => {
     return {
-
+        identity: bindActionCreators(identity, dispath)
     };
 }
 
 export default connect<PrivateRouteProps, {}, PrivateRouteProps, {}>(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(PrivateRoute);
