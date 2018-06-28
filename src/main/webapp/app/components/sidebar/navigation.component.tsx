@@ -4,6 +4,7 @@ import Http from '@/shared/utils/http';
 import * as classNames from 'classnames';
 import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { NavLink } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import { NavMenu, NavSubMenu } from './styles';
 import { Menu } from '@/domain/menu';
 
@@ -46,7 +47,9 @@ export class SidebarNav extends Component<{}, {
                                         <span className="menu-icon">
                                             <i className={menu.iconClass}></i>
                                         </span>
-                                        <span className="menu-text">{menu.title}</span>
+                                        <span className="menu-text">
+                                            <FormattedMessage id={menu.i18n} defaultMessage={menu.title} />
+                                        </span>
                                         {(() => {
                                             if(menu.badge) {
                                                 let className = 'menu-badge label';
@@ -90,7 +93,9 @@ export class SidebarNav extends Component<{}, {
                                         <span className="menu-icon">
                                             <i className={menu.iconClass}></i>
                                         </span>
-                                        <span className="menu-text">{menu.title}</span>
+                                        <span className="menu-text">
+                                            <FormattedMessage id={menu.i18n} defaultMessage={menu.title} />
+                                        </span>
                                         {(() => {
                                             if(menu.badge) {
                                                 let className = 'menu-badge label';

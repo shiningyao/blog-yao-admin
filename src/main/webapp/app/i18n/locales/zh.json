@@ -1,0 +1,33 @@
+{
+  "zh": {
+    "Weather.message": "阳光明媚！",
+    "Day.homeLink": "回家家",
+    "Home.header": "你好，世界！",
+    "Home.dayMessage": "外面是个好天气。",
+    "Home.dayLink": "点击此处查看为什么！",
+
+    "Sidebar.dashboard": "仪表盘",
+    "Sidebar.dashboard.default": "默认",
+    "Sidebar.dashboard.ecommerce": "电子商务",
+    "Sidebar.dashboard.CRM": "客户关系管理",
+    "Sidebar.dashboard.analytics": "分析",
+    "Sidebar.pageLayouts": "页面布局",
+    "Sidebar.pageLayouts.vertical": "纵向",
+    "Sidebar.pageLayouts.vertical.staticLayout": "静态布局",
+    "Sidebar.pageLayouts.vertical.headerFixed": "固定头部",
+    "Sidebar.pageLayouts.vertical.compact": "经凑型",
+    "Sidebar.pageLayouts.vertical.sidebarFixed": "固定边栏",
+    "Sidebar.pageLayouts.horizontal.staticLayout": "静态布局",
+    "Sidebar.pageLayouts.horizontal.fixedLayout": "固定布局",
+    "Sidebar.pageLayouts.horizontal.staticWithIcon": "静态带图标",
+    "Sidebar.pageLayouts.horizontal.fixedWithIcon": "固定带图标",
+    "Sidebar.pageLayouts.horizontal": "横向",
+    "Sidebar.pageLayouts.bottomMenu": "底部菜单",
+    "Sidebar.pageLayouts.boxLayout": "盒子布局",
+    "Sidebar.pageLayouts.RTL": "从右到左",
+    "Sidebar.navigation": "导航",
+    "Sidebar.widget": "部件",
+    "Sidebar.articles": "文章管理",
+    "Sidebar.articles.editor": "文章编辑器"
+  }
+}

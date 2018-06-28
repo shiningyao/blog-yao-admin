@@ -1,16 +1,15 @@
 import '#/styles/scss/main.scss';
 
-import './index.polyfills';
+import { polyfillLoader } from './index.polyfills';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import reducers from './shared/reducers';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
-import { BlogApp } from '@/app.component';
+import BlogApp from '@/app.container';
 
 const logoText = require('raw-loader!../../resources/banner.txt').replace(/(\$\{.*?\})/g, '').replace(/Running Spring Boot/g, 'Authored By Shining Yao');
 
@@ -27,14 +26,15 @@ const store = createStore(
     applyMiddleware(...middlewares)
 );
 
-ReactDOM.render(
-    <Provider store={store}>
-        <Router>
+polyfillLoader.then(function() {
+
+    ReactDOM.render(
+        <Provider store={store}>
             <BlogApp compiler='typescript' framework='react'></BlogApp>
-        </Router>
-    </Provider>,
-    document.getElementById('blog-yao-admin'),
-    () => {
-        console.log(`%c${logoText}`, `color: #fc6180`);
-    }
-);
+        </Provider>,
+        document.getElementById('blog-yao-admin'),
+        () => {
+            console.log(`%c${logoText}`, `color: #fc6180`);
+        }
+    );
+});

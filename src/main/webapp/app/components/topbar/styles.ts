@@ -108,15 +108,25 @@ export const Navbar = styled.nav`
             transition: all 0.3s ease-in-out;
             visibility: hidden;
             width: 24rem;
+
+            & > li {
+                padding: 1em 20px;
+                line-height: initial;
+            }
+
             & > li:hover {
                 background-color: #f1f1f1;
             }
-
+            
             a {
                 color: #666;
             }
         }
         
+        &.lng-dropdown > .show-notification {
+            width: 14em;
+        }
+
         &:hover {
             .show-notification {
                 opacity: 1;

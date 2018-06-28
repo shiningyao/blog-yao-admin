@@ -4,14 +4,14 @@ import { AxiosResponse, AxiosError } from "axios";
 import { Dispatch } from "react-redux";
 import { AccountProvider } from "@/shared/auth/account";
 import principle from '@/shared/auth/principle';
-import { resolve } from "dns";
-import { rejects } from "assert";
 
 export const AUTHENTICATE = 'authenticate';
 
 export const LOGOUT = 'logout';
 
-export const LOGIN = 'login';
+export const RECORD_USERINFO = 'recordUserInfo';
+
+export const CHANGE_LANGKEY = 'changeLangKey';
 
 const authServerProvider = new AuthServerProvider();
 const accountProvider = new AccountProvider();
@@ -22,11 +22,31 @@ export const authenticate: ActionCreator<Action> =  function () {
     };
 };
 
+export const recordUserInfo: ActionCreator<Action> = function (account) {
+    return {
+        type: RECORD_USERINFO,
+        account
+    };
+};
+
+export const changeLangKey: ActionCreator<any> = function (key) {
+    return function(dispatch: Dispatch) {
+        return new Promise((resolve, reject) => {
+            principle.identity().subscribe((account) => {
+                (account as any).langKey = key;
+                dispatch(recordUserInfo(account));
+                resolve(account);
+            });
+        });
+    }
+};
+
 export const identity: ActionCreator<any> = function (force?) {
     return function(dispatch: Dispatch) {
         return new Promise((resolve, reject) => {
             principle.identity(force).subscribe((account) => {
                 dispatch(authenticate());
+                dispatch(recordUserInfo(account));
                 resolve(account);
             });
         });

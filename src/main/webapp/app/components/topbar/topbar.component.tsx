@@ -53,14 +53,14 @@ export class Topbar extends Component<TopbarProps, {}> {
                             </li>
                         </ul>
                         <ul className="nav-right">
-                            <li className="header-notification dropdown">
+                            <li className="header-notification lng-dropdown">
                                 <a href="javascript:void(0);" className="dropdown-active-item">
                                     <img src={require('#/images/flags/GB.png')} alt=""/>
                                     English
                                 </a>
                                 <ul className="show-notification">
                                     <li>
-                                        <a href="javascript:void(0);" className="dropdown-active-item">
+                                        <a href="javascript:void(0);" onClick={() => this.props.changeLangKey('en')} className="dropdown-active-item">
                                             <img src={require('#/images/flags/GB.png')} alt=""/>
                                             English
                                         </a>
@@ -84,7 +84,7 @@ export class Topbar extends Component<TopbarProps, {}> {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0);" className="dropdown-active-item">
+                                        <a href="javascript:void(0);" onClick={() => this.props.changeLangKey('zh')} className="dropdown-active-item">
                                             <img src={require('#/images/flags/CN.png')} alt=""/>
                                             China
                                         </a>

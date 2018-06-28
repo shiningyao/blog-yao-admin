@@ -9,20 +9,25 @@ menuRoutes.get('/menus', (req, res) => {
         Navigation: [{
             id: uuid(),
             title: 'Dashboard',
+            i18n: 'Sidebar.dashboard',
             iconClass: 'ti-home',
             children: [{
                 id: uuid(),
                 title: 'Default',
+                i18n: 'Sidebar.dashboard.default',
                 to: '/'
             }, {
                 id: uuid(),
-                title: 'Ecommerce'
+                title: 'Ecommerce',
+                i18n: 'Sidebar.dashboard.ecommerce'
             }, {
                 id: uuid(),
-                title: 'CRM'
+                title: 'CRM',
+                i18n: 'Sidebar.dashboard.CRM'
             }, {
                 id: uuid(),
-                title: 'Anlytics',
+                title: 'Analytics',
+                i18n: 'Sidebar.dashboard.analytics',
                 badge: {
                     name: 'NEW',
                     type: 'info'
@@ -30,7 +35,8 @@ menuRoutes.get('/menus', (req, res) => {
             }]
         }, {
             id: uuid(),
-            title: 'Page layouts',
+            title: 'Page Layouts',
+            i18n: 'Sidebar.pageLayouts',
             iconClass: 'ti-layout',
             badge: {
                 name: 'NEW',
@@ -39,52 +45,67 @@ menuRoutes.get('/menus', (req, res) => {
             children: [{
                 id: uuid(),
                 title: 'Vertical',
+                i18n: 'Sidebar.pageLayouts.vertical',
                 children: [{
                     id: uuid(),
-                    title: 'Static Layout'
+                    title: 'Static Layout',
+                    i18n: 'Sidebar.pageLayouts.vertical.staticLayout'
                 }, {
                     id: uuid(),
-                    title: 'Header Fixed'
+                    title: 'Header Fixed',
+                    i18n: 'Sidebar.pageLayouts.vertical.headerFixed'
                 }, {
                     id: uuid(),
-                    title: 'Compact'
+                    title: 'Compact',
+                    i18n: 'Sidebar.pageLayouts.vertical.compact'
                 }, {
                     id: uuid(),
-                    title: 'Sidebar Fixed'
+                    title: 'Sidebar Fixed',
+                    i18n: 'Sidebar.pageLayouts.vertical.sidebarFixed',
                 }]
             }, {
                 id: uuid(),
                 title: 'Horizontal',
+                i18n: 'Sidebar.pageLayouts.horizontal',
                 children: [{
                     id: uuid(),
-                    title: 'Static Layout'
+                    title: 'Static Layout',
+                    i18n: 'Sidebar.pageLayouts.horizontal.staticLayout'
                 }, {
                     id: uuid(),
-                    title: 'Fixed Layout'
+                    title: 'Fixed Layout',
+                    i18n: 'Sidebar.pageLayouts.horizontal.fixedLayout'
                 }, {
                     id: uuid(),
-                    title: 'Static With Icon'
+                    title: 'Static With Icon',
+                    i18n: 'Sidebar.pageLayouts.horizontal.staticWithIcon'
                 }, {
                     id: uuid(),
-                    title: 'Fixed With Icon'
+                    title: 'Fixed With Icon',
+                    i18n: 'Sidebar.pageLayouts.horizontal.fixedWithIcon'
                 }]
             }, {
                 id: uuid(),
-                title: 'Bottom Menu'
+                title: 'Bottom Menu',
+                i18n: 'Sidebar.pageLayouts.bottomMenu'
             }, {
                 id: uuid(),
-                title: 'Box Layout'
+                title: 'Box Layout',
+                i18n: 'Sidebar.pageLayouts.boxLayout'
             }, {
                 id: uuid(),
-                title: 'RTL'
+                title: 'RTL',
+                i18n: 'Sidebar.pageLayouts.RTL'
             }]
         }, {
             id: uuid(),
             title: 'Navigation',
+            i18n: 'Sidebar.navigation',
             iconClass: 'ti-layout-cta-right'
         }, {
             id: uuid(),
             title: 'Widget',
+            i18n: 'Sidebar.widget',
             iconClass: 'ti-view-grid',
             badge: {
                 name: '100+',
@@ -93,10 +114,12 @@ menuRoutes.get('/menus', (req, res) => {
         }, {
             id: uuid(),
             title: 'Articles',
+            i18n: 'Sidebar.articles',
             iconClass: 'ti-write',
             children: [{
                 id: uuid(),
                 title: 'Editor',
+                i18n: 'Sidebar.articles.editor',
                 to: '/editor'
             }]
         }]

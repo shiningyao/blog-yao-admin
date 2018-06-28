@@ -5,7 +5,8 @@ interface Badge {
 
 export interface Menu {
     id: string;
-    title: string;
+    title?: string;
+    i18n: string;
     to?: string;
     badge?: Badge;
     iconClass?: string;

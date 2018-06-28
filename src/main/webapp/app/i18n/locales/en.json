@@ -1,0 +1,33 @@
+{
+  "en": {
+    "Weather.message": "Because it is sunny!",
+    "Day.homeLink": "Go back home",
+    "Home.header": "Hello, world!",
+    "Home.dayMessage": "It's a beautiful day outside.",
+    "Home.dayLink": "Click here to find out why!",
+
+    "Sidebar.dashboard": "Dashboard",
+    "Sidebar.dashboard.default": "Default",
+    "Sidebar.dashboard.ecommerce": "Ecommerce",
+    "Sidebar.dashboard.CRM": "CRM",
+    "Sidebar.dashboard.analytics": "Analytics",
+    "Sidebar.pageLayouts": "Page Layouts",
+    "Sidebar.pageLayouts.vertical": "Verticle",
+    "Sidebar.pageLayouts.vertical.staticLayout": "Static Layout",
+    "Sidebar.pageLayouts.vertical.headerFixed": "Header Fixed",
+    "Sidebar.pageLayouts.vertical.compact": "Compact",
+    "Sidebar.pageLayouts.vertical.sidebarFixed": "Sidebar Fixed",
+    "Sidebar.pageLayouts.horizontal.staticLayout": "Static Layout",
+    "Sidebar.pageLayouts.horizontal.fixedLayout": "Fixed Layout",
+    "Sidebar.pageLayouts.horizontal.staticWithIcon": "Static With Icon",
+    "Sidebar.pageLayouts.horizontal.fixedWithIcon": "Fixed With Icon",
+    "Sidebar.pageLayouts.horizontal": "Horizontal",
+    "Sidebar.pageLayouts.bottomMenu": "Bottom Menu",
+    "Sidebar.pageLayouts.boxLayout": "Box Layout",
+    "Sidebar.pageLayouts.RTL": "RTL",
+    "Sidebar.navigation": "Navigation",
+    "Sidebar.widget": "Widget",
+    "Sidebar.articles": "Articles",
+    "Sidebar.articles.editor": "Editor"
+  }
+}

@@ -44,7 +44,7 @@ module.exports = function(_path) {
                     'sass-loader'
                 ]
             }, {
-                test: /\.ejs?$/,
+                test: /\.ejs$/,
                 use: ['ejs-loader']
             }, {
                 test: /\.(jpe?g|png|gif|ico)$/i,
