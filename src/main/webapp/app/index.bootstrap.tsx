@@ -6,11 +6,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import reducers from './shared/reducers';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AppLayout } from '@/layout/layout.component';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
+import { BlogApp } from '@/app.component';
 
 const logoText = require('raw-loader!../../resources/banner.txt').replace(/(\$\{.*?\})/g, '').replace(/Running Spring Boot/g, 'Authored By Shining Yao');
 
@@ -30,7 +30,7 @@ const store = createStore(
 ReactDOM.render(
     <Provider store={store}>
         <Router>
-            <AppLayout compiler='typescript' framework='react'></AppLayout>
+            <BlogApp compiler='typescript' framework='react'></BlogApp>
         </Router>
     </Provider>,
     document.getElementById('blog-yao-admin'),

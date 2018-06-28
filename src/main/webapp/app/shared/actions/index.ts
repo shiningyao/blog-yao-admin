@@ -1,6 +1,6 @@
 import { ActionCreator, Action } from "redux";
 import { AuthServerProvider } from "@/shared/auth/auth-session";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosError } from "axios";
 import { Dispatch } from "react-redux";
 import { AccountProvider } from "@/shared/auth/account";
 import principle from '@/shared/auth/principle';
@@ -59,7 +59,7 @@ export const login: ActionCreator<any> = function (credentials, callback?) {
                     resolve(account);
                 });
                 return cb();
-            }, (error) => {
+            }, (error: AxiosError) => {
                 dispatch(logout());
                 reject(error);
                 return cb(error);

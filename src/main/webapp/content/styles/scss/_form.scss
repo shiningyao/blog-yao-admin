@@ -1,0 +1,10 @@
+.input-group {
+    & > .form-control {
+        border-radius: 0;
+        outline: none;
+        box-shadow: none;
+        &:focus {
+            border: 1px solid #4680ff;
+        }
+    }
+}

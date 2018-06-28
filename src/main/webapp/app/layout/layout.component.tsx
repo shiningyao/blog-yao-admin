@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import PrivateRoute from '@/shared/auth/route/private-route';
 import * as Loadable from 'react-loadable';
 import { AppLayout as Layout } from './styles';
@@ -21,42 +21,24 @@ const EditorPage = Loadable({
     }
 });
 
-export interface LayoutProps {
-    compiler: string,
-    framework: string
-};
-
-export class AppLayout extends Component<LayoutProps, {}> {
+export default class AppLayout extends Component<{}, {}> {
 
     render() {
         return (
-            <Route path="*" render={
-                props => {
-                    if(props.match.url === '/login') {
-                        return (
-                            <LoginPage {...props}></LoginPage>
-                        );
-                    } else {
-                        return (
-                            <Layout className="app-layout">
-                                <header>
-                                    <Topbar></Topbar>
-                                </header>
-                                <main className="main-container">
-                                    <Sidebar></Sidebar>
-                                    <div className="main-content">
-                                        <Switch>
-                                            <PrivateRoute exact path="/" component={Home}></PrivateRoute>
-                                            <PrivateRoute path="/editor" component={EditorPage}></PrivateRoute>
-                                        </Switch>
-                                    </div>
-                                </main>
-                            </Layout>
-                        );
-                    }
-                }
-            }>
-            </Route>
+            <Layout className="app-layout">
+                <header>
+                    <Topbar></Topbar>
+                </header>
+                <main className="main-container">
+                    <Sidebar></Sidebar>
+                    <div className="main-content">
+                        <Switch>
+                            <PrivateRoute exact path="/" component={Home}></PrivateRoute>
+                            <PrivateRoute path="/editor" component={EditorPage}></PrivateRoute>
+                        </Switch>
+                    </div>
+                </main>
+            </Layout>
         )
     }
 
