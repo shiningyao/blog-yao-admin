@@ -5,6 +5,7 @@ import * as WebpackPwaManifest from 'webpack-pwa-manifest';
 import * as SpritesmithPlugin from 'webpack-spritesmith';
 import * as webpack from 'webpack';
 import { Configuration } from 'webpack';
+import { styles } from '@ckeditor/ckeditor5-dev-utils';
 
 const MODE = process.env.NODE_ENV === 'production'? process.env.NODE_ENV : 'development';
 const devMode = MODE === 'development';
@@ -42,6 +43,28 @@ module.exports = function(_path) {
                     'css-loader',
                     'postcss-loader',
                     'sass-loader'
+                ],
+                exclude: [
+                    /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/
+                ]
+            }, {
+                test: /ckeditor5-[^/]+\/theme\/[\w-/]+\.css$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: styles.getPostCssConfig( {
+                            themeImporter: {
+                                themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+                            },
+                            minify: true
+                        } )
+                    },
+                ]
+            }, {
+                test: /ckeditor5-[^/]+[\w-/]+\.svg$/,
+                use: [
+                    'raw-loader'
                 ]
             }, {
                 test: /\.ejs$/,
@@ -53,6 +76,9 @@ module.exports = function(_path) {
                 test: /\.(woff2|woff|ttf|eot|svg)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loaders: [
                     "file-loader?name=assets/fonts/[name]_[hash].[ext]"
+                ],
+                exclude: [
+                    /ckeditor5-[^/]+[\w-/]+\.svg$/
                 ]
             }]
         },

@@ -2,6 +2,9 @@ import styled from "styled-components";
 
 export const PageWrapper = styled.div`
     padding: 1.8rem;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 `;
 
 export const PageHeader = styled.div`

@@ -8,10 +8,7 @@ import LoginPage from '@/shared/login/login.container';
 import PrivateRoute from '@/shared/auth/route/private-route';
 import AppLayout from '@/layout/layout.component';
 
-import { localeData } from '@/i18n';
 import { connect } from 'react-redux';
-import { changeLangKey } from '@/shared/actions';
-import { bindActionCreators } from 'redux';
 
 addLocaleData([...en, ...zh]);
 
@@ -21,36 +18,12 @@ export interface AppProps {
     [key: string]: any
 };
 
-const language =
-        (navigator.languages && navigator.languages[0]) ||
-        navigator.language ||
-        (navigator as any).userLanguage;
-
 class BlogApp extends Component<AppProps, {}> {
-    
-    get lang() {
-        let lang = language;
-        if(this.props.userInfo && this.props.userInfo.langKey) {
-            lang = this.props.userInfo.langKey;
-        }
-        return lang;
-    }
-
-    get messages() {
-        const languageWithoutRegionCode = this.lang.toLowerCase().split(/[_-]+/)[0];
-
-        const messages =
-            localeData[languageWithoutRegionCode] ||
-            localeData[this.lang] ||
-            localeData.en;
-
-        return messages;
-    }
 
     render() {
         
         return (
-            <IntlProvider locale={this.lang} messages={this.messages}>
+            <IntlProvider locale={this.props.locale.language} messages={this.props.locale.messages}>
                 <Router>
                     <Route path="*" render={
                         props => {
@@ -77,7 +50,8 @@ class BlogApp extends Component<AppProps, {}> {
 
 function mapStateToProps(state) {
     return {
-        userInfo: state.userInfo
+        userInfo: state.userInfo,
+        locale: state.locale
     };
 }
 

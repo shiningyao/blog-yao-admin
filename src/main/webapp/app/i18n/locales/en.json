@@ -28,6 +28,12 @@
     "Sidebar.navigation": "Navigation",
     "Sidebar.widget": "Widget",
     "Sidebar.articles": "Articles",
-    "Sidebar.articles.editor": "Editor"
+    "Sidebar.articles.editor": "Editor",
+
+    "global.english": "English",
+    "global.chinese": "Chinese",
+    "global.french": "French",
+    "global.spanish": "Spanish",
+    "global.portuguese": "Portuguese"
   }
 }

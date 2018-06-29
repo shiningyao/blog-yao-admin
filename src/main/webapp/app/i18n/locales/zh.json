@@ -28,6 +28,12 @@
     "Sidebar.navigation": "导航",
     "Sidebar.widget": "部件",
     "Sidebar.articles": "文章管理",
-    "Sidebar.articles.editor": "文章编辑器"
+    "Sidebar.articles.editor": "文章编辑器",
+
+    "global.english": "英文",
+    "global.chinese": "中文",
+    "global.french": "法文",
+    "global.spanish": "西班牙文",
+    "global.portuguese": "葡萄牙文"
   }
 }

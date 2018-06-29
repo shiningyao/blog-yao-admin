@@ -6,7 +6,8 @@ import { Topbar } from "@/components/topbar/topbar.component";
 
 const mapStateToProps = state => {
     return {
-        userInfo: state.userInfo
+        userInfo: state.userInfo,
+        locale: state.locale
     };
 };
   

@@ -48,7 +48,20 @@ export class EditorPage extends Component {
                             Article Editor
                         </div>
                         <div className="card-body">
-                            <ArticleEditor></ArticleEditor>
+                            <ArticleEditor className="header-editor">
+                                <p style={{textAlign: 'center'}}>
+                                    <span style={{fontSize: '40px'}}>STANDARD POST FORMAT</span>
+                                </p>
+                            </ArticleEditor>
+                            <ArticleEditor className="body-editor">
+                                <p>Bacon ipsum dolor amet leberkas ham hock cupim alcatra pancetta biltong, corned beef landjaeger swine rump shank meatloaf jowl frankfurter cow. Short ribs picanha chicken meatball pig tongue. Pig rump tri-tip ribeye, venison alcatra filet mignon drumstick shoulder swine tongue. Cow hamburger shoulder, brisket jowl bacon pork chop pig salami. Ball tip pork loin short loin brisket shank cow chuck ham boudin pork drumstick pig jowl pork chop doner.</p>
+                                <blockquote>
+                                    <p>
+                                    Cow hamburger shoulder, brisket jowl bacon pork chop pig salami. Ball tip pork loin short loin brisket shank cow chuck ham boudin pork drumstick pig jowl pork chop doner. 
+                                    </p>
+                                </blockquote>
+                                <p> Ham capicola bacon ribeye meatball chuck tail doner bresaola kevin drumstick shankle short loin. Short loin ball tip leberkas flank, ground round andouille prosciutto t-bone cow doner landjaeger hamburger shankle beef ribs. Frank furter capicola short ribs, shoulder chuck shankle </p>
+                            </ArticleEditor>
                         </div>
                     </div>
                 </PageBody>

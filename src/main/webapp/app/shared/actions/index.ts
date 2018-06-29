@@ -33,7 +33,9 @@ export const changeLangKey: ActionCreator<any> = function (key) {
     return function(dispatch: Dispatch) {
         return new Promise((resolve, reject) => {
             principle.identity().subscribe((account) => {
-                (account as any).langKey = key;
+                if(account) {
+                    (account as any).langKey = key;
+                }
                 dispatch(recordUserInfo(account));
                 resolve(account);
             });
@@ -45,9 +47,14 @@ export const identity: ActionCreator<any> = function (force?) {
     return function(dispatch: Dispatch) {
         return new Promise((resolve, reject) => {
             principle.identity(force).subscribe((account) => {
-                dispatch(authenticate());
-                dispatch(recordUserInfo(account));
-                resolve(account);
+                if(account) {
+                    dispatch(authenticate());
+                    dispatch(recordUserInfo(account));
+                    resolve(account);
+                } else {
+                    dispatch(login());
+                    reject();
+                }
             });
         });
     }

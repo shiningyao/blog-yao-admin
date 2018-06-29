@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import styles from './styles';
 import Logo from '../logo/logo.component';
 
@@ -55,38 +56,38 @@ export class Topbar extends Component<TopbarProps, {}> {
                         <ul className="nav-right">
                             <li className="header-notification lng-dropdown">
                                 <a href="javascript:void(0);" className="dropdown-active-item">
-                                    <img src={require('#/images/flags/GB.png')} alt=""/>
-                                    English
+                                    <img src={this.props.locale.icon} alt=""/>
+                                    <FormattedMessage id={this.props.locale.text.i18n} defaultMessage={this.props.locale.text.name}></FormattedMessage>
                                 </a>
                                 <ul className="show-notification">
                                     <li>
                                         <a href="javascript:void(0);" onClick={() => this.props.changeLangKey('en')} className="dropdown-active-item">
                                             <img src={require('#/images/flags/GB.png')} alt=""/>
-                                            English
+                                            <FormattedMessage id="global.english" defaultMessage="English"></FormattedMessage>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0);" className="dropdown-active-item">
                                             <img src={require('#/images/flags/ES.png')} alt=""/>
-                                            Spanish
+                                            <FormattedMessage id="global.spanish" defaultMessage="Spanish"></FormattedMessage>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0);" className="dropdown-active-item">
                                             <img src={require('#/images/flags/PT.png')} alt=""/>
-                                            Portuguese
+                                            <FormattedMessage id="global.portuguese" defaultMessage="Portuguese"></FormattedMessage>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0);" className="dropdown-active-item">
                                             <img src={require('#/images/flags/FR.png')} alt=""/>
-                                            French
+                                            <FormattedMessage id="global.french" defaultMessage="French"></FormattedMessage>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0);" onClick={() => this.props.changeLangKey('zh')} className="dropdown-active-item">
                                             <img src={require('#/images/flags/CN.png')} alt=""/>
-                                            China
+                                            <FormattedMessage id="global.chinese" defaultMessage="Chinese"></FormattedMessage>
                                         </a>
                                     </li>
                                 </ul>
