@@ -19,10 +19,9 @@ function defaultLocale() {
 };
 
 function getMessage(language) {
-    const languageWithoutRegionCode = language.toLowerCase().split(/[_-]+/)[0];
 
     const messages =
-        localeData[languageWithoutRegionCode] ||
+        localeData[LocaleUtil.languageWithoutRegionCode(language)] ||
         localeData[language] ||
         localeData.en;
 
@@ -32,7 +31,7 @@ function getMessage(language) {
 export const locale = function(state = defaultLocale(), action) {
     switch(action.type) {
         case RECORD_USERINFO:
-            const langKey = action.account.langKey || state.language;
+            const langKey = LocaleUtil.languageWithoutRegionCode(action.account.langKey || state.language);
             return {
                 language: langKey,
                 messages: getMessage(langKey),

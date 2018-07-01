@@ -13,7 +13,7 @@ export class AccountProvider {
     }
 
     get(): Observable<AxiosResponse<Account>> {
-        return this.http.get<Account>(SERVER_API_URL + 'api/account');
+        return this.http.get<Account>(SERVER_API_URL + '/api/account');
     }
 
     getData(): Observable<Account> {

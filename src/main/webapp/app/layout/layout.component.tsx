@@ -6,16 +6,17 @@ import { AppLayout as Layout } from './styles';
 import Topbar from '@/components/topbar/topbar.container';
 import { Sidebar } from '@/components/sidebar/sidebar.component';
 import { Home } from '@/pages/home/home.component';
+import { ArticleManagementPage } from '@/pages/articles/management.component';
 
 const { Component } = React;
 
 const EditorPage = Loadable({
-    loader: () => import(/* webpackChunkName: "vendors.async" */ '@/pages/editor/editor.component'),
+    loader: () => import(/* webpackChunkName: "vendors.async" */ '@/pages/articles/editor.component'),
     loading() {
        return <div>Loading...</div>;
     },
     render(loaded, props) {
-        let Component = loaded.EditorPage;
+        let Component = loaded.ArticleEditorPage;
         return <Component {...props}/>;
     }
 });
@@ -29,11 +30,19 @@ export default class AppLayout extends Component<{}, {}> {
                     <Topbar></Topbar>
                 </header>
                 <main className="main-container">
-                    <Sidebar></Sidebar>
+                    <Sidebar {...this.props}></Sidebar>
                     <div className="main-content">
                         <Switch>
-                            <PrivateRoute exact path="/" component={Home}></PrivateRoute>
-                            <PrivateRoute path="/editor" component={EditorPage}></PrivateRoute>
+                            <Route exact path="/" render={
+                                props => (
+                                    <Redirect to={{
+                                        pathname: '/dashboard'
+                                    }}></Redirect>
+                                )
+                            }></Route>
+                            <PrivateRoute path="/dashboard" component={Home}></PrivateRoute>
+                            <PrivateRoute path="/articles/editor" component={EditorPage}></PrivateRoute>
+                            <PrivateRoute path="/articles/management" component={ArticleManagementPage}></PrivateRoute>
                         </Switch>
                     </div>
                 </main>

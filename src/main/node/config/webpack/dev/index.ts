@@ -22,6 +22,9 @@ module.exports = function(_path) {
             app: [path.join(WEB_ROOT, 'app/index.bootstrap.tsx'), hotMiddlewareScript]
         },
         devtool: 'cheap-source-map',
+        output: {
+            publicPath: '/'
+        },
         devServer: {
             info: true,
             hot: true,

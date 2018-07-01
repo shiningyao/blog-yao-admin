@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import * as uuid from 'uuid/v4';
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 const menuRoutes: Router = Router();
 
@@ -11,11 +10,12 @@ menuRoutes.get('/menus', (req, res) => {
             title: 'Dashboard',
             i18n: 'Sidebar.dashboard',
             iconClass: 'ti-home',
+            breadcrumb: true,
             children: [{
                 id: uuid(),
                 title: 'Default',
                 i18n: 'Sidebar.dashboard.default',
-                to: '/'
+                to: '/dashboard'
             }, {
                 id: uuid(),
                 title: 'Ecommerce',
@@ -116,11 +116,23 @@ menuRoutes.get('/menus', (req, res) => {
             title: 'Articles',
             i18n: 'Sidebar.articles',
             iconClass: 'ti-write',
+            breadcrumb: true,
             children: [{
                 id: uuid(),
                 title: 'Editor',
                 i18n: 'Sidebar.articles.editor',
-                to: '/editor'
+                breadcrumb: true,
+                to: {
+                    pathname: '/articles/editor'
+                }
+            }, {
+                id: uuid(),
+                title: 'Management',
+                i18n: 'Sidebar.articles.management',
+                breadcrumb: true,
+                to: {
+                    pathname: '/articles/management'
+                }
             }]
         }]
     });

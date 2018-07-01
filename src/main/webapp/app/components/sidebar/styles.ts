@@ -100,6 +100,13 @@ export const Wrapper = styled.div`
             padding: 6px;
         }
     }
+
+    @media only screen and (max-width: 993px) {
+        display: none;
+        & + .main-content {
+            margin-left: 0;
+        }
+    }
 `;
 
 const menuIconColors = (size: number = 16) => {
@@ -151,6 +158,9 @@ export const NavMenu = styled.div`
 
             & > a {
                 padding: 10px 20px;
+                &.active {
+                    font-weight: bold;
+                }
                 .menu-badge {
                     top: 18px;
                     right: 30px;
@@ -230,6 +240,7 @@ export const NavSubMenu = styled.ul`
                     transition: transform .1s ease-out;
                     transition-delay: .3s;
                 }
+
             }
             &.open {
                 & > a {
@@ -245,6 +256,11 @@ export const NavSubMenu = styled.ul`
         & > a {
             .menu-icon {
                 display: none;
+            }
+            
+            &.active {
+                font-weight: bold;
+                color: #4680ff;
             }
 
             .menu-text {

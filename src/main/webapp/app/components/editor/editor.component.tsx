@@ -1,18 +1,26 @@
 import * as React from 'react';
 import { Component, RefObject } from 'react';
-import { Wrapper } from '@/components/editor/styles';
+import * as classNames from 'classnames';
+import { EditorWrapper } from '@/components/editor/styles';
 
 interface ArticleEditorProps {
     className?: string
 };
 
-export class ArticleEditor extends Component<ArticleEditorProps, {}> {
+interface ArticleEditorStates {
+    editorLoaded: boolean
+}
+
+export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorStates> {
     
     private editorRef: RefObject<HTMLDivElement>;
 
     constructor(props) {
         super(props);
         this.editorRef = React.createRef();
+        this.state = {
+            editorLoaded: false
+        };
     }
 
     componentDidMount() {
@@ -25,6 +33,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, {}> {
             '@ckeditor/ckeditor5-basic-styles/src/bold',
             '@ckeditor/ckeditor5-basic-styles/src/italic',
             '@ckeditor/ckeditor5-font/src/font',
+            '@ckeditor/ckeditor5-highlight/src/highlight',
             '@ckeditor/ckeditor5-link/src/link',
             '@ckeditor/ckeditor5-list/src/list',
             '@ckeditor/ckeditor5-image/src/image',
@@ -44,6 +53,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, {}> {
             const Bold = require('@ckeditor/ckeditor5-basic-styles/src/bold').default;
             const Italic = require('@ckeditor/ckeditor5-basic-styles/src/italic').default;
             const Font = require('@ckeditor/ckeditor5-font/src/font').default;
+            const Hight = require('@ckeditor/ckeditor5-highlight/src/highlight').default;
             const Link = require('@ckeditor/ckeditor5-link/src/link').default;
             const List = require('@ckeditor/ckeditor5-list/src/list').default;
             const Image = require('@ckeditor/ckeditor5-image/src/image').default;
@@ -63,6 +73,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, {}> {
                     Bold,
                     Italic,
                     Font,
+                    Hight,
                     Link,
                     List,
                     Image,
@@ -90,24 +101,28 @@ export class ArticleEditor extends Component<ArticleEditorProps, {}> {
                 },
                 toolbar: [  
                     'heading', '|', 
-                    'bold', 'italic', 'fontSize', 'fontFamily', '|', 
+                    'bold', 'italic', 'fontSize', 'fontFamily', 'highlight', '|', 
                     'link', 'bulletedList', 
                     'numberedList', 'imageUpload', 'blockquote',
-                    'alignment'
+                    'alignment', '|',
+                    'undo', 'redo'
                 ]
             }).then((editor) => {
                 editor.ui.view.editable.editableElement.setAttribute('spellcheck', 'false');
+                this.setState({
+                    editorLoaded: true
+                });
             });
         }, null, 'ckeditor');
     }
 
     render() {
         return (
-            <Wrapper className={this.props.className}>
+            <EditorWrapper className={classNames([this.props.className, {'hidden': !this.state.editorLoaded}])}>
                 <div ref={this.editorRef}>
                     {this.props.children}
                 </div>
-            </Wrapper>
+            </EditorWrapper>
         );
     }
 

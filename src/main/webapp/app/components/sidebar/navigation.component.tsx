@@ -7,12 +7,17 @@ import { NavLink } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { NavMenu, NavSubMenu } from './styles';
 import { Menu } from '@/domain/menu';
+import { LocationDescriptorObject, Path } from 'history';
 
-export class SidebarNav extends Component<{}, {
+import isObject = require('lodash/isObject');
+import isString = require('lodash/isString');
+
+export class SidebarNav extends Component<any, {
     menus: Object
 }> {
 
     private http = new Http();
+    private firstRender = true;
 
     constructor(props) {
         super(props);
@@ -29,11 +34,11 @@ export class SidebarNav extends Component<{}, {
                 menus: data
             });
         });
+        
     }
 
     render() {
-
-        function renderSubMenu(menus: Array<Menu>) {
+        function renderSubMenu(menus: Array<Menu>, parents: Menu[]) {
             if(menus.length > 0) {
                 return (
                     <NavSubMenu>
@@ -41,9 +46,13 @@ export class SidebarNav extends Component<{}, {
                             if(!menu.children) {
                                 menu.children = [];
                             }
+                            if(this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
+                                this.firstRender = false;
+                                menu.$isOpen = true;
+                            }
                             return (
                                 <li key={menu.id} className={classNames({hasMenus: menu.children.length > 0, open: menu.$isOpen})}>
-                                    <NavLink to={menu.to || ''} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
+                                    <NavLink to={this.getLinkTo(menu, parents)} exact={true} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
                                         <span className="menu-icon">
                                             <i className={menu.iconClass}></i>
                                         </span>
@@ -68,7 +77,7 @@ export class SidebarNav extends Component<{}, {
                                         transitionName="accordion-dropdown"
                                         transitionEnterTimeout={500}
                                         transitionLeaveTimeout={300}>
-                                        {menu.$isOpen ? renderSubMenu.apply(this, [menu.children]) : null}
+                                        {menu.$isOpen ? renderSubMenu.apply(this, [menu.children, [...parents, menu]]) : null}
                                     </ReactCSSTransitionGroup>
                                 </li>
                             ) 
@@ -81,15 +90,20 @@ export class SidebarNav extends Component<{}, {
 
         function renderMenu(menus: Array<Menu>) {
             if(menus.length > 0) {
+
                 return (
                     <ul>
                         {menus.map(menu => {
                             if(!menu.children) {
                                 menu.children = [];
                             }
+                            if(this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
+                                this.firstRender = false;
+                                menu.$isOpen = true;
+                            }
                             return ( 
                                 <li key={menu.id} className={classNames({hasMenus: menu.children.length > 0, open: menu.$isOpen})}>
-                                    <NavLink to={menu.to || ''} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
+                                    <NavLink to={this.getLinkTo(menu)} onClick={this.menuClick.bind(this, menu, menus)} isActive={(match, location) => this.isRootMenuActive(menu, match, location)} activeClassName="active">
                                         <span className="menu-icon">
                                             <i className={menu.iconClass}></i>
                                         </span>
@@ -114,7 +128,7 @@ export class SidebarNav extends Component<{}, {
                                         transitionName="accordion-dropdown"
                                         transitionEnterTimeout={500}
                                         transitionLeaveTimeout={300}>
-                                        {menu.$isOpen ? renderSubMenu.bind(this)(menu.children) : null}
+                                        {menu.$isOpen ? renderSubMenu.bind(this)(menu.children, [menu]) : null}
                                     </ReactCSSTransitionGroup>
                                 </li>
                             )
@@ -146,6 +160,7 @@ export class SidebarNav extends Component<{}, {
         if(event && !menu.to) {
             event.preventDefault();
         }
+        this.firstRender = false;
         menus.forEach(m => {
             if(m.id === menu.id) {
                 m.$isOpen = !m.$isOpen;
@@ -161,4 +176,44 @@ export class SidebarNav extends Component<{}, {
         });
     }
 
+    getLinkTo(menu: Menu, parents: Menu[] = []): LocationDescriptorObject | Path {
+
+        function getBreadcrumbs(menus: Menu[]) {
+            return menus.filter(menu => menu.breadcrumb).map(menu => {
+                if(menu.breadcrumb === true) {
+                    return {
+                        name: menu.title,
+                        i18n: menu.i18n
+                    };
+                }
+
+                if(isObject(menu.breadcrumb)) {
+                    return menu.breadcrumb;
+                }
+            });
+        }
+
+        if(menu.to) {
+            if(isString(menu.to)) {
+                return {
+                    pathname: menu.to,
+                    state: {
+                        breadcrumbs: getBreadcrumbs([...parents, menu])
+                    }
+                };
+            }
+            if(isObject(menu.to)) {
+                return Object.assign({
+                    state: {
+                        breadcrumbs: getBreadcrumbs([...parents, menu])
+                    }
+                }, menu.to);
+            }
+        }
+        return '';
+    }
+
+    isRootMenuActive(menu, match, location) {
+        return location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1;
+    }
 }

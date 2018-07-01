@@ -52,8 +52,8 @@ export const identity: ActionCreator<any> = function (force?) {
                     dispatch(recordUserInfo(account));
                     resolve(account);
                 } else {
-                    dispatch(login());
-                    reject();
+                    dispatch(logout());
+                    resolve(account);
                 }
             });
         });

@@ -20,12 +20,12 @@ export class AuthServerProvider {
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         };
-        return this.http.post<string, void>(SERVER_API_URL + 'api/authentication', data, { headers });
+        return this.http.post<string, void>(SERVER_API_URL + '/api/authentication', data, { headers });
     }
 
     logout() {
-        return this.http.post(SERVER_API_URL + 'api/logout').pipe(map((res) => {
-            this.http.get(SERVER_API_URL + 'api/account').subscribe(() => {}, () => {});
+        return this.http.post(SERVER_API_URL + '/api/logout').pipe(map((res) => {
+            this.http.get(SERVER_API_URL + '/api/account').subscribe(() => {}, () => {});
             return res;
         }));
     }

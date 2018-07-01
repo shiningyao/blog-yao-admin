@@ -174,6 +174,25 @@ export const Navbar = styled.nav`
         }
 
     }
+
+    @media only screen and (max-width: 993px) {
+        .navbar, .navbar-wrapper .navbar-logo {
+            width: 100%;
+            justify-content: center;
+            .logo-text {
+                flex-grow: 0;
+            }
+
+            .mobile-menu {
+                right: 0;
+                left: 20px;
+            }
+        }
+
+        .navbar-container {
+            display: none;
+        }
+    }
 `;
 
 export default {

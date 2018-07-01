@@ -41,7 +41,11 @@ class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<Priva
                 props => {
                     if(this.state.isIdentity) {
                         if(this.props.isAuthenticated) {
-                            return (<Component {...props} />);
+                            if(this.props.render) {
+                                return this.props.render(props);
+                            } else {
+                                return (<Component {...props} />);
+                            }
                         } else {
                             return <Redirect
                                 to={{
@@ -60,7 +64,9 @@ class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<Priva
 }
 
 const mapStateToProps = (state) => {
-    return Object.assign({}, state);
+    return {
+        isAuthenticated: state.isAuthenticated
+    };
 }
 
 const mapDispatchToProps = (dispath) => {

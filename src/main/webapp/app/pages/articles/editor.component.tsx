@@ -1,13 +1,20 @@
 import * as React from "react";
 import { Component } from "react";
+import HeaderEditor from '@/components/editor/header.component';
 import { ArticleEditor } from "@/components/editor/editor.component";
-import { PageWrapper, PageHeader, PageBody } from "@/pages/styles";
+import { PageHeader, PageBody } from "@/pages/styles";
+import { EditorPageWrapper } from "@/pages/articles/editor.styles.ts";
+import { WidgetEditor, WidgetEditorType } from "@/components/editor/widget.component";
 
-export class EditorPage extends Component {
+export class ArticleEditorPage extends Component<any, any> {
+
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         return (
-            <PageWrapper>
+            <EditorPageWrapper>
                 <PageHeader className="card">
                     <div className="row">
                         <div className="col-lg-8">
@@ -27,16 +34,15 @@ export class EditorPage extends Component {
                                             <i className="icofont icofont-home"></i>
                                         </a>
                                     </li>
-                                    <li className="breadcrumb-item">
-                                        <a href="javascript:void(0)">
-                                            Articles
-                                        </a>
-                                    </li>
-                                    <li className="breadcrumb-item">
-                                        <a href="javascript:void(0)">
-                                            Article Editor
-                                        </a>
-                                    </li>
+                                    {
+                                        this.props.location.state.breadcrumbs.map(breadcrumb => (
+                                            <li key={breadcrumb.name} className="breadcrumb-item">
+                                                <a href="javascript:void(0)">
+                                                    {breadcrumb.name}
+                                                </a>
+                                            </li>
+                                        ))
+                                    }
                                 </ul>
                             </div>
                         </div>
@@ -44,15 +50,12 @@ export class EditorPage extends Component {
                 </PageHeader>
                 <PageBody>
                     <div className="card">
-                        <div className="card-header">
+                        {/* <div className="card-header">
                             Article Editor
-                        </div>
+                        </div> */}
                         <div className="card-body">
-                            <ArticleEditor className="header-editor">
-                                <p style={{textAlign: 'center'}}>
-                                    <span style={{fontSize: '40px'}}>STANDARD POST FORMAT</span>
-                                </p>
-                            </ArticleEditor>
+                            <HeaderEditor value="STANDARD POST FORMAT"></HeaderEditor>
+                            <WidgetEditor type={WidgetEditorType.Image}></WidgetEditor>
                             <ArticleEditor className="body-editor">
                                 <p>Bacon ipsum dolor amet leberkas ham hock cupim alcatra pancetta biltong, corned beef landjaeger swine rump shank meatloaf jowl frankfurter cow. Short ribs picanha chicken meatball pig tongue. Pig rump tri-tip ribeye, venison alcatra filet mignon drumstick shoulder swine tongue. Cow hamburger shoulder, brisket jowl bacon pork chop pig salami. Ball tip pork loin short loin brisket shank cow chuck ham boudin pork drumstick pig jowl pork chop doner.</p>
                                 <blockquote>
@@ -65,7 +68,7 @@ export class EditorPage extends Component {
                         </div>
                     </div>
                 </PageBody>
-            </PageWrapper>
+            </EditorPageWrapper>
         );
     }
 

@@ -41,7 +41,7 @@ export class Sidebar extends Component<{}, {}> {
                             </span>
                         </div>
                     </div>
-                    <SidebarNav></SidebarNav>
+                    <SidebarNav {...this.props}></SidebarNav>
                 </div>
             </Wrapper>
         )

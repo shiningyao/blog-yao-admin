@@ -41,4 +41,8 @@ export class LocaleUtil {
                 return require('#/images/flags/GB.png');
         }
     }
+
+    public static languageWithoutRegionCode(langKey) {
+        return langKey.toLowerCase().split(/[_-]+/)[0];
+    }
 }
