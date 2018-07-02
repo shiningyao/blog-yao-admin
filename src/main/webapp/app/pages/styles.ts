@@ -74,7 +74,19 @@ export const PageHeader = styled.div`
     }
 `;
 
-export const PageBody = styled.div``;
+export const PageBody = styled.div`
+    flex: 1 1 0%;
+    & > .card {
+        height: 100%;
+        .card-body {
+            height: 100%;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+`;
 
 export default {
     PageWrapper,

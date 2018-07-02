@@ -125,6 +125,9 @@ const menuIconColors = (size: number = 16) => {
 } 
 
 export const NavMenu = styled.div`
+
+    user-select: none;
+
     & > ul {
         margin: 0;
         padding: 0;

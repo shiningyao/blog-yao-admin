@@ -183,12 +183,15 @@ export class SidebarNav extends Component<any, {
                 if(menu.breadcrumb === true) {
                     return {
                         name: menu.title,
-                        i18n: menu.i18n
+                        i18n: menu.i18n,
+                        to: menu.to || '/'
                     };
                 }
 
                 if(isObject(menu.breadcrumb)) {
-                    return menu.breadcrumb;
+                    return Object.assign({
+                        to: menu.to || '/'
+                    }, menu.breadcrumb);
                 }
             });
         }

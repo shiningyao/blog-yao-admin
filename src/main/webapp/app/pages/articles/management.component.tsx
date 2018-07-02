@@ -3,6 +3,8 @@ import { Component } from "react";
 import { List } from 'react-virtualized';
 import { PageHeader, PageBody, PageWrapper } from '@/pages/styles';
 import range = require('lodash/range');
+import { ManagementPageWrapper } from '@/pages/articles/management.styles';
+import { NavLink } from 'react-router-dom';
 
 const list = range(0, 10);
 
@@ -14,7 +16,7 @@ function rowRenderer({
     style        // Style object to be applied to row (to position it)
   }) {
     return (
-        <div
+        <div className="article-list-item"
           key={key}
           style={style}
         >
@@ -38,21 +40,21 @@ export class ArticleManagementPage extends Component<any, any> {
     }
 
     componentDidMount() {
-        const resetWidth = () => {
-            const width = this.listContainerRef.current.clientWidth;
+        const resetSize = () => {
             this.setState({
-                listWidth: width
+                listWidth: this.listContainerRef.current.clientWidth,
+                listHeight: this.listContainerRef.current.clientHeight
             });
         };
-        resetWidth();
+        resetSize();
         window.addEventListener('resize', function() {
-            resetWidth();
+            resetSize();
         });
     }
 
     render() {
         return (
-            <PageWrapper>
+            <ManagementPageWrapper>
                 <PageHeader className="card">
                     <div className="row">
                         <div className="col-lg-8">
@@ -68,9 +70,9 @@ export class ArticleManagementPage extends Component<any, any> {
                             <div className="page-header-breadcrumb">
                                 <ul className="breadcrumb-title">
                                     <li className="breadcrumb-item">
-                                        <a href="javascript:void(0)">
+                                        <NavLink to="/" href="javascript:void(0)">
                                             <i className="icofont icofont-home"></i>
-                                        </a>
+                                        </NavLink>
                                     </li>
                                     {
                                         this.props.location.state.breadcrumbs.map(breadcrumb => (
@@ -92,18 +94,18 @@ export class ArticleManagementPage extends Component<any, any> {
                             Article Editor
                         </div> */}
                         <div className="card-body">
-                        <div ref={this.listContainerRef}>
-                            <List width={this.state.listWidth}
-                                height={this.state.listHeight}
-                                rowCount={this.state.list.length}
-                                rowHeight={20}
-                                rowRenderer={rowRenderer}>
-                            </List>
-                        </div>
+                            <div className="article-list" ref={this.listContainerRef} style={{height: '100%'}}>
+                                <List width={this.state.listWidth}
+                                    height={this.state.listHeight}
+                                    rowCount={this.state.list.length}
+                                    rowHeight={97}
+                                    rowRenderer={rowRenderer}>
+                                </List>
+                            </div>
                         </div>
                     </div>
                 </PageBody>
-            </PageWrapper>
+            </ManagementPageWrapper>
         );
     }
 
