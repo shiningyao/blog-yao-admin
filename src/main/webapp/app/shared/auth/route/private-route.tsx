@@ -2,8 +2,6 @@ import * as React from 'react';
 import { Component } from 'react';
 import { Route, RouteProps, Redirect } from "react-router";
 import { connect } from 'react-redux';
-import principle from '@/shared/auth/principle';
-import { authenticate } from '@/shared/actions';
 import { bindActionCreators } from 'redux';
 import { identity } from '@/shared/actions';
 

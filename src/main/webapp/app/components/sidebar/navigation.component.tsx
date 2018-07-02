@@ -23,7 +23,7 @@ export class SidebarNav extends Component<any, {
         super(props);
         this.state = {
             menus: {}
-        }
+        };
     }
 
     componentDidMount() {
@@ -34,7 +34,6 @@ export class SidebarNav extends Component<any, {
                 menus: data
             });
         });
-        
     }
 
     render() {
@@ -46,10 +45,11 @@ export class SidebarNav extends Component<any, {
                             if(!menu.children) {
                                 menu.children = [];
                             }
-                            if(this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
+                            if(this.props.location.state && this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
                                 this.firstRender = false;
                                 menu.$isOpen = true;
                             }
+                            
                             return (
                                 <li key={menu.id} className={classNames({hasMenus: menu.children.length > 0, open: menu.$isOpen})}>
                                     <NavLink to={this.getLinkTo(menu, parents)} exact={true} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
@@ -97,7 +97,7 @@ export class SidebarNav extends Component<any, {
                             if(!menu.children) {
                                 menu.children = [];
                             }
-                            if(this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
+                            if(this.props.location.state && this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
                                 this.firstRender = false;
                                 menu.$isOpen = true;
                             }
@@ -194,18 +194,19 @@ export class SidebarNav extends Component<any, {
         }
 
         if(menu.to) {
+            const breadcrumbs = getBreadcrumbs([...parents, menu]);
             if(isString(menu.to)) {
                 return {
                     pathname: menu.to,
                     state: {
-                        breadcrumbs: getBreadcrumbs([...parents, menu])
+                        breadcrumbs
                     }
                 };
             }
             if(isObject(menu.to)) {
                 return Object.assign({
                     state: {
-                        breadcrumbs: getBreadcrumbs([...parents, menu])
+                        breadcrumbs
                     }
                 }, menu.to);
             }
@@ -214,6 +215,9 @@ export class SidebarNav extends Component<any, {
     }
 
     isRootMenuActive(menu, match, location) {
-        return location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1;
+        if(location.state && location.getBreadcrumbs) {
+            return location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1;
+        }
+        return false;
     }
 }
