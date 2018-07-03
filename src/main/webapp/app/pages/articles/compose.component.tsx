@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 import { Component } from "react";
 import HeaderEditor from '@/components/editor/header.component';
-import { ArticleEditor } from "@/components/editor/editor.component";
-import { PageHeader, PageBody } from "@/pages/styles";
-import { EditorPageWrapper } from "@/pages/articles/editor.styles.ts";
 import { WidgetEditor, WidgetEditorType } from "@/components/editor/widget.component";
+import { EditorPageWrapper } from '@/pages/articles/editor.styles';
+import { PageHeader, PageBody } from '@/pages/styles';
+import { ArticleEditor } from '@/components/editor/editor.component';
 
-export class ArticleEditorPage extends Component<any, any> {
+export class ComposePage extends Component<any, any> {
 
     constructor(props) {
         super(props);

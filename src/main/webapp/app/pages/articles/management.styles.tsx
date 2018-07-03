@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { PageWrapper } from "@/pages/styles";
+import { PageWrapper, PageHeader } from "@/pages/styles";
 
 export const ManagementPageWrapper = styled(PageWrapper)`
     display: flex;
     flex-direction: column;
-
+    overflow: hidden;
+    
     .article-list {
         margin: 0 -1.25rem;
     }
@@ -15,6 +16,11 @@ export const ManagementPageWrapper = styled(PageWrapper)`
     }
 `;
 
+export const ManagementPageHeader = styled(PageHeader)`
+    min-height: 114px;
+`;
+
 export default {
-    ManagementPageWrapper
+    ManagementPageWrapper,
+    ManagementPageHeader
 };

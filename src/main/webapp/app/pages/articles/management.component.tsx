@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Component } from "react";
 import { List } from 'react-virtualized';
-import { PageHeader, PageBody, PageWrapper } from '@/pages/styles';
+import { PageBody, PageWrapper } from '@/pages/styles';
 import range = require('lodash/range');
-import { ManagementPageWrapper } from '@/pages/articles/management.styles';
+import { ManagementPageWrapper, ManagementPageHeader } from '@/pages/articles/management.styles';
 import { NavLink } from 'react-router-dom';
 
 const list = range(0, 10);
@@ -55,7 +55,7 @@ export class ArticleManagementPage extends Component<any, any> {
     render() {
         return (
             <ManagementPageWrapper>
-                <PageHeader className="card">
+                <ManagementPageHeader className="card">
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="page-header-title">
@@ -87,12 +87,15 @@ export class ArticleManagementPage extends Component<any, any> {
                             </div>
                         </div>
                     </div>
-                </PageHeader>
+                </ManagementPageHeader>
                 <PageBody>
                     <div className="card">
-                        {/* <div className="card-header">
-                            Article Editor
-                        </div> */}
+                        <div className="card-header">
+                            <div>
+                                <NavLink to="/articles/compose" className="btn btn-primary">Compose</NavLink>
+                            </div>
+                            <div>Article Title</div>
+                        </div>
                         <div className="card-body">
                             <div className="article-list" ref={this.listContainerRef} style={{height: '100%'}}>
                                 <List width={this.state.listWidth}

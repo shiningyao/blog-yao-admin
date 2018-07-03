@@ -7,6 +7,7 @@ import Topbar from '@/components/topbar/topbar.container';
 import { Sidebar } from '@/components/sidebar/sidebar.component';
 import { Home } from '@/pages/home/home.component';
 import { ArticleManagementPage } from '@/pages/articles/management.component';
+import { ComposePage } from '@/pages/articles/compose.component';
 
 const { Component } = React;
 
@@ -41,6 +42,7 @@ export default class AppLayout extends Component<{}, {}> {
                                 )
                             }></Route>
                             <PrivateRoute path="/dashboard" component={Home}></PrivateRoute>
+                            <PrivateRoute path="/articles/compose" component={ComposePage}></PrivateRoute>
                             <PrivateRoute path="/articles/editor" component={EditorPage}></PrivateRoute>
                             <PrivateRoute path="/articles/management" component={ArticleManagementPage}></PrivateRoute>
                         </Switch>
