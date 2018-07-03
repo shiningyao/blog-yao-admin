@@ -11,9 +11,13 @@ import { LocationDescriptorObject, Path } from 'history';
 
 import isObject = require('lodash/isObject');
 import isString = require('lodash/isString');
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setBreadcrumbs } from '@/shared/actions';
 
-export class SidebarNav extends Component<any, {
-    menus: Object
+class SidebarNav extends Component<any, {
+    menus: Object,
+    loaded: boolean
 }> {
 
     private http = new Http();
@@ -22,7 +26,8 @@ export class SidebarNav extends Component<any, {
     constructor(props) {
         super(props);
         this.state = {
-            menus: {}
+            menus: {},
+            loaded: false
         };
     }
 
@@ -77,7 +82,7 @@ export class SidebarNav extends Component<any, {
                                         transitionName="accordion-dropdown"
                                         transitionEnterTimeout={500}
                                         transitionLeaveTimeout={300}>
-                                        {menu.$isOpen ? renderSubMenu.apply(this, [menu.children, [...parents, menu]]) : null}
+                                        {menu.$isOpen || !this.state.loaded ? renderSubMenu.apply(this, [menu.children, [...parents, menu]]) : null}
                                     </ReactCSSTransitionGroup>
                                 </li>
                             ) 
@@ -128,7 +133,7 @@ export class SidebarNav extends Component<any, {
                                         transitionName="accordion-dropdown"
                                         transitionEnterTimeout={500}
                                         transitionLeaveTimeout={300}>
-                                        {menu.$isOpen ? renderSubMenu.bind(this)(menu.children, [menu]) : null}
+                                        {menu.$isOpen || !this.state.loaded ? renderSubMenu.bind(this)(menu.children, [menu]) : null}
                                     </ReactCSSTransitionGroup>
                                 </li>
                             )
@@ -139,21 +144,25 @@ export class SidebarNav extends Component<any, {
             }
         }
 
-        return (
-            <div>
-                {Object.keys(this.state.menus).map(category => {
-                    const menus = this.state.menus[category];
-                    return (
-                        <NavMenu key={category}>
-                            <div className="nav-category">
-                                {category}
-                            </div>
-                            {renderMenu.bind(this)(menus)}
-                        </NavMenu>
-                    );
-                })}
-            </div>
-        );
+        if(Object.keys(this.state.menus).length > 0) {
+            return (
+                <div>
+                    {Object.keys(this.state.menus).map(category => {
+                        const menus = this.state.menus[category];
+                        return (
+                            <NavMenu key={category}>
+                                <div className="nav-category">
+                                    {category}
+                                </div>
+                                {renderMenu.bind(this)(menus)}
+                            </NavMenu>
+                        );
+                    })}
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 
     menuClick(menu: Menu, menus: Array<Menu>, event?: SyntheticEvent) {
@@ -198,6 +207,7 @@ export class SidebarNav extends Component<any, {
 
         if(menu.to) {
             const breadcrumbs = getBreadcrumbs([...parents, menu]);
+            this.props.setBreadcrumbs(breadcrumbs);
             if(isString(menu.to)) {
                 return {
                     pathname: menu.to,
@@ -214,6 +224,12 @@ export class SidebarNav extends Component<any, {
                 }, menu.to);
             }
         }
+
+        if(!this.state.loaded) {
+            this.setState({
+                loaded: true
+            });
+        }
         return '';
     }
 
@@ -224,3 +240,20 @@ export class SidebarNav extends Component<any, {
         return false;
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        breadcrumbs: state.breadcrumbs
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        setBreadcrumbs: bindActionCreators(setBreadcrumbs, dispatch)
+    };
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(SidebarNav);

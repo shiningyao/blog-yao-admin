@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component, RefObject } from "react";
 import PerfectScrollbar from 'perfect-scrollbar';
-import { SidebarNav } from './navigation.component';
+import SidebarNav from './navigation.component';
 import { Wrapper } from './styles';
 
 export class Sidebar extends Component<{}, {}> {

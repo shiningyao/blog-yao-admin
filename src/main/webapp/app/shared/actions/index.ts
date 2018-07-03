@@ -1,3 +1,4 @@
+import { LocationDescriptorObject } from 'history';
 import { ActionCreator, Action } from "redux";
 import { AuthServerProvider } from "@/shared/auth/auth-session";
 import { AxiosResponse, AxiosError } from "axios";
@@ -12,6 +13,8 @@ export const LOGOUT = 'logout';
 export const RECORD_USERINFO = 'recordUserInfo';
 
 export const CHANGE_LANGKEY = 'changeLangKey';
+
+export const SET_BREADCRUMBS = 'setBreadcrumbs';
 
 const authServerProvider = new AuthServerProvider();
 const accountProvider = new AccountProvider();
@@ -95,3 +98,14 @@ export const login: ActionCreator<any> = function (credentials, callback?) {
     }
 
 }
+
+export const setBreadcrumbs: ActionCreator<Action> =  function (breadcrumbs: [{
+    name: string,
+    i18n: string,
+    to: string | LocationDescriptorObject
+}]) {
+    return {
+        type: SET_BREADCRUMBS,
+        breadcrumbs
+    };
+};
