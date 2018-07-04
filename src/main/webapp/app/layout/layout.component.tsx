@@ -6,8 +6,8 @@ import { AppLayout as Layout } from './styles';
 import Topbar from '@/components/topbar/topbar.container';
 import { Sidebar } from '@/components/sidebar/sidebar.component';
 import { Home } from '@/pages/home/home.component';
-import { ArticleManagementPage } from '@/pages/articles/management.component';
-import { ComposePage } from '@/pages/articles/compose.component';
+import ArticleManagementPage from '@/pages/articles/management.component';
+import ComposePage from '@/pages/articles/compose.component';
 
 const { Component } = React;
 
@@ -17,7 +17,7 @@ const EditorPage = Loadable({
        return <div>Loading...</div>;
     },
     render(loaded, props) {
-        let Component = loaded.ArticleEditorPage;
+        let Component = loaded.default;
         return <Component {...props}/>;
     }
 });
@@ -31,16 +31,16 @@ export default class AppLayout extends Component<{}, {}> {
                     <Topbar></Topbar>
                 </header>
                 <main className="main-container">
-                    <Sidebar {...this.props}></Sidebar>
+                    <Sidebar></Sidebar>
                     <div className="main-content">
                         <Switch>
-                            <Route exact path="/" render={
+                            <PrivateRoute exact path="/" render={
                                 props => (
                                     <Redirect to={{
                                         pathname: '/dashboard'
                                     }}></Redirect>
                                 )
-                            }></Route>
+                            }></PrivateRoute>
                             <PrivateRoute path="/dashboard" component={Home}></PrivateRoute>
                             <PrivateRoute path="/articles/compose" component={ComposePage}></PrivateRoute>
                             <PrivateRoute path="/articles/editor" component={EditorPage}></PrivateRoute>

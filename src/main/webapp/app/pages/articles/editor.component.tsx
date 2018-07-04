@@ -5,8 +5,9 @@ import { ArticleEditor } from "@/components/editor/editor.component";
 import { PageHeader, PageBody } from "@/pages/styles";
 import { EditorPageWrapper } from "@/pages/articles/editor.styles.ts";
 import { WidgetEditor, WidgetEditorType } from "@/components/editor/widget.component";
+import { connect } from "react-redux";
 
-export class ArticleEditorPage extends Component<any, any> {
+class ArticleEditorPage extends Component<any, any> {
 
     constructor(props) {
         super(props);
@@ -35,15 +36,13 @@ export class ArticleEditorPage extends Component<any, any> {
                                         </a>
                                     </li>
                                     {
-                                        this.props.location.state ? 
-                                        this.props.location.state.breadcrumbs.map(breadcrumb => (
-                                            <li key={breadcrumb.name} className="breadcrumb-item">
+                                        this.props.breadcrumbs.map(breadcrumb => (
+                                            <li key={breadcrumb.id} className="breadcrumb-item">
                                                 <a href="javascript:void(0)">
-                                                    {breadcrumb.name}
+                                                    {breadcrumb.title}
                                                 </a>
                                             </li>
-                                        )) :
-                                        null
+                                        ))
                                     }
                                 </ul>
                             </div>
@@ -75,3 +74,13 @@ export class ArticleEditorPage extends Component<any, any> {
     }
 
 }
+
+function mapStateToProps(state) {
+    return {
+        breadcrumbs: state.breadcrumbs
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(ArticleEditorPage);

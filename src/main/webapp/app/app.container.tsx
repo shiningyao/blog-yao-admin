@@ -34,7 +34,7 @@ class BlogApp extends Component<AppProps, {}> {
                             } else {
                                 return (
                                     <div>
-                                        <PrivateRoute {...props} component={AppLayout} />
+                                        <PrivateRoute title="Home" {...props} component={AppLayout} />
                                     </div>
                                 );
                             }

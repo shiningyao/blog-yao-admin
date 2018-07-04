@@ -5,11 +5,17 @@ import { WidgetEditor, WidgetEditorType } from "@/components/editor/widget.compo
 import { EditorPageWrapper } from '@/pages/articles/editor.styles';
 import { PageHeader, PageBody } from '@/pages/styles';
 import { ArticleEditor } from '@/components/editor/editor.component';
+import { connect } from 'react-redux';
+import { Article } from '@/domain/article';
 
-export class ComposePage extends Component<any, any> {
+class ComposePage extends Component<any, any> {
 
     constructor(props) {
         super(props);
+    }
+
+    onChange(article: Article) {
+        console.log(article);
     }
 
     render() {
@@ -35,15 +41,13 @@ export class ComposePage extends Component<any, any> {
                                         </a>
                                     </li>
                                     {
-                                        this.props.location.state ? 
-                                        this.props.location.state.breadcrumbs.map(breadcrumb => (
-                                            <li key={breadcrumb.name} className="breadcrumb-item">
+                                        this.props.breadcrumbs.map(breadcrumb => (
+                                            <li key={breadcrumb.id} className="breadcrumb-item">
                                                 <a href="javascript:void(0)">
-                                                    {breadcrumb.name}
+                                                    {breadcrumb.title}
                                                 </a>
                                             </li>
-                                        )) :
-                                        null
+                                        ))
                                     }
                                 </ul>
                             </div>
@@ -56,16 +60,9 @@ export class ComposePage extends Component<any, any> {
                             Article Editor
                         </div> */}
                         <div className="card-body">
-                            <HeaderEditor value="STANDARD POST FORMAT"></HeaderEditor>
-                            <WidgetEditor type={WidgetEditorType.Image}></WidgetEditor>
-                            <ArticleEditor className="body-editor">
-                                <p>Bacon ipsum dolor amet leberkas ham hock cupim alcatra pancetta biltong, corned beef landjaeger swine rump shank meatloaf jowl frankfurter cow. Short ribs picanha chicken meatball pig tongue. Pig rump tri-tip ribeye, venison alcatra filet mignon drumstick shoulder swine tongue. Cow hamburger shoulder, brisket jowl bacon pork chop pig salami. Ball tip pork loin short loin brisket shank cow chuck ham boudin pork drumstick pig jowl pork chop doner.</p>
-                                <blockquote>
-                                    <p>
-                                    Cow hamburger shoulder, brisket jowl bacon pork chop pig salami. Ball tip pork loin short loin brisket shank cow chuck ham boudin pork drumstick pig jowl pork chop doner. 
-                                    </p>
-                                </blockquote>
-                                <p> Ham capicola bacon ribeye meatball chuck tail doner bresaola kevin drumstick shankle short loin. Short loin ball tip leberkas flank, ground round andouille prosciutto t-bone cow doner landjaeger hamburger shankle beef ribs. Frank furter capicola short ribs, shoulder chuck shankle </p>
+                            <HeaderEditor onChange={this.onChange}></HeaderEditor>
+                            <WidgetEditor onChange={this.onChange} type={WidgetEditorType.Image}></WidgetEditor>
+                            <ArticleEditor onChange={this.onChange} className="body-editor">
                             </ArticleEditor>
                         </div>
                     </div>
@@ -75,3 +72,13 @@ export class ComposePage extends Component<any, any> {
     }
 
 }
+
+function mapStateToProps(state) {
+    return {
+        breadcrumbs: state.breadcrumbs
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(ComposePage);

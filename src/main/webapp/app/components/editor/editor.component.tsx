@@ -4,7 +4,8 @@ import * as classNames from 'classnames';
 import { EditorWrapper } from '@/components/editor/styles';
 
 interface ArticleEditorProps {
-    className?: string
+    className?: string,
+    onChange?: Function
 };
 
 interface ArticleEditorStates {
@@ -109,6 +110,9 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                 ]
             }).then((editor) => {
                 editor.ui.view.editable.editableElement.setAttribute('spellcheck', 'false');
+                editor.model.document.on('change', () => {
+                    console.log(123123);
+                });
                 this.setState({
                     editorLoaded: true
                 });

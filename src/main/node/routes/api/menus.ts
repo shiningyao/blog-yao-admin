@@ -133,6 +133,14 @@ menuRoutes.get('/menus', (req, res) => {
                 to: {
                     pathname: '/articles/management'
                 }
+            }, {
+                id: uuid(),
+                title: 'Compose',
+                i18n: 'Sidebar.articles.compose',
+                breadcrumb: true,
+                to: {
+                    pathname: '/articles/compose'
+                }
             }]
         }]
     });

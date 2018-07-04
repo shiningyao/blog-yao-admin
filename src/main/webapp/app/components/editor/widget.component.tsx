@@ -7,7 +7,8 @@ export enum WidgetEditorType {
 }
 
 interface WidgetEditorProps {
-    type: WidgetEditorType
+    type: WidgetEditorType,
+    onChange?: Function
 }
 
 export class WidgetEditor extends Component<WidgetEditorProps, {}> {

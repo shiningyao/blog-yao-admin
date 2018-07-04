@@ -3,7 +3,7 @@ import { Component, SyntheticEvent } from "react";
 import Http from '@/shared/utils/http';
 import * as classNames from 'classnames';
 import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { NavMenu, NavSubMenu } from './styles';
 import { Menu } from '@/domain/menu';
@@ -11,8 +11,9 @@ import { LocationDescriptorObject, Path } from 'history';
 
 import isObject = require('lodash/isObject');
 import isString = require('lodash/isString');
+import isArray = require('lodash/isArray');
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { setBreadcrumbs } from '@/shared/actions';
 
 class SidebarNav extends Component<any, {
@@ -31,6 +32,62 @@ class SidebarNav extends Component<any, {
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if(prevProps.location !== this.props.location) {
+            this.onRouteChanged(this.props.location);
+        }
+    }
+
+    onRouteChanged(location) {
+
+        const allMenus = [];
+        const rootMenus = [].concat(...Object.values(this.state.menus));
+        const breadcrumbs = [];
+
+        const findActiveMenu = (menus) => {
+            let activeMenu;
+            
+            function step(menus, parent?) {
+                menus.forEach(menu => {
+                    if(parent) {
+                        menu.$parent = parent;
+                    }
+                    allMenus.push(menu);
+                    
+                    function isCurrent(currentPathname, menu) {
+                        const pathname = isObject(menu.to) ? menu.to.pathname : menu.to;
+                        return currentPathname === pathname;
+                    }
+                    
+                    if(isArray(menu.children) && menu.children.length > 0) {
+                        step(menu.children, menu);
+                    } else {
+                        if(isCurrent(location.pathname, menu)) {
+                            activeMenu = menu;
+                        }
+                    }
+                });
+            }
+
+            step(menus);
+
+            return activeMenu;
+        }
+
+        const activeMenu = findActiveMenu(rootMenus);
+        if(activeMenu) {
+            initBreadcrumbs(activeMenu);
+            this.props.setBreadcrumbs(breadcrumbs);
+        }
+        function initBreadcrumbs(menu) {
+            breadcrumbs.unshift(menu);
+            if(menu.$parent) {
+                menu.$parent.$isOpen = true;
+                initBreadcrumbs(menu.$parent);
+            }
+        }
+    }
+
     componentDidMount() {
         this.http.getData<{
              [category: string]: [Menu]
@@ -38,6 +95,41 @@ class SidebarNav extends Component<any, {
             this.setState({
                 menus: data
             });
+            const menus = [].concat(...Object.values(data));
+            const breadcrumbs = [];
+            const initMenus = (menus, parent?, location?) => {
+                breadcrumbs.length = 0;
+                location = location || this.props.location;
+                menus.forEach((menu) => {
+                    if(parent) {
+                        menu.$parent = parent;
+                    }
+
+                    function initBreadcrumbs(menu) {
+                        breadcrumbs.unshift(menu);
+                        if(menu.$parent) {
+                            menu.$parent.$isOpen = true;
+                            initBreadcrumbs(menu.$parent);
+                        }
+                    }
+    
+                    function isCurrent(currentPathname, menu) {
+                        const pathname = isObject(menu.to) ? menu.to.pathname : menu.to;
+                        return currentPathname === pathname;
+                    }
+    
+                    if(isArray(menu.children) && menu.children.length > 0) {
+                        initMenus(menu.children, menu);
+                    } else {
+                        if(isCurrent(location.pathname, menu)) {
+                            initBreadcrumbs(menu);
+                        }
+                    }
+    
+                });
+            };
+            initMenus(menus);
+            this.props.setBreadcrumbs(breadcrumbs);
         });
     }
 
@@ -50,14 +142,15 @@ class SidebarNav extends Component<any, {
                             if(!menu.children) {
                                 menu.children = [];
                             }
-                            if(this.props.location.state && this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
+                            
+                            if(this.props.location.state && this.props.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
                                 this.firstRender = false;
                                 menu.$isOpen = true;
                             }
                             
                             return (
                                 <li key={menu.id} className={classNames({hasMenus: menu.children.length > 0, open: menu.$isOpen})}>
-                                    <NavLink to={this.getLinkTo(menu, parents)} exact={true} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
+                                    <NavLink to={menu.to || ''} exact={true} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
                                         <span className="menu-icon">
                                             <i className={menu.iconClass}></i>
                                         </span>
@@ -82,7 +175,7 @@ class SidebarNav extends Component<any, {
                                         transitionName="accordion-dropdown"
                                         transitionEnterTimeout={500}
                                         transitionLeaveTimeout={300}>
-                                        {menu.$isOpen || !this.state.loaded ? renderSubMenu.apply(this, [menu.children, [...parents, menu]]) : null}
+                                        {menu.$isOpen ? renderSubMenu.apply(this, [menu.children, [...parents, menu]]) : null}
                                     </ReactCSSTransitionGroup>
                                 </li>
                             ) 
@@ -102,13 +195,14 @@ class SidebarNav extends Component<any, {
                             if(!menu.children) {
                                 menu.children = [];
                             }
-                            if(this.props.location.state && this.props.location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
+                            
+                            if(this.props.location.state && this.props.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
                                 this.firstRender = false;
                                 menu.$isOpen = true;
                             }
                             return ( 
                                 <li key={menu.id} className={classNames({hasMenus: menu.children.length > 0, open: menu.$isOpen})}>
-                                    <NavLink to={this.getLinkTo(menu)} onClick={this.menuClick.bind(this, menu, menus)} isActive={(match, location) => this.isRootMenuActive(menu, match, location)} activeClassName="active">
+                                    <NavLink to={menu.to || ''} onClick={this.menuClick.bind(this, menu, menus)} isActive={(match, location) => this.isRootMenuActive(menu, match, location)} activeClassName="active">
                                         <span className="menu-icon">
                                             <i className={menu.iconClass}></i>
                                         </span>
@@ -133,7 +227,7 @@ class SidebarNav extends Component<any, {
                                         transitionName="accordion-dropdown"
                                         transitionEnterTimeout={500}
                                         transitionLeaveTimeout={300}>
-                                        {menu.$isOpen || !this.state.loaded ? renderSubMenu.bind(this)(menu.children, [menu]) : null}
+                                        {menu.$isOpen ? renderSubMenu.bind(this)(menu.children, [menu]) : null}
                                     </ReactCSSTransitionGroup>
                                 </li>
                             )
@@ -185,53 +279,47 @@ class SidebarNav extends Component<any, {
         });
     }
 
-    getLinkTo(menu: Menu, parents: Menu[] = []): LocationDescriptorObject | Path {
+    // getLinkTo(menu: Menu, parents: Menu[] = []): LocationDescriptorObject | Path {
 
-        function getBreadcrumbs(menus: Menu[]) {
-            return menus.filter(menu => menu.breadcrumb).map(menu => {
-                if(menu.breadcrumb === true) {
-                    return {
-                        name: menu.title,
-                        i18n: menu.i18n,
-                        to: menu.to || '/'
-                    };
-                }
+    //     function getBreadcrumbs(menus: Menu[]) {
+    //         return menus.filter(menu => menu.breadcrumb).map(menu => {
+    //             if(menu.breadcrumb === true) {
+    //                 return {
+    //                     name: menu.title,
+    //                     i18n: menu.i18n,
+    //                     to: menu.to || '/'
+    //                 };
+    //             }
 
-                if(isObject(menu.breadcrumb)) {
-                    return Object.assign({
-                        to: menu.to || '/'
-                    }, menu.breadcrumb);
-                }
-            });
-        }
+    //             if(isObject(menu.breadcrumb)) {
+    //                 return Object.assign({
+    //                     to: menu.to || '/'
+    //                 }, menu.breadcrumb);
+    //             }
+    //         });
+    //     }
 
-        if(menu.to) {
-            const breadcrumbs = getBreadcrumbs([...parents, menu]);
-            this.props.setBreadcrumbs(breadcrumbs);
-            if(isString(menu.to)) {
-                return {
-                    pathname: menu.to,
-                    state: {
-                        breadcrumbs
-                    }
-                };
-            }
-            if(isObject(menu.to)) {
-                return Object.assign({
-                    state: {
-                        breadcrumbs
-                    }
-                }, menu.to);
-            }
-        }
+    //     if(menu.to) {
+    //         const breadcrumbs = getBreadcrumbs([...parents, menu]);
+    //         if(isString(menu.to)) {
+    //             return {
+    //                 pathname: menu.to,
+    //                 state: {
+    //                     breadcrumbs
+    //                 }
+    //             };
+    //         }
+    //         if(isObject(menu.to)) {
+    //             return Object.assign({
+    //                 state: {
+    //                     breadcrumbs
+    //                 }
+    //             }, menu.to);
+    //         }
+    //     }
 
-        if(!this.state.loaded) {
-            this.setState({
-                loaded: true
-            });
-        }
-        return '';
-    }
+    //     return '';
+    // }
 
     isRootMenuActive(menu, match, location) {
         if(location.state && location.getBreadcrumbs) {
@@ -239,6 +327,7 @@ class SidebarNav extends Component<any, {
         }
         return false;
     }
+
 }
 
 function mapStateToProps(state) {
@@ -253,7 +342,10 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(
-    null,
-    mapDispatchToProps
+export default compose(
+    withRouter,
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )
 )(SidebarNav);

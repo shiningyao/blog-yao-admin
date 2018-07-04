@@ -5,6 +5,7 @@ import { PageBody, PageWrapper } from '@/pages/styles';
 import range = require('lodash/range');
 import { ManagementPageWrapper, ManagementPageHeader } from '@/pages/articles/management.styles';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const list = range(0, 10);
 
@@ -25,7 +26,7 @@ function rowRenderer({
     );
 }
 
-export class ArticleManagementPage extends Component<any, any> {
+class ArticleManagementPage extends Component<any, any> {
 
     private listContainerRef: React.RefObject<HTMLDivElement>;
 
@@ -75,10 +76,10 @@ export class ArticleManagementPage extends Component<any, any> {
                                         </NavLink>
                                     </li>
                                     {
-                                        this.props.location.state.breadcrumbs.map(breadcrumb => (
-                                            <li key={breadcrumb.name} className="breadcrumb-item">
+                                        this.props.breadcrumbs.map(breadcrumb => (
+                                            <li key={breadcrumb.id} className="breadcrumb-item">
                                                 <a href="javascript:void(0)">
-                                                    {breadcrumb.name}
+                                                    {breadcrumb.title}
                                                 </a>
                                             </li>
                                         ))
@@ -113,3 +114,13 @@ export class ArticleManagementPage extends Component<any, any> {
     }
 
 }
+
+function mapStateToProps(state) {
+    return {
+        breadcrumbs: state.breadcrumbs
+    };
+}
+
+export default connect(
+    mapStateToProps
+)(ArticleManagementPage);
