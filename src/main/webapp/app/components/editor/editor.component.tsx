@@ -3,25 +3,31 @@ import { Component, RefObject } from 'react';
 import * as classNames from 'classnames';
 import { EditorWrapper } from '@/components/editor/styles';
 
+import isFunction = require('lodash/isFunction');
+
 interface ArticleEditorProps {
     className?: string,
     onChange?: Function
 };
 
 interface ArticleEditorStates {
-    editorLoaded: boolean
+    editorLoaded: boolean,
+    isEmpty: boolean
 }
 
 export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorStates> {
     
     private editorRef: RefObject<HTMLDivElement>;
+    private editor: any;
 
     constructor(props) {
         super(props);
         this.editorRef = React.createRef();
         this.state = {
-            editorLoaded: false
+            editorLoaded: false,
+            isEmpty: true
         };
+        this.onEditorBlur = this.onEditorBlur.bind(this);
     }
 
     componentDidMount() {
@@ -109,10 +115,16 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                     'undo', 'redo'
                 ]
             }).then((editor) => {
+                this.editor = editor;
+                if(!this.isEmpty()) {
+                    this.setState({
+                        isEmpty: false
+                    });
+                }
                 editor.ui.view.editable.editableElement.setAttribute('spellcheck', 'false');
-                editor.model.document.on('change', () => {
-                    console.log(123123);
-                });
+                // editor.model.document.on('change', () => {
+                    
+                // });
                 this.setState({
                     editorLoaded: true
                 });
@@ -120,10 +132,45 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
         }, null, 'ckeditor');
     }
 
+    isEmpty() {
+        if(!this.editor) {
+            return true;
+        }
+        return this.editor.getData() === '<p>&nbsp;</p>'
+    }
+
+    onEditorBlur() {
+
+        if(!this.editor) {
+            return false;
+        }
+        
+        if(this.isEmpty()) {
+            this.setState({
+                isEmpty: true
+            });
+        } else {
+            this.setState({
+                isEmpty: false
+            });
+        }
+
+        if(isFunction(this.props.onChange)) {
+            this.props.onChange({
+                content: this.editor.getData()
+            });
+        }
+    }
+
     render() {
         return (
-            <EditorWrapper className={classNames([this.props.className, {'hidden': !this.state.editorLoaded}])}>
-                <div ref={this.editorRef}>
+            <EditorWrapper 
+                className={classNames([
+                    this.props.className, 
+                    {'hidden': !this.state.editorLoaded},
+                    {'empty': this.state.isEmpty}
+                ])}>
+                <div ref={this.editorRef} placeholder="Write article content from here..." onBlur={this.onEditorBlur}>
                     {this.props.children}
                 </div>
             </EditorWrapper>

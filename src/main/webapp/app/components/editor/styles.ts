@@ -43,7 +43,7 @@ export const EditorWrapper = styled.div`
         }
         
         .ck-content {
-            min-height: 300px;
+            min-height: 100px;
             font-weight: 300;
         }
 
@@ -53,6 +53,18 @@ export const EditorWrapper = styled.div`
     }
     .ck.ck-editor__editable_inline {
         /* border: 1px solid rgba(0,0,0,.15); */
+    }
+
+    &.empty .ck-content:before{
+        content: attr(placeholder);
+        display: block;
+        font-family: 'Roboto Slab',serif;
+        font-weight: 300;
+        color: #bbbbbb;
+    }
+
+    .ck-content:focus:before{
+        display: none;
     }
 `;
 

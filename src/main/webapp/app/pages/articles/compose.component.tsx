@@ -7,15 +7,20 @@ import { PageHeader, PageBody } from '@/pages/styles';
 import { ArticleEditor } from '@/components/editor/editor.component';
 import { connect } from 'react-redux';
 import { Article } from '@/domain/article';
+import { NavLink } from 'react-router-dom';
 
 class ComposePage extends Component<any, any> {
 
+    private article = {};
+
     constructor(props) {
         super(props);
+        this.onChange = this.onChange.bind(this);
     }
 
     onChange(article: Article) {
-        console.log(article);
+        Object.assign(this.article, article);
+        console.log(this.article);
     }
 
     render() {
@@ -43,9 +48,15 @@ class ComposePage extends Component<any, any> {
                                     {
                                         this.props.breadcrumbs.map(breadcrumb => (
                                             <li key={breadcrumb.id} className="breadcrumb-item">
-                                                <a href="javascript:void(0)">
-                                                    {breadcrumb.title}
-                                                </a>
+                                                {
+                                                    breadcrumb.to ? 
+                                                    <NavLink to={breadcrumb.to}>
+                                                        {breadcrumb.title}
+                                                    </NavLink> : 
+                                                    <a href="javascript:void(0)">
+                                                        {breadcrumb.title}
+                                                    </a>
+                                                }
                                             </li>
                                         ))
                                     }

@@ -6,6 +6,7 @@ import { PageHeader, PageBody } from "@/pages/styles";
 import { EditorPageWrapper } from "@/pages/articles/editor.styles.ts";
 import { WidgetEditor, WidgetEditorType } from "@/components/editor/widget.component";
 import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 class ArticleEditorPage extends Component<any, any> {
 
@@ -38,9 +39,15 @@ class ArticleEditorPage extends Component<any, any> {
                                     {
                                         this.props.breadcrumbs.map(breadcrumb => (
                                             <li key={breadcrumb.id} className="breadcrumb-item">
-                                                <a href="javascript:void(0)">
-                                                    {breadcrumb.title}
-                                                </a>
+                                                {
+                                                    breadcrumb.to ? 
+                                                    <NavLink to={breadcrumb.to}>
+                                                        {breadcrumb.title}
+                                                    </NavLink> : 
+                                                    <a href="javascript:void(0)">
+                                                        {breadcrumb.title}
+                                                    </a>
+                                                }
                                             </li>
                                         ))
                                     }

@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import * as classNames from 'classnames';
 import { HeaderWrapper } from '@/components/editor/styles';
 
+import isFunction = require('lodash/isFunction');
+import * as moment from 'moment';
+import {Moment} from 'moment';
+
 interface HeaderEditorProps {
     value?: string,
     onChange?: Function,
@@ -12,21 +16,51 @@ interface HeaderEditorProps {
 
 interface HeaderEditorStates {
     value?: string,
-    focused: boolean
+    focused: boolean,
+    postDateFormated: string
 }
 
 class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
+    
+    private postDate: Moment
 
     constructor(props) {
         super(props);
+        this.postDate = moment();
+        moment.locale(this.props.locale.language);
         this.state = {
             value: this.props.value,
-            focused: false
+            focused: false,
+            postDateFormated: this.postDate.format('ll')
         };
+        this.onBlur = this.onBlur.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        if(!prevProps.locale === this.props.locale) {
+            moment.locale(this.props.locale.language);
+            this.setState({
+                postDateFormated: this.postDate.format('ll')
+            });
+        }
     }
 
     componentDidMount () {
         
+    }
+
+    onBlur (event) {
+        this.setState({
+            focused: false
+        });
+        const title = event.target.innerText.trim();
+        if(title !== '') {
+            if(isFunction(this.props.onChange)) {
+                this.props.onChange({
+                    title
+                });
+            }
+        }
     }
 
     render() {
@@ -41,7 +75,7 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
                 </div>
                 <h2 className="article-title" 
                     onFocus={() => this.setState({focused: true})} 
-                    onBlur={() => this.setState({focused: false})}
+                    onBlur={this.onBlur}
                     contentEditable={true} spellCheck={false}
                     suppressContentEditableWarning={true}
                     placeholder="Enter article title here.">
@@ -49,7 +83,7 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
                 </h2>
                 <ul className="entry-meta">
                     <li className="publish-date">
-                        POSTED ON <time className="entry-date">JAN, 2015</time>
+                        POSTED ON <time className="entry-date">{this.state.postDateFormated}</time>
                     </li>
                     <li className="author">
                         BY <a href="javascript:void(0)">{this.props.userInfo.login}</a>
@@ -66,7 +100,8 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
 
 function mapStateToProps(state) {
     return {
-        userInfo: state.userInfo
+        userInfo: state.userInfo,
+        locale: state.locale
     };
 }
 

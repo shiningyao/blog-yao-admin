@@ -78,9 +78,15 @@ class ArticleManagementPage extends Component<any, any> {
                                     {
                                         this.props.breadcrumbs.map(breadcrumb => (
                                             <li key={breadcrumb.id} className="breadcrumb-item">
-                                                <a href="javascript:void(0)">
-                                                    {breadcrumb.title}
-                                                </a>
+                                                {
+                                                    breadcrumb.to ? 
+                                                    <NavLink to={breadcrumb.to}>
+                                                        {breadcrumb.title}
+                                                    </NavLink> : 
+                                                    <a href="javascript:void(0)">
+                                                        {breadcrumb.title}
+                                                    </a>
+                                                }
                                             </li>
                                         ))
                                     }
