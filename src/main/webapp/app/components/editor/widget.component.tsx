@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Component } from "react";
 import { ImageWidget } from '@/components/editor/widgets/image.component';
+import { Subject } from 'rxjs';
 
 export enum WidgetEditorType {
     Image

@@ -5,8 +5,9 @@ import * as classNames from 'classnames';
 import { HeaderWrapper } from '@/components/editor/styles';
 
 import isFunction = require('lodash/isFunction');
-import * as moment from 'moment';
+import moment, { defineLocale } from '@/shared/utils/moment/moment';
 import {Moment} from 'moment';
+import { Subject } from 'rxjs';
 
 interface HeaderEditorProps {
     value?: string,
@@ -27,7 +28,8 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
     constructor(props) {
         super(props);
         this.postDate = moment();
-        moment.locale(this.props.locale.language);
+        defineLocale(this.props.locale.language);
+        this.postDate.locale(this.props.locale.language);
         this.state = {
             value: this.props.value,
             focused: false,
@@ -37,8 +39,9 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
     }
 
     componentDidUpdate(prevProps) {
-        if(!prevProps.locale === this.props.locale) {
-            moment.locale(this.props.locale.language);
+        if(!(prevProps.locale === this.props.locale)) {
+            defineLocale(this.props.locale.language);
+            this.postDate.locale(this.props.locale.language);
             this.setState({
                 postDateFormated: this.postDate.format('ll')
             });
@@ -53,11 +56,15 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
         this.setState({
             focused: false
         });
+        const publishDate = this.postDate.toDate().getTime();
+        const author = this.props.userInfo.login;
         const title = event.target.innerText.trim();
         if(title !== '') {
             if(isFunction(this.props.onChange)) {
                 this.props.onChange({
-                    title
+                    title,
+                    publishDate,
+                    author
                 });
             }
         }

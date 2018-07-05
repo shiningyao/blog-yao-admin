@@ -8,7 +8,7 @@ export interface ArticleHeader {
     author: string,
     category: string,
     content: string,
-    publishDate: Date,
+    publishDate: number,
     status: PostStatus,
     modifyDate: Date
 }

@@ -6,20 +6,26 @@ import { EditorPageWrapper } from '@/pages/articles/editor.styles';
 import { PageHeader, PageBody } from '@/pages/styles';
 import { ArticleEditor } from '@/components/editor/editor.component';
 import { connect } from 'react-redux';
-import { Article } from '@/domain/article';
+import { Article, PostStatus } from '@/domain/article';
 import { NavLink } from 'react-router-dom';
 
 class ComposePage extends Component<any, any> {
 
-    private article = {};
+    private article = {
+        status: PostStatus.OFFLINE
+    };
 
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     onChange(article: Article) {
         Object.assign(this.article, article);
+    }
+
+    onSubmit() {
         console.log(this.article);
     }
 
@@ -67,9 +73,11 @@ class ComposePage extends Component<any, any> {
                 </PageHeader>
                 <PageBody>
                     <div className="card">
-                        {/* <div className="card-header">
-                            Article Editor
-                        </div> */}
+                        <div className="card-header">
+                            <a onClick={this.onSubmit} href="javascript:void(0)" className="btn btn-primary pull-right">
+                                Submit
+                            </a>
+                        </div>
                         <div className="card-body">
                             <HeaderEditor onChange={this.onChange}></HeaderEditor>
                             <WidgetEditor onChange={this.onChange} type={WidgetEditorType.Image}></WidgetEditor>

@@ -4,6 +4,7 @@ import * as classNames from 'classnames';
 import { EditorWrapper } from '@/components/editor/styles';
 
 import isFunction = require('lodash/isFunction');
+import { Subject } from 'rxjs';
 
 interface ArticleEditorProps {
     className?: string,
@@ -149,16 +150,16 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
             this.setState({
                 isEmpty: true
             });
+            return false;
         } else {
             this.setState({
                 isEmpty: false
             });
-        }
-
-        if(isFunction(this.props.onChange)) {
-            this.props.onChange({
-                content: this.editor.getData()
-            });
+            if(isFunction(this.props.onChange)) {
+                this.props.onChange({
+                    content: this.editor.getData()
+                });
+            }
         }
     }
 
