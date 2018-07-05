@@ -17,7 +17,7 @@ public class AccountResource {
 
     private final UserService userService;
 
-    public AccountResource(UserService userService, GraphQlUtility utility) {
+    public AccountResource(UserService userService) {
         this.userService = userService;
     }
 
