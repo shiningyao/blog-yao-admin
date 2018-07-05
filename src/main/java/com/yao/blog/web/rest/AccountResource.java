@@ -17,7 +17,7 @@ public class AccountResource {
 
     private final UserService userService;
 
-    public AccountResource(UserService userService) {
+    public AccountResource(UserService userService, GraphQlUtility utility) {
         this.userService = userService;
     }
 
@@ -27,4 +27,5 @@ public class AccountResource {
                 .map(UserDTO::new)
                 .orElseThrow((() -> new InternalServerErrorException("User could not be found")));
     }
+
 }

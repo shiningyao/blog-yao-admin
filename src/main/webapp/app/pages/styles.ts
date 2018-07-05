@@ -11,7 +11,7 @@ export const PageHeader = styled.div`
     margin-bottom: 30px;
     background-color: #fff;
     padding: 30px;
-    
+
     & > .row {
         align-items: flex-end;
     }
@@ -78,6 +78,13 @@ export const PageBody = styled.div`
     flex: 1 1 0%;
     & > .card {
         height: 100%;
+
+        .card-header {
+            &.with-border {
+                border-bottom: 1px solid rgba(178,186,194,.24);
+            }
+        }
+
         .card-body {
             height: 100%;
         }

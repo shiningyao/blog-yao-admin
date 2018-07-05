@@ -21,6 +21,7 @@ public class UserService {
     }
 
     public Optional<User> getUserWithAuthorities() {
+        System.out.println(SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin).get());
         return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
     }
 }

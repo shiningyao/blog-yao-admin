@@ -1,0 +1,26 @@
+scalar Date
+
+scheme {
+    query: Query
+}
+
+type Query {
+    users: [User]
+    user(id: String): User
+}
+
+type User {
+    id: String
+    login: String
+    firstName: String
+    lastName: String
+    email: String
+    activated: Boolean
+    langKey: String
+    imageUrl: String
+    createdBy: String
+    createdDate: Date
+    lastModifiedBy: String
+    lastModifiedDate: Date
+    authorities: [String]
+}

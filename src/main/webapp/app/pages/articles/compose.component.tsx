@@ -73,7 +73,7 @@ class ComposePage extends Component<any, any> {
                 </PageHeader>
                 <PageBody>
                     <div className="card">
-                        <div className="card-header">
+                        <div className="card-header with-border">
                             <a onClick={this.onSubmit} href="javascript:void(0)" className="btn btn-primary pull-right">
                                 Submit
                             </a>

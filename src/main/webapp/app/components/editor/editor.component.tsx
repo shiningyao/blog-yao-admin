@@ -112,7 +112,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                     'bold', 'italic', 'fontSize', 'fontFamily', 'highlight', '|', 
                     'link', 'bulletedList', 
                     'numberedList', 'imageUpload', 'blockquote',
-                    'alignment', '|',
+                    'alignment:left', 'alignment:center', 'alignment:right', '|',
                     'undo', 'redo'
                 ]
             }).then((editor) => {
