@@ -1,6 +1,6 @@
-scalar Date
+# scalar Date
 
-scheme {
+schema {
     query: Query
 }
 
@@ -19,8 +19,8 @@ type User {
     langKey: String
     imageUrl: String
     createdBy: String
-    createdDate: Date
+    createdDate: String
     lastModifiedBy: String
-    lastModifiedDate: Date
+    lastModifiedDate: String
     authorities: [String]
 }
