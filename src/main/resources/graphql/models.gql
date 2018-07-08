@@ -6,12 +6,12 @@ schema {
 
 type Query {
     users: [User]
-    user(id: String): User
+    user(login: String): User
 }
 
 type User {
-    id: String
-    login: String
+    id: ID!
+    login: String!
     firstName: String
     lastName: String
     email: String
