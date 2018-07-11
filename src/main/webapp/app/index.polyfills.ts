@@ -1,4 +1,7 @@
 import 'core-js/es6/promise';
+import 'core-js/es6/map';
+import 'core-js/es6/set';
+import 'core-js/es6/object';
 
 export const polyfillLoader = new Promise<void>((resolve, reject) => {
     if(!global.Intl) {

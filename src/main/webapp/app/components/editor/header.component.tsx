@@ -56,8 +56,11 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
         this.setState({
             focused: false
         });
-        const publishDate = this.postDate.toDate().getTime();
-        const author = this.props.userInfo.login;
+        const publishDate = this.postDate.toISOString();
+        const author = {
+            id: this.props.userInfo.id,
+            login: this.props.userInfo.login
+        }
         const title = event.target.innerText.trim();
         if(title !== '') {
             if(isFunction(this.props.onChange)) {

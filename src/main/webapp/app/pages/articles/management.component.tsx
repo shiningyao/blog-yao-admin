@@ -6,25 +6,11 @@ import range = require('lodash/range');
 import { ManagementPageWrapper, ManagementPageHeader } from '@/pages/articles/management.styles';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+import * as moment from 'moment';
 
 const list = range(0, 10);
-
-function rowRenderer({
-    key,         // Unique key within array of rows
-    index,       // Index of row within collection
-    isScrolling, // The List is currently being scrolled
-    isVisible,   // This row is visible within the List (eg it is not an overscanned row)
-    style        // Style object to be applied to row (to position it)
-  }) {
-    return (
-        <div className="article-list-item"
-          key={key}
-          style={style}
-        >
-          {list[index]}
-        </div>
-    );
-}
 
 class ArticleManagementPage extends Component<any, any> {
 
@@ -98,19 +84,91 @@ class ArticleManagementPage extends Component<any, any> {
                 <PageBody>
                     <div className="card">
                         <div className="card-header">
-                            <div>
-                                <NavLink to="/articles/compose" className="btn btn-primary">Compose</NavLink>
-                            </div>
-                            <div>Article Title</div>
+                            <NavLink to="/articles/compose" className="btn btn-primary">Compose</NavLink>
+                            <ul className="pull-right category-list">
+                                <li>
+                                    <a className="active" href="javascript: void(0)">All</a>
+                                </li>
+                                <li>
+                                    <a href="javascript: void(0)">Fashion</a>
+                                </li>
+                                <li>
+                                    <a href="javascript: void(0)">Health</a>
+                                </li>
+                                <li>
+                                    <a href="javascript: void(0)">Technology</a>
+                                </li>
+                            </ul>
                         </div>
                         <div className="card-body">
                             <div className="article-list" ref={this.listContainerRef} style={{height: '100%'}}>
-                                <List width={this.state.listWidth}
-                                    height={this.state.listHeight}
-                                    rowCount={this.state.list.length}
-                                    rowHeight={97}
-                                    rowRenderer={rowRenderer}>
-                                </List>
+                                <Query query={gql`
+                                    query {
+                                        articles {
+                                            title,
+                                            author {
+                                                login
+                                            },
+                                            publishDate
+                                        }
+                                    }
+                                `} variables={{
+                                    
+                                }}>
+                                    {({loading, error, data}) => {
+                                        if(loading) return <p>Loading...</p>;
+                                        if(error) return <p>{error.message}</p>;
+
+                                        const articles = data.articles || [];
+
+                                        function rowRenderer({
+                                            key,         // Unique key within array of rows
+                                            index,       // Index of row within collection
+                                            isScrolling, // The List is currently being scrolled
+                                            isVisible,   // This row is visible within the List (eg it is not an overscanned row)
+                                            style        // Style object to be applied to row (to position it)
+                                          }) {
+
+                                            function renderDuration(instant: moment.Moment) {
+                                                const duration = moment.duration(instant.diff(moment.now()));
+                                                return (
+                                                    <span>
+                                                        {duration.humanize(true)}
+                                                    </span>
+                                                )
+                                            }
+
+                                            return (
+                                                <div className="article-list-item"
+                                                    key={key}
+                                                    style={style}
+                                                >
+                                                    <div className="article-summary">
+                                                        <h4>{articles[index].title}</h4>
+                                                        <p>
+                                                            <span className="category-badge label label-warning">BLOG</span>
+                                                            <span className="article-meta">{articles[index].author.login}</span>
+                                                            <span className="article-meta">{renderDuration(moment.parseZone(articles[index].publishDate))}</span>
+                                                            <span className="article-meta">4325 Reading</span>
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <img className="article-thumb" src="http://themewing.com/wordpress/easyblog/wp-content/uploads/2015/01/demo2-1024x539.jpg" alt=""/>
+                                                    </div>
+                                                </div>
+                                            );;
+                                        }
+
+                                        return (
+                                            <List width={this.state.listWidth}
+                                                height={this.state.listHeight}
+                                                rowCount={articles.length}
+                                                rowHeight={97}
+                                                rowRenderer={rowRenderer}>
+                                            </List>
+                                        );
+                                    }}
+                                </Query>
                             </div>
                         </div>
                     </div>

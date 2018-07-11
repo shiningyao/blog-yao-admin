@@ -35,7 +35,9 @@ module.exports = function(_path) {
         module: {
             rules: [{
                 test: /\.(tsx|ts)?$/,
-                use: 'awesome-typescript-loader'
+                use: {
+                    loader: 'awesome-typescript-loader'
+                }
             }, {
                 test: /\.(sa|sc|c)ss$/,
                 use: [

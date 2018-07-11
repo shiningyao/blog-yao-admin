@@ -121,6 +121,7 @@ dependencies {
     compile group: 'org.zalando', name: 'problem-spring-web', version: '0.23.0'
     compile group: 'com.graphql-java', name: 'graphql-spring-boot-starter', version: '4.2.0'
     compile group: 'com.graphql-java', name: 'graphql-java-tools', version: '5.1.0'
+    compile group: 'org.json', name: 'json', version: '20180130'
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     compileOnly 'org.projectlombok:lombok:1.18.0'
 	apt "org.projectlombok:lombok:1.18.0"

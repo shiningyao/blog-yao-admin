@@ -6,17 +6,20 @@ import { EditorPageWrapper } from '@/pages/articles/editor.styles';
 import { PageHeader, PageBody } from '@/pages/styles';
 import { ArticleEditor } from '@/components/editor/editor.component';
 import { connect } from 'react-redux';
-import { Article, PostStatus } from '@/domain/article';
+import { Article, PostState } from '@/domain/article';
 import { NavLink } from 'react-router-dom';
+import Http from '@/shared/utils/http';
 
 class ComposePage extends Component<any, any> {
 
     private article = {
-        status: PostStatus.OFFLINE
+        state: PostState.OFFLINE
     };
+    private http: Http;
 
     constructor(props) {
         super(props);
+        this.http = new Http();
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -26,7 +29,14 @@ class ComposePage extends Component<any, any> {
     }
 
     onSubmit() {
-        console.log(this.article);
+        this.http.post<Article, Article>('/api/articles', 
+            (this.article as Article), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).subscribe((res) => {
+                console.log(res);
+        });
     }
 
     render() {

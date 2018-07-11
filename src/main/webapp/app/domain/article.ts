@@ -1,15 +1,15 @@
-export enum PostStatus {
-    ONLINE = 'online',
-    OFFLINE = 'offline'
+export enum PostState {
+    ONLINE = 'ONLINE',
+    OFFLINE = 'OFFLINE'
 }
 
 export interface ArticleHeader {
     title: string,
-    author: string,
+    author: object,
     category: string,
     content: string,
-    publishDate: number,
-    status: PostStatus,
+    publishDate: string,
+    state: PostState,
     modifyDate: Date
 }
 

@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Observable, Observer, Subscriber } from 'rxjs';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { Observable, Observer } from 'rxjs';
 import * as Cookie from 'js-cookie';
 
 export default class Http {

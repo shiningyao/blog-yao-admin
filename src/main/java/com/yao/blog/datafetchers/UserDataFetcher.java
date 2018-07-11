@@ -2,6 +2,7 @@ package com.yao.blog.datafetchers;
 
 import java.util.Map;
 
+import com.yao.blog.domain.Article;
 import com.yao.blog.domain.User;
 import com.yao.blog.repository.UserRepository;
 
@@ -23,6 +24,11 @@ public class UserDataFetcher implements DataFetcher<User> {
 	@Override
 	public User get(DataFetchingEnvironment environment) {
         Map<String, Object> args = environment.getArguments();
+        Object source = environment.getSource();
+        if(source instanceof Article) {
+            Article article = (Article) source;
+            return article.getAuthor();
+        }
         String login = String.valueOf(args.get("login"));
         User user = userRepository
             .findOneByLogin(login).get();

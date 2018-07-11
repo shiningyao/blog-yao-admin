@@ -16,6 +16,7 @@ import javax.cache.spi.CachingProvider;
 import com.yao.blog.config.BlogYaoProperties;
 import com.yao.blog.config.BlogYaoProperties.Cache.Ehcache;
 import com.yao.blog.datafetchers.AllUsersDataFetcher;
+import com.yao.blog.datafetchers.ArticlesDataFetcher;
 import com.yao.blog.datafetchers.AuthoritiesDataFetcher;
 import com.yao.blog.datafetchers.UserDataFetcher;
 
@@ -58,6 +59,7 @@ public class GraphQlUtility {
 	private AllUsersDataFetcher allUsersDataFetcher;
     private UserDataFetcher userDataFetcher;
     private AuthoritiesDataFetcher authoritiesDataFetcher;
+    private ArticlesDataFetcher articlesDataFetcher;
     private BlogYaoProperties blogYaoProperties;
 
     @Autowired
@@ -65,11 +67,13 @@ public class GraphQlUtility {
         AllUsersDataFetcher allUsersDataFetcher,
         UserDataFetcher userDataFetcher,
         AuthoritiesDataFetcher authoritiesDataFetcher,
+        ArticlesDataFetcher articlesDataFetcher,
         BlogYaoProperties blogYaoProperties
         ) {
         this.allUsersDataFetcher = allUsersDataFetcher;
         this.userDataFetcher = userDataFetcher;
         this.authoritiesDataFetcher = authoritiesDataFetcher;
+        this.articlesDataFetcher = articlesDataFetcher;
         this.blogYaoProperties = blogYaoProperties;
     }
     
@@ -114,10 +118,14 @@ public class GraphQlUtility {
                     .type("Query", typeWiring -> typeWiring
                         .dataFetcher("users", allUsersDataFetcher)
                         .dataFetcher("user", userDataFetcher)
+                        .dataFetcher("articles", articlesDataFetcher)
                     )
                     .type("User", typeWiring -> typeWiring
                         .dataFetcher("authorities", authoritiesDataFetcher)
                     )
+                    .type("Article", typeWiring -> typeWiring
+                        .dataFetcher("author", userDataFetcher)
+                    )   
                     .build();
 	}
 }

@@ -1,5 +1,6 @@
 .gradle
 .idea/
+.awcache/
 /*.iml
 bin
 build

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Component, RefObject } from 'react';
+import { Query } from "react-apollo";
+import gql from 'graphql-tag';
 import * as classNames from 'classnames';
 import { EditorWrapper } from '@/components/editor/styles';
-
 import isFunction = require('lodash/isFunction');
-import { Subject } from 'rxjs';
 
 interface ArticleEditorProps {
     className?: string,
@@ -33,7 +33,6 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
 
     componentDidMount() {
         require.ensure([
-            '@ckeditor/ckeditor5-editor-classic/src/classiceditor',
             '@ckeditor/ckeditor5-editor-inline/src/inlineeditor',
             '@ckeditor/ckeditor5-essentials/src/essentials',
             '@ckeditor/ckeditor5-autoformat/src/autoformat',
@@ -53,7 +52,6 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
             '@ckeditor/ckeditor5-alignment/src/alignment',
             '@ckeditor/ckeditor5-paragraph/src/paragraph'
         ], (require) => {
-            const ClassicEditor = require('@ckeditor/ckeditor5-editor-classic/src/classiceditor').default;
             const InlineEditor = require('@ckeditor/ckeditor5-editor-inline/src/inlineeditor').default;
             const Essentials = require('@ckeditor/ckeditor5-essentials/src/essentials').default;
             const Autoformat = require('@ckeditor/ckeditor5-autoformat/src/autoformat').default;
@@ -174,6 +172,22 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                 <div ref={this.editorRef} placeholder="Write article content from here..." onBlur={this.onEditorBlur}>
                     {this.props.children}
                 </div>
+                <Query query={gql`
+                    query findUser($login: String) {
+                        user(login: $login) {
+                            login
+                        }
+                    }
+                `} variables={{
+                    login: 'admin'
+                }}>
+                    {({ loading, error, data }) => {
+                        if (loading) return <p>Loading...</p>;
+                        if (error) return <p>Error :({error.message}</p>;
+
+                        return <div>{data.user.login}</div>;
+                    }}
+                </Query>
             </EditorWrapper>
         );
     }
