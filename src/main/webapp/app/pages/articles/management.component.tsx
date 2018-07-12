@@ -42,7 +42,7 @@ class ArticleManagementPage extends Component<any, any> {
     render() {
         return (
             <ManagementPageWrapper>
-                <ManagementPageHeader className="card">
+                <ManagementPageHeader className="card" style={{display: 'none'}}>
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="page-header-title">
@@ -84,7 +84,11 @@ class ArticleManagementPage extends Component<any, any> {
                 <PageBody>
                     <div className="card">
                         <div className="card-header">
-                            <NavLink to="/articles/compose" className="btn btn-primary">Compose</NavLink>
+                            <div className="btn-group pull-left" role="group">
+                                <NavLink to="/articles/compose" className="btn btn-primary">
+                                    <i className="icofont icofont-quill-pen"></i> Compose
+                                </NavLink>
+                            </div>
                             <ul className="pull-right category-list">
                                 <li>
                                     <a className="active" href="javascript: void(0)">All</a>
@@ -99,6 +103,19 @@ class ArticleManagementPage extends Component<any, any> {
                                     <a href="javascript: void(0)">Technology</a>
                                 </li>
                             </ul>
+                            <div className="text-center">
+                                <div className="btn-group" role="group">
+                                    <a href="javascript:void(0)" className="btn btn-primary btn-outline-primary">
+                                        Published
+                                    </a>
+                                    <a href="javascript:void(0)" className="btn btn-primary btn-outline-primary">
+                                        Drafts
+                                    </a>
+                                    <a href="javascript:void(0)" className="btn btn-primary btn-outline-primary">
+                                        Trashed
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div className="card-body">
                             <div className="article-list" ref={this.listContainerRef} style={{height: '100%'}}>
@@ -152,6 +169,31 @@ class ArticleManagementPage extends Component<any, any> {
                                                             <span className="article-meta">4325 Reading</span>
                                                         </p>
                                                     </div>
+                                                    <ul className="operations-col">
+                                                        <li>
+                                                            <a href="javascript: void(0)">
+                                                                <i className="action-icon icofont icofont-edit-alt"></i>
+                                                                Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript: void(0)">
+                                                                <i className="action-icon icofont icofont-eye-alt"></i>
+                                                                View
+                                                            </a>
+                                                        </li>
+                                                        <li className="move-to-trash">
+                                                            <a href="javascript: void(0)">
+                                                                <i className="action-icon icofont icofont-garbage"></i>
+                                                                Trash
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="javascript: void(0)">
+                                                                <i className="action-icon ti-more-alt"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
                                                     <div>
                                                         <img className="article-thumb" src="http://themewing.com/wordpress/easyblog/wp-content/uploads/2015/01/demo2-1024x539.jpg" alt=""/>
                                                     </div>

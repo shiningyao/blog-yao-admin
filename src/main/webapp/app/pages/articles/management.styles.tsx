@@ -41,6 +41,45 @@ export const ManagementPageWrapper = styled(PageWrapper)`
                 margin: 0;
             }
         }
+        
+        &:hover {
+            ul.operations-col {
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+
+        ul.operations-col {
+            list-style: none;
+            margin: 0 50px 0 10px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity .5s ease-in;
+            & > li {
+                display: inline-block;
+                margin: 0 15px;
+                & > a {
+                    color: #999999;
+                    text-decoration: none;
+                    &:hover {
+                        color: #333333;
+                    }
+                }
+
+                i {
+                    margin-right: 8px;
+                }
+
+                &.move-to-trash {
+                    & > a {
+                        color: rgba(255, 0, 0, .6);
+                        &:hover {
+                            color: red;
+                        }
+                    }
+                }
+            }
+        }
 
         .article-thumb {
             max-width: 100px;
