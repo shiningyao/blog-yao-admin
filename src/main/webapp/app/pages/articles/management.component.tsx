@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { Component } from "react";
 import { List } from 'react-virtualized';
-import { PageBody, PageWrapper } from '@/pages/styles';
-import range = require('lodash/range');
+import { PageBody } from '@/pages/styles';
 import { ManagementPageWrapper, ManagementPageHeader } from '@/pages/articles/management.styles';
+import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Query } from 'react-apollo';
+import * as classNames from 'classnames';
 import gql from 'graphql-tag';
 import * as moment from 'moment';
-
-const list = range(0, 10);
 
 class ArticleManagementPage extends Component<any, any> {
 
@@ -21,7 +20,7 @@ class ArticleManagementPage extends Component<any, any> {
         this.state = {
             listWidth: 300,
             listHeight: 300,
-            list
+            showSearchBar: false
         };
         this.listContainerRef = React.createRef<HTMLDivElement>();
     }
@@ -83,8 +82,26 @@ class ArticleManagementPage extends Component<any, any> {
                 </ManagementPageHeader>
                 <PageBody>
                     <div className="card">
-                        <div className="card-header">
+                        <div className={classNames(["card-header", {'show-search-bar': this.state.showSearchBar}])}>
+                            <ReactCSSTransitionGroup
+                                transitionName="accordion-dropdown"
+                                transitionEnterTimeout={500}
+                                transitionLeaveTimeout={300}
+                                component="form"
+                                className="search-bar">
+                                {this.state.showSearchBar ? (
+                                    <div className="input-group">
+                                        <input type="text" autoFocus={true} className="form-control" placeholder="Search..." />
+                                        <div className="input-group-append" onClick={() => this.setState({showSearchBar: false})}>
+                                            <span className="input-group-text ti-close"></span>
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </ReactCSSTransitionGroup>
                             <div className="btn-group pull-left" role="group">
+                                <a href="javascript:void(0)" className="search-btn btn btn-danger" onClick={() => this.setState({showSearchBar: true})}>
+                                    <i className="ti-search"></i>
+                                </a>
                                 <NavLink to="/articles/compose" className="btn btn-primary">
                                     <i className="icofont icofont-quill-pen"></i> Compose
                                 </NavLink>
@@ -101,6 +118,11 @@ class ArticleManagementPage extends Component<any, any> {
                                 </li>
                                 <li>
                                     <a href="javascript: void(0)">Technology</a>
+                                </li>
+                                <li>
+                                    <a href="javascript: void(0)">
+                                        <i className="ti-angle-down"></i>
+                                    </a>
                                 </li>
                             </ul>
                             <div className="text-center">
@@ -156,7 +178,7 @@ class ArticleManagementPage extends Component<any, any> {
                                             }
 
                                             return (
-                                                <div className="article-list-item"
+                                                <div className={classNames(['article-list-item'])}
                                                     key={key}
                                                     style={style}
                                                 >

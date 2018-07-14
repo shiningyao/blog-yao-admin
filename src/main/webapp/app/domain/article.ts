@@ -1,6 +1,7 @@
 export enum PostState {
     ONLINE = 'ONLINE',
-    OFFLINE = 'OFFLINE'
+    OFFLINE = 'OFFLINE',
+    TRASHED = 'TRASHED'
 }
 
 export interface ArticleHeader {

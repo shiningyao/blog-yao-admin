@@ -62,7 +62,7 @@ export const ManagementPageWrapper = styled(PageWrapper)`
                     color: #999999;
                     text-decoration: none;
                     &:hover {
-                        color: #333333;
+                        color: #478FCA;
                     }
                 }
 
@@ -72,9 +72,9 @@ export const ManagementPageWrapper = styled(PageWrapper)`
 
                 &.move-to-trash {
                     & > a {
-                        color: rgba(255, 0, 0, .6);
+                        color: rgba(221, 90, 67, .7);
                         &:hover {
-                            color: red;
+                            color: #DD5A43;
                         }
                     }
                 }
@@ -113,6 +113,50 @@ export const ManagementPageWrapper = styled(PageWrapper)`
 
     .card-header {
         border-bottom: 1px solid rgba(178,186,194,.15);
+        position: relative;
+
+        .search-btn {
+            &:focus {
+                box-shadow: none;
+            }
+        }
+        
+        &.show-search-bar {
+            & > .search-bar {
+                visibility: visible;
+            }
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            padding: inherit;
+            background-color: #FFFFFF;
+            visibility: hidden;
+            
+            .input-group-text {
+                background-color: transparent;
+                border-color: transparent;
+                color: #999999;
+                cursor: pointer;
+            }
+
+            .input-group-prepend {
+                visibility: hidden;
+            }
+
+            input {
+                border-color: transparent;
+                &:focus {
+                    outline: none;
+                    box-shadow: none;
+                }
+            }
+        }
     }
 
     .card-body {

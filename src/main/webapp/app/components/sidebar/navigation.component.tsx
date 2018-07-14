@@ -7,10 +7,8 @@ import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { NavMenu, NavSubMenu } from './styles';
 import { Menu } from '@/domain/menu';
-import { LocationDescriptorObject, Path } from 'history';
 
 import isObject = require('lodash/isObject');
-import isString = require('lodash/isString');
 import isArray = require('lodash/isArray');
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
@@ -278,48 +276,6 @@ class SidebarNav extends Component<any, {
             menus: this.state.menus
         });
     }
-
-    // getLinkTo(menu: Menu, parents: Menu[] = []): LocationDescriptorObject | Path {
-
-    //     function getBreadcrumbs(menus: Menu[]) {
-    //         return menus.filter(menu => menu.breadcrumb).map(menu => {
-    //             if(menu.breadcrumb === true) {
-    //                 return {
-    //                     name: menu.title,
-    //                     i18n: menu.i18n,
-    //                     to: menu.to || '/'
-    //                 };
-    //             }
-
-    //             if(isObject(menu.breadcrumb)) {
-    //                 return Object.assign({
-    //                     to: menu.to || '/'
-    //                 }, menu.breadcrumb);
-    //             }
-    //         });
-    //     }
-
-    //     if(menu.to) {
-    //         const breadcrumbs = getBreadcrumbs([...parents, menu]);
-    //         if(isString(menu.to)) {
-    //             return {
-    //                 pathname: menu.to,
-    //                 state: {
-    //                     breadcrumbs
-    //                 }
-    //             };
-    //         }
-    //         if(isObject(menu.to)) {
-    //             return Object.assign({
-    //                 state: {
-    //                     breadcrumbs
-    //                 }
-    //             }, menu.to);
-    //         }
-    //     }
-
-    //     return '';
-    // }
 
     isRootMenuActive(menu, match, location) {
         if(location.state && location.getBreadcrumbs) {
