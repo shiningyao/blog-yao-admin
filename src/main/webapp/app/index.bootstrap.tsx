@@ -1,17 +1,14 @@
 import '#/styles/scss/main.scss';
 
 import { polyfillLoader } from './index.polyfills';
-
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import reducers from './shared/reducers';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from "react-apollo";
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import BlogApp from '@/app.container';
-import { client } from '@/shared/utils/gql-clitent';
 
 const logoText = require('raw-loader!../../resources/banner.txt').replace(/(\$\{.*?\})/g, '').replace(/Running Spring Boot/g, 'Authored By Shining Yao');
 
@@ -31,11 +28,9 @@ const store = createStore(
 polyfillLoader.then(function() {
 
     ReactDOM.render(
-        <ApolloProvider client={client}>
-            <Provider store={store}>
-                <BlogApp compiler='typescript' framework='react'></BlogApp>
-            </Provider>
-        </ApolloProvider>,
+        <Provider store={store}>
+            <BlogApp compiler='typescript' framework='react'></BlogApp>
+        </Provider>,
         document.getElementById('blog-yao-admin'),
         () => {
             console.log(`%c${logoText}`, `color: #fc6180`);

@@ -8,9 +8,14 @@ import { ArticleEditor } from '@/components/editor/editor.component';
 import { connect } from 'react-redux';
 import { Article, PostState } from '@/domain/article';
 import { NavLink } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import Http from '@/shared/utils/http';
 
-class ComposePage extends Component<any, any> {
+interface ComposePageProps extends RouteComponentProps<any, any> {
+    [key: string]: any
+}
+
+class ComposePage extends Component<ComposePageProps, any> {
 
     private article = {
         state: PostState.OFFLINE
@@ -29,13 +34,14 @@ class ComposePage extends Component<any, any> {
     }
 
     onSubmit() {
+        const { history } = this.props;
         this.http.post<Article, Article>('/api/articles', 
             (this.article as Article), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }).subscribe((res) => {
-                console.log(res);
+                history.push('/articles/management');
         });
     }
 

@@ -10,19 +10,34 @@ import { Query } from 'react-apollo';
 import * as classNames from 'classnames';
 import gql from 'graphql-tag';
 import * as moment from 'moment';
+import { PostState } from '@/domain/article';
 
-class ArticleManagementPage extends Component<any, any> {
+interface ArticleManagementPageStates {
+    listWidth: number,
+    listHeight: number,
+    showSearchBar: boolean,
+    filters: {
+        status: PostState
+    }
+}
+
+class ArticleManagementPage extends Component<any, ArticleManagementPageStates> {
 
     private listContainerRef: React.RefObject<HTMLDivElement>;
+    private refetchListData: (variables?: {}) => Promise<{}> = () => new Promise((resolve) => resolve());
 
     constructor(props) {
         super(props);
         this.state = {
             listWidth: 300,
             listHeight: 300,
-            showSearchBar: false
+            showSearchBar: false,
+            filters: {
+                status: PostState.ONLINE
+            }
         };
         this.listContainerRef = React.createRef<HTMLDivElement>();
+        this.filter = this.filter.bind(this);
     }
 
     componentDidMount() {
@@ -36,6 +51,16 @@ class ArticleManagementPage extends Component<any, any> {
         window.addEventListener('resize', function() {
             resetSize();
         });
+    }
+
+    filter(condition: ArticleManagementPageStates["filters"]) {
+        Object.assign(this.state.filters, condition);
+        this.setState(this.state);
+        this.refetchListData();
+    }
+    
+    componentDidUpdate() {
+        this.refetchListData();
     }
 
     render() {
@@ -127,13 +152,19 @@ class ArticleManagementPage extends Component<any, any> {
                             </ul>
                             <div className="text-center">
                                 <div className="btn-group" role="group">
-                                    <a href="javascript:void(0)" className="btn btn-primary btn-outline-primary">
+                                    <a href="javascript:void(0)" 
+                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostState.ONLINE}])}
+                                        onClick={() => this.filter({status: PostState.ONLINE})}>
                                         Published
                                     </a>
-                                    <a href="javascript:void(0)" className="btn btn-primary btn-outline-primary">
+                                    <a href="javascript:void(0)" 
+                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostState.OFFLINE}])}
+                                        onClick={() => this.filter({status: PostState.OFFLINE})}>
                                         Drafts
                                     </a>
-                                    <a href="javascript:void(0)" className="btn btn-primary btn-outline-primary">
+                                    <a href="javascript:void(0)" 
+                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostState.TRASHED}])}
+                                        onClick={() => this.filter({status: PostState.TRASHED})}>
                                         Trashed
                                     </a>
                                 </div>
@@ -154,12 +185,12 @@ class ArticleManagementPage extends Component<any, any> {
                                 `} variables={{
                                     
                                 }}>
-                                    {({loading, error, data}) => {
+                                    {({loading, error, data, refetch}) => {
                                         if(loading) return <p>Loading...</p>;
                                         if(error) return <p>{error.message}</p>;
 
                                         const articles = data.articles || [];
-
+                                        this.refetchListData = refetch;
                                         function rowRenderer({
                                             key,         // Unique key within array of rows
                                             index,       // Index of row within collection
@@ -249,6 +280,6 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(
+export default connect<{}, {}, {}, ArticleManagementPageStates>(
     mapStateToProps
 )(ArticleManagementPage);

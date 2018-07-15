@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { Component, RefObject } from 'react';
-import { Query } from "react-apollo";
-import gql from 'graphql-tag';
 import * as classNames from 'classnames';
 import { EditorWrapper } from '@/components/editor/styles';
 import isFunction = require('lodash/isFunction');
@@ -172,22 +170,6 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                 <div ref={this.editorRef} placeholder="Write article content from here..." onBlur={this.onEditorBlur}>
                     {this.props.children}
                 </div>
-                <Query query={gql`
-                    query findUser($login: String) {
-                        user(login: $login) {
-                            login
-                        }
-                    }
-                `} variables={{
-                    login: 'admin'
-                }}>
-                    {({ loading, error, data }) => {
-                        if (loading) return <p>Loading...</p>;
-                        if (error) return <p>Error :({error.message}</p>;
-
-                        return <div>{data.user.login}</div>;
-                    }}
-                </Query>
             </EditorWrapper>
         );
     }
