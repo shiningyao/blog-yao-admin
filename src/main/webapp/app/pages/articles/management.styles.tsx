@@ -19,11 +19,14 @@ export const ManagementPageWrapper = styled(PageWrapper)`
             justify-content: space-between;
             h4 {
                 cursor: pointer;
+                font-size: 1em;
             }
             p {
+                font-size: .75em;
                 .category-badge {
                     margin-right: 10px;
                     cursor: pointer;
+                    padding: 1px 4px;
                 }
                 .article-meta {
                     &:last-child {
@@ -51,7 +54,7 @@ export const ManagementPageWrapper = styled(PageWrapper)`
 
         ul.operations-col {
             list-style: none;
-            margin: 0 50px 0 10px;
+            margin: 0 20px 0 10px;
             visibility: hidden;
             opacity: 0;
             transition: opacity .5s ease-in;
@@ -61,6 +64,7 @@ export const ManagementPageWrapper = styled(PageWrapper)`
                 & > a {
                     color: #999999;
                     text-decoration: none;
+                    font-size: 14px;
                     &:hover {
                         color: #478FCA;
                     }
@@ -82,7 +86,7 @@ export const ManagementPageWrapper = styled(PageWrapper)`
         }
 
         .article-thumb {
-            max-width: 100px;
+            max-width: 80px;
         }
     }
 
@@ -99,7 +103,7 @@ export const ManagementPageWrapper = styled(PageWrapper)`
                 text-align: center;
                 white-space: nowrap;
                 vertical-align: middle;
-                padding: 0.375rem 0.75rem;
+                padding: 0.375rem;
                 font-size: 1rem;
                 line-height: 1.5;
                 text-decoration: none;

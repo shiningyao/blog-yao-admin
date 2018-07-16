@@ -10,7 +10,10 @@ import { Query } from 'react-apollo';
 import * as classNames from 'classnames';
 import gql from 'graphql-tag';
 import * as moment from 'moment';
-import { PostState } from '@/domain/article';
+import { PostState, Article } from '@/domain/article';
+import { withModal, ModalComponentProps } from '@/components/modal';
+import { compose } from 'redux';
+import { DialogComponent } from '@/components/modal/dialog.component';
 
 interface ArticleManagementPageStates {
     listWidth: number,
@@ -21,7 +24,11 @@ interface ArticleManagementPageStates {
     }
 }
 
-class ArticleManagementPage extends Component<any, ArticleManagementPageStates> {
+interface ArticleManagementPageProps extends ModalComponentProps<{}> {
+    [key: string]: any
+}
+
+class ArticleManagementPage extends Component<ArticleManagementPageProps, ArticleManagementPageStates> {
 
     private listContainerRef: React.RefObject<HTMLDivElement>;
     private refetchListData: (variables?: {}) => Promise<{}> = () => new Promise((resolve) => resolve());
@@ -38,6 +45,7 @@ class ArticleManagementPage extends Component<any, ArticleManagementPageStates> 
         };
         this.listContainerRef = React.createRef<HTMLDivElement>();
         this.filter = this.filter.bind(this);
+        this.moveToTrash = this.moveToTrash.bind(this);
     }
 
     componentDidMount() {
@@ -59,6 +67,20 @@ class ArticleManagementPage extends Component<any, ArticleManagementPageStates> 
         this.refetchListData();
     }
     
+    moveToTrash(article: Article) {
+        this.props.modal.open({
+            render: ({modalInstance}) => {
+                return (
+                    <DialogComponent>
+                        <button className="btn btn-primary" onClick={() => modalInstance.dismiss()}>
+                            dismiss
+                        </button>
+                    </DialogComponent>
+                )
+            }
+        });
+    }
+
     componentDidUpdate() {
         this.refetchListData();
     }
@@ -191,6 +213,7 @@ class ArticleManagementPage extends Component<any, ArticleManagementPageStates> 
 
                                         const articles = data.articles || [];
                                         this.refetchListData = refetch;
+                                        
                                         function rowRenderer({
                                             key,         // Unique key within array of rows
                                             index,       // Index of row within collection
@@ -236,7 +259,7 @@ class ArticleManagementPage extends Component<any, ArticleManagementPageStates> 
                                                             </a>
                                                         </li>
                                                         <li className="move-to-trash">
-                                                            <a href="javascript: void(0)">
+                                                            <a href="javascript: void(0)" onClick={() => this.moveToTrash(articles[index])}>
                                                                 <i className="action-icon icofont icofont-garbage"></i>
                                                                 Trash
                                                             </a>
@@ -258,8 +281,8 @@ class ArticleManagementPage extends Component<any, ArticleManagementPageStates> 
                                             <List width={this.state.listWidth}
                                                 height={this.state.listHeight}
                                                 rowCount={articles.length}
-                                                rowHeight={97}
-                                                rowRenderer={rowRenderer}>
+                                                rowHeight={80}
+                                                rowRenderer={rowRenderer.bind(this)}>
                                             </List>
                                         );
                                     }}
@@ -280,6 +303,9 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect<{}, {}, {}, ArticleManagementPageStates>(
-    mapStateToProps
-)(ArticleManagementPage);
+export default compose(
+    withModal,
+    connect<{}, {}, {}, ArticleManagementPageStates>(
+        mapStateToProps
+    )
+)(ArticleManagementPage);;
