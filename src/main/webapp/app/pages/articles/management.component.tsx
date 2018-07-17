@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import { PostState, Article } from '@/domain/article';
 import { withModal, ModalComponentProps } from '@/components/modal';
 import { compose } from 'redux';
-import { DialogComponent } from '@/components/modal/dialog.component';
+import { Dialog } from '@/components/modal/dialog.component';
 
 interface ArticleManagementPageStates {
     listWidth: number,
@@ -71,9 +71,9 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
         this.props.modal.open({
             render: ({modalInstance}) => {
                 return (
-                    <DialogComponent>
+                    <Dialog modalInstance={modalInstance}>
                         body
-                    </DialogComponent>
+                    </Dialog>
                 )
             }
         });

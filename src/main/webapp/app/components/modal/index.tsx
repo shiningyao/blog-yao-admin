@@ -47,7 +47,7 @@ class Modal {
                     });
                     resolve(modalInstance);
                 });
-            }, 10);
+            }, 100);
         });
     }
 
@@ -62,7 +62,7 @@ class Modal {
     }
 }
 
-class ModalInstance {
+export class ModalInstance {
 
     private container: HTMLDivElement;
 

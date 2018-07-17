@@ -1,19 +1,20 @@
 import * as React from "react";
 import { Component } from "react";
 import * as classNames from 'classnames';
+import { ModalInstance } from "@/components/modal";
 
 interface DialogComponentProps {
-    title?: string
+    title?: string,
+    modalInstance: ModalInstance
 }
 
-export class DialogComponent extends Component<DialogComponentProps, any> {
+export class Dialog extends Component<DialogComponentProps, any> {
 
     constructor(props) {
         super(props);
         this.state = {
             show: false
         };
-        console.log(props);
     }
 
     componentDidMount() {
@@ -31,8 +32,8 @@ export class DialogComponent extends Component<DialogComponentProps, any> {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">Modal title</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => this.props.modalInstance.dismiss()}>
+                                <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div className="modal-body">
