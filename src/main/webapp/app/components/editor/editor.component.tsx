@@ -3,13 +3,16 @@ import { Component, RefObject } from 'react';
 import * as classNames from 'classnames';
 import { EditorWrapper } from '@/components/editor/styles';
 import isFunction = require('lodash/isFunction');
+import { Article } from '@/domain/article';
 
 interface ArticleEditorProps {
     className?: string,
-    onChange?: Function
+    onChange?: Function,
+    article?: Article
 };
 
 interface ArticleEditorStates {
+    article?: any;
     editorLoaded: boolean,
     isEmpty: boolean
 }
@@ -23,10 +26,19 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
         super(props);
         this.editorRef = React.createRef();
         this.state = {
+            article: {},
             editorLoaded: false,
             isEmpty: true
         };
         this.onEditorBlur = this.onEditorBlur.bind(this);
+    }
+    
+    componentDidUpdate(prevProps) {
+        if(prevProps.article.content !== this.props.article.content) {
+            this.setState({
+                article: this.props.article
+            });
+        }
     }
 
     componentDidMount() {
@@ -167,8 +179,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                     {'hidden': !this.state.editorLoaded},
                     {'empty': this.state.isEmpty}
                 ])}>
-                <div ref={this.editorRef} placeholder="Write article content from here..." onBlur={this.onEditorBlur}>
-                    {this.props.children}
+                <div dangerouslySetInnerHTML={{__html: this.state.article.content}} ref={this.editorRef} placeholder="Write article content from here..." onBlur={this.onEditorBlur}>
                 </div>
             </EditorWrapper>
         );

@@ -72,9 +72,7 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
             render: ({modalInstance}) => {
                 return (
                     <DialogComponent>
-                        <button className="btn btn-primary" onClick={() => modalInstance.dismiss()}>
-                            dismiss
-                        </button>
+                        body
                     </DialogComponent>
                 )
             }
@@ -197,6 +195,7 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                                 <Query query={gql`
                                     query {
                                         articles {
+                                            id,
                                             title,
                                             author {
                                                 login
@@ -247,10 +246,10 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                                                     </div>
                                                     <ul className="operations-col">
                                                         <li>
-                                                            <a href="javascript: void(0)">
+                                                            <NavLink to={`/articles/compose/${articles[index].id}`}>
                                                                 <i className="action-icon icofont icofont-edit-alt"></i>
                                                                 Edit
-                                                            </a>
+                                                            </NavLink>
                                                         </li>
                                                         <li>
                                                             <a href="javascript: void(0)">

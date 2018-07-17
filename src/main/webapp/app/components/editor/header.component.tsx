@@ -7,16 +7,16 @@ import { HeaderWrapper } from '@/components/editor/styles';
 import isFunction = require('lodash/isFunction');
 import moment, { defineLocale } from '@/shared/utils/moment/moment';
 import {Moment} from 'moment';
-import { Subject } from 'rxjs';
+import { Article } from '@/domain/article';
 
 interface HeaderEditorProps {
-    value?: string,
+    article?: Article,
     onChange?: Function,
     [key: string]: any
 }
 
 interface HeaderEditorStates {
-    value?: string,
+    article?: any,
     focused: boolean,
     postDateFormated: string
 }
@@ -31,7 +31,7 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
         defineLocale(this.props.locale.language);
         this.postDate.locale(this.props.locale.language);
         this.state = {
-            value: this.props.value,
+            article: {},
             focused: false,
             postDateFormated: this.postDate.format('ll')
         };
@@ -44,6 +44,11 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
             this.postDate.locale(this.props.locale.language);
             this.setState({
                 postDateFormated: this.postDate.format('ll')
+            });
+        }
+        if(prevProps.article !== this.props.article) {
+            this.setState({
+                article: this.props.article
             });
         }
     }
@@ -89,7 +94,7 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
                     contentEditable={true} spellCheck={false}
                     suppressContentEditableWarning={true}
                     placeholder="Enter article title here.">
-                    {this.state.value}
+                    {this.state.article.title}
                 </h2>
                 <ul className="entry-meta">
                     <li className="publish-date">

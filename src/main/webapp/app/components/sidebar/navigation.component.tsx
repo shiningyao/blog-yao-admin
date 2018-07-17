@@ -3,6 +3,7 @@ import { Component, SyntheticEvent } from "react";
 import Http from '@/shared/utils/http';
 import * as classNames from 'classnames';
 import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { matchPath } from 'react-router';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { NavMenu, NavSubMenu } from './styles';
@@ -37,7 +38,6 @@ class SidebarNav extends Component<any, {
     }
 
     onRouteChanged(location) {
-
         const allMenus = [];
         const rootMenus = [].concat(...Object.values(this.state.menus));
         const breadcrumbs = [];
@@ -113,7 +113,12 @@ class SidebarNav extends Component<any, {
     
                     function isCurrent(currentPathname, menu) {
                         const pathname = isObject(menu.to) ? menu.to.pathname : menu.to;
-                        return currentPathname === pathname;
+                        const match = matchPath(currentPathname, {
+                            path: pathname,
+                            exact: false,
+                            strict: false
+                        });
+                        return match;
                     }
     
                     if(isArray(menu.children) && menu.children.length > 0) {
@@ -148,7 +153,7 @@ class SidebarNav extends Component<any, {
                             
                             return (
                                 <li key={menu.id} className={classNames({hasMenus: menu.children.length > 0, open: menu.$isOpen})}>
-                                    <NavLink to={menu.to || ''} exact={true} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
+                                    <NavLink to={menu.to || ''} exact={true} isActive={(match, location) => this.isSubMenuActive(menu, match, location)} onClick={this.menuClick.bind(this, menu, menus)} activeClassName="active">
                                         <span className="menu-icon">
                                             <i className={menu.iconClass}></i>
                                         </span>
@@ -193,7 +198,7 @@ class SidebarNav extends Component<any, {
                             if(!menu.children) {
                                 menu.children = [];
                             }
-                            
+
                             if(this.props.location.state && this.props.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1 && this.firstRender) {
                                 this.firstRender = false;
                                 menu.$isOpen = true;
@@ -282,6 +287,16 @@ class SidebarNav extends Component<any, {
             return location.state.breadcrumbs.map(breadcrumb => breadcrumb.name).indexOf(menu.title) > -1;
         }
         return false;
+    }
+
+    isSubMenuActive(menu, m, location) {
+        const pathname = isObject(menu.to) ? menu.to.pathname : menu.to;
+        const match = matchPath(location.pathname, {
+            path: pathname,
+            exact: false,
+            strict: false
+        });
+        return match;
     }
 
 }

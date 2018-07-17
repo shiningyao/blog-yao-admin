@@ -10,9 +10,15 @@ import { Article, PostState } from '@/domain/article';
 import { NavLink } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 import Http from '@/shared/utils/http';
+import client from '@/shared/utils/gql-client';
+import gql from 'graphql-tag';
 
 interface ComposePageProps extends RouteComponentProps<any, any> {
     [key: string]: any
+}
+
+interface ComposePageStates {
+    article: Article
 }
 
 class ComposePage extends Component<ComposePageProps, any> {
@@ -25,8 +31,52 @@ class ComposePage extends Component<ComposePageProps, any> {
     constructor(props) {
         super(props);
         this.http = new Http();
+        this.state = {
+            article: {}
+        };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        const articleId = this.props.match.params.articleId;
+        if(articleId) {
+            this.fetchData(articleId).then((article) => {
+                this.setState({
+                    article
+                });
+            });
+        }
+    }
+
+    fetchData(articleId): Promise<Article> {
+        
+        return new Promise<Article>((resolve, reject) => {
+            client.query<{
+                article: Article
+            }>({
+                query: gql`
+                    query fetchArticle($id: String) {
+                        article(id: $id) {
+                            title,
+                            content,
+                            publishDate,
+                            author {
+                                login
+                            }
+                        }
+                    }
+                `,
+                variables: {
+                    id: articleId
+                }
+            }).then((result) => {
+                if(result.errors) {
+                    reject(result.errors);
+                }
+                this.article = result.data.article;
+                resolve(result.data.article);
+            }, (reason) => {
+                reject(reason);
+            });
+        });
     }
 
     onChange(article: Article) {
@@ -34,9 +84,22 @@ class ComposePage extends Component<ComposePageProps, any> {
     }
 
     onSubmit() {
+        const articleId = this.props.match.params.articleId;
+        if(articleId) {
+            this.edit(this.article as Article);
+        } else {
+            this.save(this.article as Article);
+        }
+    }
+
+    edit(article: Article){
+        alert('edit');
+    }
+
+    save(article: Article) {
         const { history } = this.props;
         this.http.post<Article, Article>('/api/articles', 
-            (this.article as Article), {
+            (article), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -95,9 +158,9 @@ class ComposePage extends Component<ComposePageProps, any> {
                             </a>
                         </div>
                         <div className="card-body">
-                            <HeaderEditor onChange={this.onChange}></HeaderEditor>
+                            <HeaderEditor onChange={this.onChange} article={this.state.article}></HeaderEditor>
                             <WidgetEditor onChange={this.onChange} type={WidgetEditorType.Image}></WidgetEditor>
-                            <ArticleEditor onChange={this.onChange} className="body-editor">
+                            <ArticleEditor onChange={this.onChange} article={this.state.article} className="body-editor">
                             </ArticleEditor>
                         </div>
                     </div>
