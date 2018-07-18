@@ -1,34 +1,59 @@
 .swal-modal {
     width: 478px;
-    opacity: 1;
-    pointer-events: auto;
+    opacity: 0;
+    pointer-events: none;
     background-color: #fff;
     text-align: center;
     border-radius: 5px;
+    padding: 17px;
     position: fixed;
-    top: 40%;
+    top: 50%;
     left: 50%;
     margin: 20px auto;
     display: inline-block;
     vertical-align: middle;
     transform: scale(1) translate(-50%, -50%);
-    transform-origin: 50% 50%;
+    transform-origin: 0 0;
     z-index: 10001;
     transition: transform .3s,opacity .2s;
+
+    &.show {
+        opacity: 1;
+        pointer-events: auto;
+        box-sizing: border-box;
+        animation: showSweetAlert .3s;
+        will-change: transform;
+    }
+
+    &.hide {
+        animation: hideSweetAlert .2s;
+    }
+}
+
+.swal-title {
+    color: #575757;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 600;
+    text-transform: none;
+    position: relative;
+    margin: 25px 0;
+    padding: 0;
+    line-height: 40px;
+    display: block;
 }
 
 .swal-text {
     font-size: 16px;
     position: relative;
-    float: none;
     line-height: normal;
     vertical-align: top;
     text-align: left;
     display: inline-block;
     margin: 0;
-    padding: 0 10px;
+    padding: 0;
     font-weight: 400;
-    color: rgba(0,0,0,.64);
+    color: #797979;
     max-width: calc(100% - 20px);
     overflow-wrap: break-word;
     box-sizing: border-box;
@@ -41,10 +66,64 @@
 
 .swal-footer {
     text-align: center;
-    padding-top: 13px;
     margin-top: 13px;
-    padding: 13px 16px;
+    padding: 13px 16px 0;
     border-radius: inherit;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.swal-button {
+    background-color: #7cd1f9;
+    color: #fff;
+    border: none;
+    box-shadow: none;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 17px;
+    padding: 10px 32px;
+    margin: 0;
+    cursor: pointer;
+    &:focus {
+        outline: none;
+    }
+
+    &.swal-button--confirm {
+        background-color: #4680ff;
+    }
+}
+
+
+.swal-button-container {
+    margin: 5px;
+    display: inline-block;
+    position: relative;
+}
+
+@keyframes showSweetAlert {
+    0% {
+        transform: scale(.7) translate(-50%, -50%);
+    }
+
+    45% {
+        transform: scale(1.05) translate(-50%, -50%);
+    }
+
+    80% {
+        transform: scale(.95) translate(-50%, -50%);
+    }
+
+    100% {
+        transform: scale(1) translate(-50%, -50%);
+    }
+}
+
+@keyframes hideSweetAlert {
+    0% {
+        transform: scale(1) translate(-50%, -50%);
+    }
+
+    100% {
+        transform: scale(.5) translate(-50%, -50%);
+    }
 }

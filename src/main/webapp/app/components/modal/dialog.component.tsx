@@ -20,6 +20,7 @@ interface DialogButton {
 
 interface DialogComponentProps {
     title?: string | Function,
+    size?: 'large' | 'small' | 'normal',
     footer?: DialogButton[] | Function,
     modalInstance: ModalInstance
 }
@@ -115,7 +116,7 @@ export class Dialog extends Component<DialogComponentProps, any> {
 
         return (
             <div onTransitionEnd={this.onTransitionEnd} onClick={() => this.dismiss()} className={classNames(["modal fade", {show: this.state.show}])} role="dialog" style={{display: 'block'}}>
-                <div className="modal-dialog" role="document" onClick={(event) => event.stopPropagation()}>
+                <div className={classNames(['modal-dialog', {'modal-lg': this.props.size === 'large'}, {'modal-sm': this.props.size === 'small'}])} role="document" onClick={(event) => event.stopPropagation()}>
                     <div className="modal-content">
                         {this.renderHeader()}
                         <div className="modal-body">

@@ -73,18 +73,22 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
         const a = this.props.modal.open({
             render: ({modalInstance}) => {
                 return (
-                    // <SweetAlert></SweetAlert>
-                    <Dialog modalInstance={modalInstance} 
-                        title="asdasdasdasd"
-                        footer={[{
-                            text: 'Close',
-                            type: DialogButtonType.CANCEL
-                        }, {
-                            text: 'custom submit',
-                            type: DialogButtonType.OK
-                        }]}>
-                        body
-                    </Dialog>
+                    <SweetAlert modalInstance={modalInstance} 
+                        title="Here's a message!" text="It's pretty, isn't it?"
+                        buttons={{
+                            cancel: true
+                        }}></SweetAlert>
+                    // <Dialog modalInstance={modalInstance} 
+                    //     title="asdasdasdasd"
+                    //     footer={[{
+                    //         text: 'Close',
+                    //         type: DialogButtonType.CANCEL
+                    //     }, {
+                    //         text: 'custom submit',
+                    //         type: DialogButtonType.OK
+                    //     }]}>
+                    //     body
+                    // </Dialog>
                 )
             }
         }).result.subscribe(() => {
