@@ -1,4 +1,4 @@
-import { LoginPage } from './login.component';
+import { LoginPage } from '@/shared/login/login.component';
 import { connect } from 'react-redux';
 import { authenticate, logout, login } from '@/shared/actions';
 import { bindActionCreators } from 'redux';

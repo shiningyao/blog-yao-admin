@@ -6,7 +6,7 @@ import * as ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { matchPath } from 'react-router';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { NavMenu, NavSubMenu } from './styles';
+import { NavMenu, NavSubMenu } from '@/components/sidebar/styles';
 import { Menu } from '@/domain/menu';
 
 import isObject = require('lodash/isObject');

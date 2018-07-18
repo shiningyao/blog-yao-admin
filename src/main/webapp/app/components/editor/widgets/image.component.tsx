@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from "react";
-import { ImageWidgetWrapper } from './image.style';
+import { ImageWidgetWrapper } from '@/components/editor/widgets/image.style';
 
 export class ImageWidget extends Component {
 

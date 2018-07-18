@@ -1,4 +1,4 @@
-import { changeLangKey } from './../../shared/actions/index';
+import { changeLangKey } from '@/shared/actions';
 import { bindActionCreators } from "redux";
 import { logout } from "@/shared/actions";
 import { connect } from "react-redux";

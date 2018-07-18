@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import styles from './styles';
-import Logo from '../logo/logo.component';
+import styles from '@/components/topbar/styles';
+import Logo from '@/components/logo/logo.component';
 
 const { Component } = React;
 const { Navbar } = styles;
