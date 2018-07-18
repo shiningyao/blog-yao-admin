@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import PrivateRoute from '@/shared/auth/route/private-route';
 import * as Loadable from 'react-loadable';
 import { ApolloProvider } from "react-apollo";
-import { AppLayout as Layout } from './styles';
+import { AppLayout as Layout } from '@/layout/styles';
 import Topbar from '@/components/topbar/topbar.container';
 import { Sidebar } from '@/components/sidebar/sidebar.component';
 import { Home } from '@/pages/home/home.component';

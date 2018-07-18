@@ -1,14 +1,20 @@
 import * as React from 'react';
-import { ComponentType, ComponentClass, Component, DOMElement } from 'react';
+import { ComponentType, ComponentClass, Component, DOMElement, ComponentState } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { StaticContext, Omit } from "react-router";
 import hoistStatics = require("hoist-non-react-statics");
 import { canUseDOM } from '@/shared/utils/exenv';
+import { Subject, Observable } from 'rxjs';
+import isFunction = require('lodash/isFunction');
 
 export interface ModalComponentProps<P, C extends StaticContext = StaticContext> {
     modal: Modal,
     [key: string]: any
 }
+
+export interface ModalPromise<T> extends Promise<T> {
+    result?: Observable<any>;
+};
 
 const ModalContext = React.createContext<any>({
     Component: null
@@ -17,38 +23,48 @@ const ModalContext = React.createContext<any>({
 class Modal {
     
     private backdrop: HTMLDivElement;
-
+    
     constructor() {
-        if(canUseDOM) {
-            this.backdrop = document.createElement('div');
-            this.backdrop.classList.add('modal-backdrop');
-            this.backdrop.classList.add('fade');
-        }
+        this.destroy = this.destroy.bind(this);
     }
 
     open(options: any = {
         render() {
             return null; 
         }
-    }): Promise<ModalInstance> {
+    }): ModalPromise<ModalInstance> {
         if(!canUseDOM) {
             return Promise.reject(new Error('Can not manipulate DOM in current environment.'));
         }
         
-        return new Promise((resolve, reject) => {
+        this.backdrop = document.createElement('div');
+        this.backdrop.classList.add('modal-backdrop');
+        this.backdrop.classList.add('fade');
+
+        const modalInstance = new ModalInstance({
+            elementRender: options.render,
+            modal: this
+        });
+
+        const promise: ModalPromise<ModalInstance> = new Promise<ModalInstance>((resolve, reject) => {
             document.body.appendChild(this.backdrop);
 
             setTimeout(() => {
                 this.backdrop.classList.add('show');
                 this.backdrop.addEventListener('transitionend', () => {
-                    const modalInstance = new ModalInstance({
-                        elementRender: options.render,
-                        modal: this
-                    });
-                    resolve(modalInstance);
+                    if(this.backdrop.classList.contains('show')) {
+                        resolve(modalInstance);
+                    } else {
+                        this.backdrop.remove();
+                        delete this.backdrop;
+                    }
                 });
-            }, 100);
+            }, 150);
         });
+
+        promise.result = modalInstance.result;
+
+        return promise;
     }
 
     confirm() {
@@ -60,21 +76,31 @@ class Modal {
             }
         });
     }
+
+    destroy() {
+        if(this.backdrop) {
+            this.backdrop.classList.remove('show');
+        }
+    }
 }
 
 export class ModalInstance {
 
     private container: HTMLDivElement;
+    private modal: Modal;
+    renderedComponent: Component<any, ComponentState> | Element | void;
+    private resultSubject = new Subject<any>();
 
     constructor({elementRender, modal}: {
         elementRender: (any) => DOMElement<any, any>,
         modal: Modal
     }) {
+        this.modal = modal;
         if(canUseDOM) {
             this.container = document.createElement('div');
             this.container.classList.add('modal-container');
             document.body.appendChild(this.container);
-            render(elementRender({
+            this.renderedComponent = render(elementRender({
                 modalInstance: this
             }), this.container, () => {
     
@@ -82,8 +108,23 @@ export class ModalInstance {
         }
     }
 
+    close() {
+        unmountComponentAtNode(this.container);
+        this.container.remove();
+        this.modal.destroy();
+        this.resultSubject.next({});
+        this.resultSubject.complete();
+    }
+
     dismiss() {
         unmountComponentAtNode(this.container);
+        this.container.remove();
+        this.modal.destroy();
+        this.resultSubject.error({});
+    }
+
+    get result() {
+        return this.resultSubject.asObservable();
     }
 
 }

@@ -1,0 +1,50 @@
+.swal-modal {
+    width: 478px;
+    opacity: 1;
+    pointer-events: auto;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    margin: 20px auto;
+    display: inline-block;
+    vertical-align: middle;
+    transform: scale(1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+    z-index: 10001;
+    transition: transform .3s,opacity .2s;
+}
+
+.swal-text {
+    font-size: 16px;
+    position: relative;
+    float: none;
+    line-height: normal;
+    vertical-align: top;
+    text-align: left;
+    display: inline-block;
+    margin: 0;
+    padding: 0 10px;
+    font-weight: 400;
+    color: rgba(0,0,0,.64);
+    max-width: calc(100% - 20px);
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+
+    &:first-child {
+        margin-top: 45px;
+    }
+
+}
+
+.swal-footer {
+    text-align: center;
+    padding-top: 13px;
+    margin-top: 13px;
+    padding: 13px 16px;
+    border-radius: inherit;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

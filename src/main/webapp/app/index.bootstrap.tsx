@@ -1,6 +1,6 @@
 import '#/styles/scss/main.scss';
 
-import { polyfillLoader } from './index.polyfills';
+import { polyfillLoader } from '@/index.polyfills';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import reducers from './shared/reducers';

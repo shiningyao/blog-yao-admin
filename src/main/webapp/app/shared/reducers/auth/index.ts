@@ -1,4 +1,4 @@
-import { RECORD_USERINFO } from './../../actions/index';
+import { RECORD_USERINFO } from '@/shared/actions';
 import { Reducer, Action, combineReducers } from "redux";
 import { AUTHENTICATE, LOGOUT } from "@/shared/actions";
 import principle from "@/shared/auth/principle";

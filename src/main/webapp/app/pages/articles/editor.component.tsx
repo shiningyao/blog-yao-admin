@@ -3,7 +3,7 @@ import { Component } from "react";
 import HeaderEditor from '@/components/editor/header.component';
 import { ArticleEditor } from "@/components/editor/editor.component";
 import { PageHeader, PageBody } from "@/pages/styles";
-import { EditorPageWrapper } from "@/pages/articles/editor.styles.ts";
+import { EditorPageWrapper } from "@/pages/articles/editor.styles";
 import { WidgetEditor, WidgetEditorType } from "@/components/editor/widget.component";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";

@@ -13,7 +13,8 @@ import * as moment from 'moment';
 import { PostState, Article } from '@/domain/article';
 import { withModal, ModalComponentProps } from '@/components/modal';
 import { compose } from 'redux';
-import { Dialog } from '@/components/modal/dialog.component';
+import { Dialog, DialogButtonType } from '@/components/modal/dialog.component';
+import { SweetAlert } from '@/components/modal/swal.component';
 
 interface ArticleManagementPageStates {
     listWidth: number,
@@ -68,14 +69,28 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
     }
     
     moveToTrash(article: Article) {
-        this.props.modal.open({
+
+        const a = this.props.modal.open({
             render: ({modalInstance}) => {
                 return (
-                    <Dialog modalInstance={modalInstance}>
+                    // <SweetAlert></SweetAlert>
+                    <Dialog modalInstance={modalInstance} 
+                        title="asdasdasdasd"
+                        footer={[{
+                            text: 'Close',
+                            type: DialogButtonType.CANCEL
+                        }, {
+                            text: 'custom submit',
+                            type: DialogButtonType.OK
+                        }]}>
                         body
                     </Dialog>
                 )
             }
+        }).result.subscribe(() => {
+            console.log('ok');
+        }, () => {
+            console.log('error');
         });
     }
 
