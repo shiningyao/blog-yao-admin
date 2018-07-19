@@ -71,13 +71,23 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
     moveToTrash(article: Article) {
 
         this.props.modal.open({
-            closeModal: [false],
+            closeModal: [true, false],
             render: ({modalInstance}) => {
                 return (
                     <SweetAlert modalInstance={modalInstance} 
                         icon="warning"
                         title="Move to trash!" 
                         text="Are you sure to move this article to trash?"
+                        dangerMode={true}
+                        beforeSubmit={
+                            () => new Promise(
+                                (resolve, reject) => {
+                                    setTimeout(() => {
+                                        resolve(123)
+                                    }, 1000)
+                                }
+                            )
+                        }
                         buttons={{
                             cancel: true,
                             confirm: true
@@ -98,23 +108,23 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
         }).result.subscribe(({modalInstance, payload}) => {
             if(payload) {
                 switch (payload.source) {
-                    case 'custom':
-                        alert('custom button clicked');
+                    case 'confirm':
+                        console.log(payload.data);
+                        modalInstance.open({
+                            render({modalInstance}) {
+                                return <SweetAlert 
+                                    modalInstance={modalInstance}
+                                    icon="success"
+                                    title="Deleted"
+                                    text="Already moved to trash."></SweetAlert>
+                            }
+                        });
                         break;
-                    default: 
-                        alert('others clicked');
+                    default:;
                 }
             }
-        }, ({modalInstance}) => {
-            (modalInstance as ModalInstance).open({
-                render({modalInstance}) {
-                    return (
-                        <SweetAlert 
-                            modalInstance={modalInstance}
-                            buttons={['Close', 'Submit']}></SweetAlert>
-                    );
-                }
-            });
+        }, () => {
+            
         });
     }
 

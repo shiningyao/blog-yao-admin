@@ -4,6 +4,7 @@ import * as classNames from 'classnames';
 import { SwalOptions } from "sweetalert/typings/modules/options";
 import { ButtonList, ButtonOptions } from "sweetalert/typings/modules/options/buttons";
 import { ModalInstance } from "@/components/modal";
+import isFunction = require('lodash/isFunction');
 import isArray = require('lodash/isArray');
 import isString = require('lodash/isString');
 import isBoolean = require('lodash/isBoolean');
@@ -17,7 +18,9 @@ interface SweetAlertProps {
     title?: string;
     text?: string;
     icon?: string;
+    dangerMode?: boolean,
     buttons?: ButtonList | Array<string | boolean> | boolean;
+    beforeSubmit?: () => Promise<any> | boolean;
 }
 
 interface SweetAlertStates {
@@ -149,6 +152,21 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
             this.dismiss();
             return false;
         }
+        
+        if(isFunction(this.props.beforeSubmit)) {
+            const result = this.props.beforeSubmit();
+            if(result === true) {
+                this.close<boolean>(key, true);
+            } else if(result) {
+                result.then(() => {
+                    this.close<boolean>(key, true);
+                }, () => {
+                    this.close<boolean>(key, false);
+                });
+            }
+
+            return false;
+        }
 
         this.close(key);
     }
@@ -156,12 +174,15 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
     render() {
 
         const renderButtons = () => {
+
+            const focusKey = this.props.dangerMode ? CANCEL_KEY : CONFIRM_KEY;
+
             if(this.buttons) {
                 return (
                     Object.keys(this.buttons).map((key, index) => {
                         return (
                             <div key={index} className="swal-button-container">
-                                <button className={`swal-button swal-button--${key}`} onClick={() => this.onButtonClick(key, this.buttons[key])}>
+                                <button className={`swal-button swal-button--${key === CONFIRM_KEY ? (this.props.dangerMode ? 'danger' : key) : key}`} autoFocus={key === focusKey} onClick={() => this.onButtonClick(key, this.buttons[key])}>
                                     {this.buttons[key].text}
                                 </button>
                                 <div className="swal-button__loader">
@@ -174,8 +195,52 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
             return null;
         };
 
+        const renderIcon = () => {
+            if(this.props.icon === 'warning') {
+                return (
+                    <div className="swal-icon swal-icon--warning">
+                        <span className="swal-icon--warning__body">
+                            <span className="swal-icon--warning__dot"></span>
+                        </span>
+                    </div>
+                )
+            }
+
+            if(this.props.icon === 'success') {
+                return (
+                    <div className="swal-icon swal-icon--success">
+                        <span className="swal-icon--success__line swal-icon--success__line--long"></span>
+                        <span className="swal-icon--success__line swal-icon--success__line--tip"></span>
+                        <span className="swal-icon--success__ring"></span>
+                        <span className="swal-icon--success__hide-corners"></span>
+                    </div>
+                )
+            }
+
+            if(this.props.icon === 'error') {
+                return (
+                    <div className="swal-icon swal-icon--error">
+                        <div className="swal-icon__x-mark">
+                            <span className="swal-icon--error__line swal-icon--error__line--left"></span>
+                            <span className="swal-icon--error__line swal-icon--error__line--right"></span>
+                        </div>
+                    </div>
+                )
+            }
+
+            if(this.props.icon === 'info') {
+                return (
+                    <div className="swal-icon swal-icon--info">
+                    </div>
+                )
+            }
+
+            return null;
+        };
+
         return (
             <div onAnimationEnd={this.onAnimationEnd} className={classNames(['swal-modal', {show: this.state.show}, {hide: this.state.hide}])}>
+                {this.props.icon ? renderIcon() : null}
                 {this.props.title ? <div className="swal-title">{this.props.title}</div> : null}
                 {this.props.text ? <div className="swal-text">{this.props.text}</div> : null}
                 <div className="swal-footer">
@@ -201,7 +266,7 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
 
     }
 
-    close(key: string) {
+    close<T = any>(key: string, data?: T) {
         this.setState({
             show: false,
             hide: true
@@ -210,8 +275,9 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
         this.onAnimationEnd = () => {
             if(this.state.hide) {
                 setTimeout(() => {
-                    this.props.modalInstance.close<string>({
-                        source: key
+                    this.props.modalInstance.close<string, T>({
+                        source: key,
+                        data
                     });
                 }, 0);
             }

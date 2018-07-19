@@ -7,7 +7,7 @@
     border-radius: 5px;
     padding: 17px;
     position: fixed;
-    top: 50%;
+    top: 45%;
     left: 50%;
     margin: 20px auto;
     display: inline-block;
@@ -27,6 +27,183 @@
 
     &.hide {
         animation: hideSweetAlert .2s;
+    }
+}
+
+.swal-icon {
+    width: 80px;
+    height: 80px;
+    border-width: 4px;
+    border-style: solid;
+    border-radius: 50%;
+    padding: 0;
+    position: relative;
+    box-sizing: content-box;
+    margin: 20px auto;
+
+    &:first-child {
+        margin-top: 32px;
+    }
+
+    &.swal-icon--warning {
+        border-color: #f8bb86;
+        animation: pulseWarning .75s infinite alternate;
+    }
+
+    &.swal-icon--info {
+        border-color: #c9dae1;
+
+        &:before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 29px;
+            left: 50%;
+            bottom: 17px;
+            border-radius: 2px;
+            margin-left: -2px;
+            background-color: #c9dae1;
+          }
+
+        &:after {
+            content: "";
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-left: -3px;
+            top: 19px;
+            background-color: #c9dae1;
+            left: 50%;
+        }
+    }
+    
+    &.swal-icon--error {
+        border-color: #f27474;
+        animation: animateErrorIcon .5s .15s;
+
+        .swal-icon__x-mark {
+            animation: animateXMark .5s .15s;
+        }
+
+        .swal-icon--error__line {
+            position: absolute;
+            height: 5px;
+            width: 47px;
+            background-color: #f27474;
+            display: block;
+            top: 37px;
+            border-radius: 2px;
+        }
+
+        .swal-icon--error__line--left {
+            transform: rotate(45deg);
+            left: 17px;
+        }
+
+        .swal-icon--error__line--right {
+            transform: rotate(-45deg);
+            right: 16px;
+        }
+    }
+
+    &.swal-icon--success {
+        border-color: #a5dc86;
+        &:before, &:after {
+            content: "";
+            border-radius: 50%;
+            position: absolute;
+            width: 60px;
+            height: 120px;
+            background: #fff;
+            transform: rotate(45deg);
+        }
+
+        &:before {
+            border-radius: 120px 0 0 120px;
+            top: -7px;
+            left: -33px;
+            transform: rotate(-45deg);
+            transform-origin: 60px 60px;
+        }
+
+        &:after {
+            border-radius: 0 120px 120px 0;
+            top: -11px;
+            left: 30px;
+            transform: rotate(-45deg);
+            transform-origin: 0 60px;
+            animation: rotatePlaceholder 4.25s ease-in;
+        }
+
+        .swal-icon--success__line {
+            height: 5px;
+            background-color: #a5dc86;
+            display: block;
+            border-radius: 2px;
+            position: absolute;
+            z-index: 2;
+            &.swal-icon--success__line--long {
+                width: 47px;
+                right: 8px;
+                top: 38px;
+                transform: rotate(-45deg);
+                animation: animateSuccessLong .75s;
+            }
+            &.swal-icon--success__line--tip {
+                width: 25px;
+                left: 14px;
+                top: 46px;
+                transform: rotate(45deg);
+                animation: animateSuccessTip .75s;
+            }
+        }
+        
+        .swal-icon--success__ring {
+            width: 80px;
+            height: 80px;
+            border: 4px solid hsla(98,55%,69%,.2);
+            border-radius: 50%;
+            box-sizing: content-box;
+            position: absolute;
+            left: -4px;
+            top: -4px;
+            z-index: 2;
+        }
+
+        .swal-icon--success__hide-corners {
+            width: 5px;
+            height: 90px;
+            background-color: #fff;
+            padding: 1px;
+            position: absolute;
+            left: 28px;
+            top: 8px;
+            z-index: 1;
+            transform: rotate(-45deg);
+        }
+    }
+
+    .swal-icon--warning__body {
+        width: 5px;
+        height: 47px;
+        top: 10px;
+        border-radius: 2px;
+        margin-left: -2px;
+    }
+
+    .swal-icon--warning__body, .swal-icon--warning__dot {
+        position: absolute;
+        left: 50%;
+        background-color: #f8bb86;
+    }
+
+    .swal-icon--warning__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-left: -4px;
+        bottom: -11px;
     }
 }
 
@@ -98,6 +275,10 @@
             background-color: #b9b9b9;
         }
     }
+
+    &.swal-button--danger {
+        background-color: #e64942;
+    }
 }
 
 
@@ -132,5 +313,128 @@
 
     100% {
         transform: scale(.5) translate(-50%, -50%);
+    }
+}
+
+@keyframes pulseWarning {
+    0% {
+        border-color: #f8d486
+    }
+
+    100% {
+        border-color: #f8bb86
+    }
+}
+
+@keyframes rotatePlaceholder {
+    0% {
+        transform: rotate(-45deg);
+    }
+
+    5% {
+        transform: rotate(-45deg);
+    }
+
+    12% {
+        transform: rotate(-405deg);
+    }
+
+    100% {
+        transform: rotate(-405deg);
+    }
+}
+
+@keyframes animateSuccessLong {
+    0% {
+        width: 0;
+        right: 46px;
+        top: 54px
+    }
+
+    65% {
+        width: 0;
+        right: 46px;
+        top: 54px
+    }
+
+    84% {
+        width: 55px;
+        right: 0;
+        top: 35px
+    }
+
+    100% {
+        width: 47px;
+        right: 8px;
+        top: 38px
+    }
+}
+
+@keyframes animateSuccessTip {
+    0% {
+        width: 0;
+        left: 1px;
+        top: 19px
+    }
+
+    54% {
+        width: 0;
+        left: 1px;
+        top: 19px
+    }
+
+    70% {
+        width: 50px;
+        left: -8px;
+        top: 37px
+    }
+
+    84% {
+        width: 17px;
+        left: 21px;
+        top: 48px
+    }
+
+    100% {
+        width: 25px;
+        left: 14px;
+        top: 45px
+    }
+}
+
+@keyframes animateErrorIcon {
+    0% {
+        transform: rotateX(100deg);
+        opacity: 0
+    }
+
+    100% {
+        transform: rotateX(0deg);
+        opacity: 1
+    }
+}
+
+@keyframes animateXMark {
+    0% {
+        transform: scale(.4);
+        margin-top: 26px;
+        opacity: 0
+    }
+
+    50% {
+        transform: scale(.4);
+        margin-top: 26px;
+        opacity: 0
+    }
+
+    80% {
+        transform: scale(1.15);
+        margin-top: -6px
+    }
+
+    100% {
+        transform: scale(1);
+        margin-top: 0;
+        opacity: 1
     }
 }
