@@ -7,7 +7,7 @@ import isString = require('lodash/isString');
 import isArray = require('lodash/isArray');
 
 export enum DialogButtonType {
-    OK,
+    CONFIRM,
     CANCEL,
     CUSTOM
 }
@@ -72,7 +72,7 @@ export class Dialog extends Component<DialogComponentProps, any> {
             if(button.type === DialogButtonType.CUSTOM && button.handler) {
                 button.handler(event);
             }
-            if(button.type === DialogButtonType.OK) {
+            if(button.type === DialogButtonType.CONFIRM) {
                 this.close();
             }
             if(button.type === DialogButtonType.CANCEL) {
@@ -95,7 +95,7 @@ export class Dialog extends Component<DialogComponentProps, any> {
                                     <button key={index} type="button" className={
                                         classNames(
                                             ['btn'], 
-                                            {'btn-primary': button.type === DialogButtonType.OK},
+                                            {'btn-primary': button.type === DialogButtonType.CONFIRM},
                                             {'btn-secondary': button.type === DialogButtonType.CANCEL},
                                             {'btn-default': button.type === DialogButtonType.CUSTOM}
                                         )
@@ -133,6 +133,7 @@ export class Dialog extends Component<DialogComponentProps, any> {
         this.setState({
             show: false
         });
+
         this.onTransitionEnd = () => {
             if(!this.state.show) {
                 setTimeout(() => {
@@ -146,6 +147,7 @@ export class Dialog extends Component<DialogComponentProps, any> {
         this.setState({
             show: false
         });
+
         this.onTransitionEnd = () => {
             if(!this.state.show) {
                 setTimeout(() => {

@@ -16,6 +16,7 @@ interface SweetAlertProps {
     modalInstance: ModalInstance;
     title?: string;
     text?: string;
+    icon?: string;
     buttons?: ButtonList | Array<string | boolean> | boolean;
 }
 
@@ -52,7 +53,6 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
             hide: false
         };
         this.buttons = this.formatButtons();
-        console.log(this.buttons);
         this.onAnimationEnd = this.onAnimationEnd.bind(this);
     }
 
@@ -85,7 +85,7 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
             return null;
         }
 
-        if(this.props.buttons === undefined) {
+        if(this.props.buttons === undefined || this.props.buttons === true) {
             return defaultButtonList;
         }
 
@@ -143,18 +143,32 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
         }, 150);
     }
 
+    onButtonClick(key: string, button: ButtonOptions) {
+        
+        if(key === CANCEL_KEY) {
+            this.dismiss();
+            return false;
+        }
+
+        this.close(key);
+    }
+
     render() {
 
         const renderButtons = () => {
             if(this.buttons) {
                 return (
-                    <div className="swal-button-container">
-                        <button className="swal-button swal-button--confirm" onClick={() => this.dismiss()}>
-                            OK
-                        </button>
-                        <div className="swal-button__loader">
-                        </div>
-                    </div>
+                    Object.keys(this.buttons).map((key, index) => {
+                        return (
+                            <div key={index} className="swal-button-container">
+                                <button className={`swal-button swal-button--${key}`} onClick={() => this.onButtonClick(key, this.buttons[key])}>
+                                    {this.buttons[key].text}
+                                </button>
+                                <div className="swal-button__loader">
+                                </div>
+                            </div>
+                        );
+                    })
                 )
             }
             return null;
@@ -176,6 +190,7 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
             show: false,
             hide: true
         });
+
         this.onAnimationEnd = () => {
             if(this.state.hide) {
                 setTimeout(() => {
@@ -183,20 +198,25 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
                 }, 0);
             }
         }
+
     }
 
-    close() {
+    close(key: string) {
         this.setState({
             show: false,
             hide: true
         });
+
         this.onAnimationEnd = () => {
             if(this.state.hide) {
                 setTimeout(() => {
-                    this.props.modalInstance.close();
+                    this.props.modalInstance.close<string>({
+                        source: key
+                    });
                 }, 0);
             }
         }
+
     }
 
     onAnimationEnd() {

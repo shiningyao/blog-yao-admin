@@ -91,6 +91,13 @@
     &.swal-button--confirm {
         background-color: #4680ff;
     }
+
+    &.swal-button--cancel {
+        background-color: #c1c1c1;
+        &:hover {
+            background-color: #b9b9b9;
+        }
+    }
 }
 
 

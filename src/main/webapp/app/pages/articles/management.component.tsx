@@ -11,7 +11,7 @@ import * as classNames from 'classnames';
 import gql from 'graphql-tag';
 import * as moment from 'moment';
 import { PostState, Article } from '@/domain/article';
-import { withModal, ModalComponentProps } from '@/components/modal';
+import { withModal, ModalProps, ModalInstance } from '@/components/modal';
 import { compose } from 'redux';
 import { Dialog, DialogButtonType } from '@/components/modal/dialog.component';
 import { SweetAlert } from '@/components/modal/swal.component';
@@ -25,7 +25,7 @@ interface ArticleManagementPageStates {
     }
 }
 
-interface ArticleManagementPageProps extends ModalComponentProps<{}> {
+interface ArticleManagementPageProps extends ModalProps<{}> {
     [key: string]: any
 }
 
@@ -70,13 +70,17 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
     
     moveToTrash(article: Article) {
 
-        const a = this.props.modal.open({
+        this.props.modal.open({
+            closeModal: [false],
             render: ({modalInstance}) => {
                 return (
                     <SweetAlert modalInstance={modalInstance} 
-                        title="Here's a message!" text="It's pretty, isn't it?"
+                        icon="warning"
+                        title="Move to trash!" 
+                        text="Are you sure to move this article to trash?"
                         buttons={{
-                            cancel: true
+                            cancel: true,
+                            confirm: true
                         }}></SweetAlert>
                     // <Dialog modalInstance={modalInstance} 
                     //     title="asdasdasdasd"
@@ -91,10 +95,26 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                     // </Dialog>
                 )
             }
-        }).result.subscribe(() => {
-            console.log('ok');
-        }, () => {
-            console.log('error');
+        }).result.subscribe(({modalInstance, payload}) => {
+            if(payload) {
+                switch (payload.source) {
+                    case 'custom':
+                        alert('custom button clicked');
+                        break;
+                    default: 
+                        alert('others clicked');
+                }
+            }
+        }, ({modalInstance}) => {
+            (modalInstance as ModalInstance).open({
+                render({modalInstance}) {
+                    return (
+                        <SweetAlert 
+                            modalInstance={modalInstance}
+                            buttons={['Close', 'Submit']}></SweetAlert>
+                    );
+                }
+            });
         });
     }
 

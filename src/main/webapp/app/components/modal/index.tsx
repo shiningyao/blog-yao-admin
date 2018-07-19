@@ -1,20 +1,45 @@
 import * as React from 'react';
-import { ComponentType, ComponentClass, Component, DOMElement, ComponentState } from 'react';
+import { ComponentType, ComponentClass, Component, ReactElement, ComponentState } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { StaticContext, Omit } from "react-router";
 import hoistStatics = require("hoist-non-react-statics");
 import { canUseDOM } from '@/shared/utils/exenv';
 import { Subject, Observable } from 'rxjs';
-import isFunction = require('lodash/isFunction');
+import { Dialog } from '@/components/modal/dialog.component';
+import { SweetAlert } from '@/components/modal/swal.component';
+import isArray = require('lodash/isArray');
 
-export interface ModalComponentProps<P, C extends StaticContext = StaticContext> {
+export interface ModalProps<P, C extends StaticContext = StaticContext> {
     modal: Modal,
     [key: string]: any
 }
 
 export interface ModalPromise<T> extends Promise<T> {
-    result?: Observable<any>;
+    result?: Observable<ModalResult>;
 };
+
+interface ModalResultPayload<T = any, S = any> {
+    source?: S,
+    data?: T
+}
+
+interface ModalResult {
+    modalInstance: ModalInstance,
+    payload?: ModalResultPayload
+}
+
+interface ModalAllowedComponent extends ReactElement<Dialog | SweetAlert> {
+
+}
+
+interface ModalInstanceRenderProps {
+    modalInstance: ModalInstance
+}
+
+interface ModalOpenOptions {
+    closeModal?: [boolean, boolean] | [boolean],
+    render: (props: ModalInstanceRenderProps) => ModalAllowedComponent
+}
 
 const ModalContext = React.createContext<any>({
     Component: null
@@ -28,7 +53,7 @@ class Modal {
         this.destroy = this.destroy.bind(this);
     }
 
-    open(options: any = {
+    open(options: ModalOpenOptions = {
         render() {
             return null; 
         }
@@ -43,7 +68,8 @@ class Modal {
 
         const modalInstance = new ModalInstance({
             elementRender: options.render,
-            modal: this
+            modal: this,
+            closeModal: options.closeModal
         });
 
         const promise: ModalPromise<ModalInstance> = new Promise<ModalInstance>((resolve, reject) => {
@@ -89,13 +115,20 @@ export class ModalInstance {
     private container: HTMLDivElement;
     private modal: Modal;
     renderedComponent: Component<any, ComponentState> | Element | void;
-    private resultSubject = new Subject<any>();
+    private resultSubject = new Subject<ModalResult>();
+    private closeModalAfterDismiss = true;
+    private closeModalAfterClose = true;
 
-    constructor({elementRender, modal}: {
-        elementRender: (any) => DOMElement<any, any>,
-        modal: Modal
+    constructor({elementRender, modal, closeModal}: {
+        elementRender: (props: ModalInstanceRenderProps) => ModalAllowedComponent,
+        modal: Modal,
+        closeModal?: [boolean, boolean] | [boolean]
     }) {
         this.modal = modal;
+        if(isArray(closeModal)) {
+            this.closeModalAfterDismiss = closeModal[0] === undefined ? true : closeModal[0];
+            this.closeModalAfterClose = closeModal[1] === undefined ? true : closeModal[1];
+        }
         if(canUseDOM) {
             this.container = document.createElement('div');
             this.container.classList.add('modal-container');
@@ -108,28 +141,51 @@ export class ModalInstance {
         }
     }
 
-    close() {
+    close<S = any, T = any>(payload?: ModalResultPayload<T, S>) {
         unmountComponentAtNode(this.container);
         this.container.remove();
-        this.modal.destroy();
-        this.resultSubject.next({});
+        if(this.closeModalAfterClose) {
+            this.modal.destroy();
+        }
+        this.resultSubject.next({
+            modalInstance: this,
+            payload: payload
+        });
         this.resultSubject.complete();
     }
 
     dismiss() {
         unmountComponentAtNode(this.container);
         this.container.remove();
-        this.modal.destroy();
-        this.resultSubject.error({});
+        if(this.closeModalAfterDismiss) {
+            this.modal.destroy();
+        }
+        this.resultSubject.error({
+            modalInstance: this
+        });
     }
 
     get result() {
         return this.resultSubject.asObservable();
     }
 
+    open(options: ModalOpenOptions = {
+        render() {
+            return null; 
+        }
+    }): ModalInstance {
+        unmountComponentAtNode(this.container);
+        this.container.remove();
+        const modalInstance = new ModalInstance({
+            elementRender: options.render,
+            modal: this.modal,
+            closeModal: options.closeModal
+        });
+        return modalInstance;
+    }
 }
 
-class ModalComponent extends Component<ModalComponentProps<any>, StaticContext> {
+class ModalComponent extends Component<ModalProps<any>, StaticContext> {
     
     constructor(props) {
         super(props);
@@ -151,7 +207,7 @@ class ModalComponent extends Component<ModalComponentProps<any>, StaticContext> 
 
 }
 
-export function withModal<P extends ModalComponentProps<any>>(Component: ComponentType<Omit<P, keyof ModalComponentProps<any>>>): ComponentClass<Omit<P, keyof ModalComponentProps<any>>> {
+export function withModal<P extends ModalProps<any>>(Component: ComponentType<Omit<P, keyof ModalProps<any>>>): ComponentClass<Omit<P, keyof ModalProps<any>>> {
 
     function C(props) {
         return (
@@ -162,5 +218,5 @@ export function withModal<P extends ModalComponentProps<any>>(Component: Compone
         )
     }
     
-    return hoistStatics<Omit<P, keyof ModalComponentProps<any>>, StaticContext>(C, Component) as ComponentClass<Omit<P, keyof ModalComponentProps<any>>>;
+    return hoistStatics<Omit<P, keyof ModalProps<any>>, StaticContext>(C, Component) as ComponentClass<Omit<P, keyof ModalProps<any>>>;
 }
