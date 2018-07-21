@@ -4,7 +4,8 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { StaticContext, Omit } from "react-router";
 import hoistStatics = require("hoist-non-react-statics");
 import { canUseDOM } from '@/shared/utils/exenv';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, from } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 import { Dialog } from '@/components/modal/dialog.component';
 import { SweetAlert } from '@/components/modal/swal.component';
 import isArray = require('lodash/isArray');
@@ -14,7 +15,7 @@ export interface ModalProps<P, C extends StaticContext = StaticContext> {
     [key: string]: any
 }
 
-export interface ModalPromise<T> extends Promise<T> {
+export interface ModalObserable<T> extends Observable<T> {
     result?: Observable<ModalResult>;
 };
 
@@ -25,7 +26,8 @@ interface ModalResultPayload<T = any, S = any> {
 
 interface ModalResult {
     modalInstance: ModalInstance,
-    payload?: ModalResultPayload
+    payload?: ModalResultPayload,
+    completeSubject: Subject<any>
 }
 
 interface ModalAllowedComponent extends ReactElement<Dialog | SweetAlert> {
@@ -57,9 +59,9 @@ class Modal {
         render() {
             return null; 
         }
-    }): ModalPromise<ModalInstance> {
+    }): ModalObserable<ModalInstance> {
         if(!canUseDOM) {
-            return Promise.reject(new Error('Can not manipulate DOM in current environment.'));
+            return from(Promise.reject(new Error('Can not manipulate DOM in current environment.')));
         }
         
         this.backdrop = document.createElement('div');
@@ -72,7 +74,7 @@ class Modal {
             closeModal: options.closeModal
         });
 
-        const promise: ModalPromise<ModalInstance> = new Promise<ModalInstance>((resolve, reject) => {
+        const promise = new Promise<ModalInstance>((resolve, reject) => {
             document.body.appendChild(this.backdrop);
 
             setTimeout(() => {
@@ -88,9 +90,11 @@ class Modal {
             }, 150);
         });
 
-        promise.result = modalInstance.result;
+        const observable = from(promise) as ModalObserable<ModalInstance>;
 
-        return promise;
+        observable.result = modalInstance.result;
+
+        return observable;
     }
 
     confirm() {
@@ -144,13 +148,18 @@ export class ModalInstance {
     close<S = any, T = any>(payload?: ModalResultPayload<T, S>) {
         unmountComponentAtNode(this.container);
         this.container.remove();
+        const completeSubject = new Subject<any>();
+
         if(this.closeModalAfterClose) {
             this.modal.destroy();
         }
+
         this.resultSubject.next({
             modalInstance: this,
-            payload: payload
+            payload: payload,
+            completeSubject
         });
+
         this.resultSubject.complete();
     }
 

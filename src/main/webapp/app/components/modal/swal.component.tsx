@@ -146,25 +146,10 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
         }, 150);
     }
 
-    onButtonClick(key: string, button: ButtonOptions) {
+    onButtonClick(key: string) {
         
         if(key === CANCEL_KEY) {
             this.dismiss();
-            return false;
-        }
-        
-        if(isFunction(this.props.beforeSubmit)) {
-            const result = this.props.beforeSubmit();
-            if(result === true) {
-                this.close<boolean>(key, true);
-            } else if(result) {
-                result.then(() => {
-                    this.close<boolean>(key, true);
-                }, () => {
-                    this.close<boolean>(key, false);
-                });
-            }
-
             return false;
         }
 
@@ -182,7 +167,7 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
                     Object.keys(this.buttons).map((key, index) => {
                         return (
                             <div key={index} className="swal-button-container">
-                                <button className={`swal-button swal-button--${key === CONFIRM_KEY ? (this.props.dangerMode ? 'danger' : key) : key}`} autoFocus={key === focusKey} onClick={() => this.onButtonClick(key, this.buttons[key])}>
+                                <button className={`swal-button swal-button--${key === CONFIRM_KEY ? (this.props.dangerMode ? 'danger' : key) : key}`} autoFocus={key === focusKey} onClick={() => this.onButtonClick(key)}>
                                     {this.buttons[key].text}
                                 </button>
                                 <div className="swal-button__loader">

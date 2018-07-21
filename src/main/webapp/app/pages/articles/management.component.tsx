@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Component } from "react";
+import * as Observable from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 import { List } from 'react-virtualized';
 import { PageBody } from '@/pages/styles';
 import { ManagementPageWrapper, ManagementPageHeader } from '@/pages/articles/management.styles';
@@ -79,15 +81,6 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                         title="Move to trash!" 
                         text="Are you sure to move this article to trash?"
                         dangerMode={true}
-                        beforeSubmit={
-                            () => new Promise(
-                                (resolve, reject) => {
-                                    setTimeout(() => {
-                                        resolve(123)
-                                    }, 1000)
-                                }
-                            )
-                        }
                         buttons={{
                             cancel: true,
                             confirm: true
@@ -105,11 +98,14 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                     // </Dialog>
                 )
             }
-        }).result.subscribe(({modalInstance, payload}) => {
+        }).result.pipe(flatMap((project) => {
+            console.log(project);
+            return Observable.of(project);
+        })).subscribe(({modalInstance, payload, completeSubject}) => {
             if(payload) {
                 switch (payload.source) {
                     case 'confirm':
-                        console.log(payload.data);
+                        completeSubject.next([123]);
                         modalInstance.open({
                             render({modalInstance}) {
                                 return <SweetAlert 
@@ -123,8 +119,8 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                     default:;
                 }
             }
-        }, () => {
-            
+
+            return 123;
         });
     }
 
