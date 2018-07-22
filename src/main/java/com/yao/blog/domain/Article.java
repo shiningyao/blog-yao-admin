@@ -5,6 +5,8 @@ import java.time.Instant;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -50,7 +52,8 @@ public class Article extends AbstractAuditingEntity {
     public static enum Status {
 
         OFFLINE,
-        ONLINE;
-        
+        ONLINE,
+        TRASHED;
+
     }
 }

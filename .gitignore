@@ -2,6 +2,7 @@
 .idea/
 .awcache/
 /*.iml
+src/querydsl
 bin
 build
 out

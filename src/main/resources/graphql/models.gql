@@ -6,13 +6,14 @@ schema {
 
 enum ArticleStatus {
     OFFLINE,
-    ONLINE
+    ONLINE,
+    TRASHED
 }
 
 type Query {
     users: [User]
     user(login: String): User
-    articles: [Article],
+    articles(status: ArticleStatus): [Article],
     article(id: String): Article
 }
 

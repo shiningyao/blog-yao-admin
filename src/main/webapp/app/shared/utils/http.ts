@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, from } from 'rxjs';
 import * as Cookie from 'js-cookie';
 
 export default class Http {
@@ -44,6 +44,18 @@ export default class Http {
         return observable;
     }
 
+    put<D = any, T = any>(url: string, data?: D, config?: AxiosRequestConfig): Observable<AxiosResponse<T>> {
+        const observable: Observable<AxiosResponse<T>> = Observable.create((observer: Observer<AxiosResponse<T>>) => {
+            this.axiosInstance.put(url, data, config).then((res) => {
+                observer.next(res);
+                observer.complete();
+            }).catch((error) => {
+                observer.error(error);
+            });
+        });
+        return observable;
+    }
+
     post<D = any, T = any>(url: string, data?: D, config?: AxiosRequestConfig): Observable<AxiosResponse<T>> {
         const observable: Observable<AxiosResponse<T>> = Observable.create((observer: Observer<AxiosResponse<T>>) => {
             this.axiosInstance.post(url, data, config).then((res) => {
@@ -56,4 +68,7 @@ export default class Http {
         return observable;
     }
 
+    delete(url: string, config?: AxiosRequestConfig): Observable<AxiosResponse<void>> {
+        return from(this.axiosInstance.delete(url, config));
+    }
 }

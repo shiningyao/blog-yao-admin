@@ -4,7 +4,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { StaticContext, Omit } from "react-router";
 import hoistStatics = require("hoist-non-react-statics");
 import { canUseDOM } from '@/shared/utils/exenv';
-import { Subject, Observable, from } from 'rxjs';
+import { Subject, Observable, from, OperatorFunction, Subscription, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { Dialog } from '@/components/modal/dialog.component';
 import { SweetAlert } from '@/components/modal/swal.component';
@@ -16,7 +16,7 @@ export interface ModalProps<P, C extends StaticContext = StaticContext> {
 }
 
 export interface ModalObserable<T> extends Observable<T> {
-    result?: Observable<ModalResult>;
+    result?: ModalResultSubject;
 };
 
 interface ModalResultPayload<T = any, S = any> {
@@ -26,8 +26,7 @@ interface ModalResultPayload<T = any, S = any> {
 
 interface ModalResult {
     modalInstance: ModalInstance,
-    payload?: ModalResultPayload,
-    completeSubject: Subject<any>
+    payload?: ModalResultPayload
 }
 
 interface ModalAllowedComponent extends ReactElement<Dialog | SweetAlert> {
@@ -120,6 +119,7 @@ export class ModalInstance {
     private modal: Modal;
     renderedComponent: Component<any, ComponentState> | Element | void;
     private resultSubject = new Subject<ModalResult>();
+    private completeSubject: Subject<any>;
     private closeModalAfterDismiss = true;
     private closeModalAfterClose = true;
 
@@ -145,19 +145,19 @@ export class ModalInstance {
         }
     }
 
-    close<S = any, T = any>(payload?: ModalResultPayload<T, S>) {
+    close() {
         unmountComponentAtNode(this.container);
         this.container.remove();
-        const completeSubject = new Subject<any>();
-
         if(this.closeModalAfterClose) {
             this.modal.destroy();
         }
+    }
 
+    beforeClose<S = any, T = any>(payload?: ModalResultPayload<T, S>) {
+        
         this.resultSubject.next({
             modalInstance: this,
-            payload: payload,
-            completeSubject
+            payload: payload
         });
 
         this.resultSubject.complete();
@@ -175,7 +175,16 @@ export class ModalInstance {
     }
 
     get result() {
-        return this.resultSubject.asObservable();
+        if(!this.completeSubject) {
+            this.completeSubject = new Subject<any>();
+        }
+        const modalResultSubject = new ModalResultSubject(this.resultSubject.asObservable(), this.completeSubject);
+        return modalResultSubject;
+    }
+
+    get completeObservable() {
+        const completeObservable = this.completeSubject || Observable.create(observer => observer.next());
+        return completeObservable;
     }
 
     open(options: ModalOpenOptions = {
@@ -191,6 +200,49 @@ export class ModalInstance {
             closeModal: options.closeModal
         });
         return modalInstance;
+    }
+}
+
+class ModalResultSubject {
+
+    private resultObservable: Observable<ModalResult>;
+    private completeSubject = new Subject<any>();
+    private observables: Observable<any>[] = [];
+    private subscribed = false;
+    private modalResult: ModalResult;
+
+    constructor(resultObservable: Observable<ModalResult>, completeSubject: Subject<any>) {
+        this.resultObservable = resultObservable.pipe(flatMap((value) => {
+            this.modalResult = value;
+            return of(value);
+        }));
+        this.completeSubject = completeSubject;
+        this.observables.push(this.resultObservable);
+    }
+
+    pipe<A>(op1: OperatorFunction<ModalResult | any, A>): ModalResultSubject {
+        const source = this.observables[this.observables.length - 1];
+        this.observables.push(source.pipe(flatMap((value) => {
+            return of(Object.assign({
+                value
+            }, this.modalResult));
+        })).pipe(op1));
+        return this;
+    }
+
+    subscribe(): Subscription {
+        const source = this.observables[this.observables.length - 1];
+        const subscription = source.subscribe(this.completeSubject);
+        this.subscribed = true;
+        return subscription;
+    }
+
+    get observable() {
+        return this.resultObservable;
+    }
+
+    get isSubscribed() {
+        return this.subscribed;
     }
 }
 

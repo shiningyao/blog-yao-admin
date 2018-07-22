@@ -6,7 +6,7 @@ import { EditorPageWrapper } from '@/pages/articles/editor.styles';
 import { PageHeader, PageBody } from '@/pages/styles';
 import { ArticleEditor } from '@/components/editor/editor.component';
 import { connect } from 'react-redux';
-import { Article, PostState } from '@/domain/article';
+import { Article, PostStatus } from '@/domain/article';
 import { NavLink } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 import Http from '@/shared/utils/http';
@@ -24,7 +24,7 @@ interface ComposePageStates {
 class ComposePage extends Component<ComposePageProps, any> {
 
     private article = {
-        state: PostState.OFFLINE
+        status: PostStatus.OFFLINE
     };
     private http: Http;
 
@@ -85,6 +85,7 @@ class ComposePage extends Component<ComposePageProps, any> {
 
     onSubmit() {
         const articleId = this.props.match.params.articleId;
+        this.article.status = PostStatus.ONLINE;
         if(articleId) {
             this.edit(this.article as Article);
         } else {

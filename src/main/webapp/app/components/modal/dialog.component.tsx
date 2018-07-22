@@ -5,6 +5,7 @@ import { ModalInstance } from "@/components/modal";
 import isFunction = require('lodash/isFunction');
 import isString = require('lodash/isString');
 import isArray = require('lodash/isArray');
+import { Subscription } from "rxjs";
 
 export enum DialogButtonType {
     CONFIRM,
@@ -27,6 +28,8 @@ interface DialogComponentProps {
 
 export class Dialog extends Component<DialogComponentProps, any> {
 
+    private completeSubscription: Subscription;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -41,6 +44,12 @@ export class Dialog extends Component<DialogComponentProps, any> {
                 show: true
             });
         }, 150);
+    }
+
+    componentWillUnmount() {
+        if(this.completeSubscription) {
+            this.completeSubscription.unsubscribe();
+        }
     }
 
     renderHeader(): ReactElement<any> {
@@ -143,18 +152,28 @@ export class Dialog extends Component<DialogComponentProps, any> {
         }
     }
 
-    close() {
-        this.setState({
-            show: false
+    close<T = any>(key: string, data?: T) {
+
+        this.props.modalInstance.beforeClose<string, T>({
+            source: key,
+            data
         });
 
-        this.onTransitionEnd = () => {
-            if(!this.state.show) {
-                setTimeout(() => {
-                    this.props.modalInstance.close();
-                }, 150);
+        this.completeSubscription = this.props.modalInstance.completeObservable.subscribe((value) => {
+
+            this.setState({
+                show: false
+            });
+    
+            this.onTransitionEnd = () => {
+                if(!this.state.show) {
+                    setTimeout(() => {
+                        this.props.modalInstance.close();
+                    }, 150);
+                }
             }
-        }
+        });
+
     }
 
     onTransitionEnd() {

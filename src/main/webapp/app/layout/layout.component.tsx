@@ -47,7 +47,7 @@ export default class AppLayout extends Component<{}, {}> {
                                 <PrivateRoute path="/dashboard" component={Home}></PrivateRoute>
                                 <PrivateRoute path="/articles/compose/:articleId?" component={ComposePage}></PrivateRoute>
                                 <PrivateRoute path="/articles/editor" component={EditorPage}></PrivateRoute>
-                                <PrivateRoute path="/articles/management" component={ArticleManagementPage}></PrivateRoute>
+                                <PrivateRoute path="/articles/management" forceRefresh={true} component={ArticleManagementPage}></PrivateRoute>
                             </Switch>
                         </div>
                     </main>

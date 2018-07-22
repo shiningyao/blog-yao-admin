@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component } from "react";
 import * as Observable from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, delay, catchError } from 'rxjs/operators';
 import { List } from 'react-virtualized';
 import { PageBody } from '@/pages/styles';
 import { ManagementPageWrapper, ManagementPageHeader } from '@/pages/articles/management.styles';
@@ -12,18 +12,20 @@ import { Query } from 'react-apollo';
 import * as classNames from 'classnames';
 import gql from 'graphql-tag';
 import * as moment from 'moment';
-import { PostState, Article } from '@/domain/article';
+import { PostStatus, Article } from '@/domain/article';
 import { withModal, ModalProps, ModalInstance } from '@/components/modal';
 import { compose } from 'redux';
 import { Dialog, DialogButtonType } from '@/components/modal/dialog.component';
 import { SweetAlert } from '@/components/modal/swal.component';
+import Http from '@/shared/utils/http';
+import { SERVER_API_URL } from '@/app.constants';
 
 interface ArticleManagementPageStates {
     listWidth: number,
     listHeight: number,
     showSearchBar: boolean,
     filters: {
-        status: PostState
+        status: PostStatus
     }
 }
 
@@ -35,6 +37,7 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
 
     private listContainerRef: React.RefObject<HTMLDivElement>;
     private refetchListData: (variables?: {}) => Promise<{}> = () => new Promise((resolve) => resolve());
+    private http: Http;
 
     constructor(props) {
         super(props);
@@ -43,11 +46,12 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
             listHeight: 300,
             showSearchBar: false,
             filters: {
-                status: PostState.ONLINE
+                status: PostStatus.ONLINE
             }
         };
         this.listContainerRef = React.createRef<HTMLDivElement>();
         this.filter = this.filter.bind(this);
+        this.http = new Http();
         this.moveToTrash = this.moveToTrash.bind(this);
     }
 
@@ -67,11 +71,24 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
     filter(condition: ArticleManagementPageStates["filters"]) {
         Object.assign(this.state.filters, condition);
         this.setState(this.state);
-        this.refetchListData();
+        // this.refetchListData();
     }
     
     moveToTrash(article: Article) {
+        const params = Object.assign({}, article);
+        params.status = PostStatus.TRASHED;
+        this.http.put<any, any>(`${SERVER_API_URL}/api/articles/${article.id}`, params, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).subscribe(() => {
+            this.refetchListData();
+        }, () => {
+            alert('error');
+        });
+    }
 
+    delete(article: Article) {
         this.props.modal.open({
             closeModal: [true, false],
             render: ({modalInstance}) => {
@@ -92,42 +109,49 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                     //         type: DialogButtonType.CANCEL
                     //     }, {
                     //         text: 'custom submit',
-                    //         type: DialogButtonType.OK
+                    //         type: DialogButtonType.CONFIRM
                     //     }]}>
                     //     body
                     // </Dialog>
                 )
             }
-        }).result.pipe(flatMap((project) => {
-            console.log(project);
-            return Observable.of(project);
-        })).subscribe(({modalInstance, payload, completeSubject}) => {
+        }).result.pipe(flatMap(() => {
+            const params = Object.assign({}, article);
+            params.status = PostStatus.TRASHED;
+            return this.http.delete(`${SERVER_API_URL}/api/articles/${article.id}`).pipe(catchError((error) => {
+                return Observable.of({
+                    error
+                });
+            })).pipe(delay(2000));
+        })).pipe(flatMap(({modalInstance, payload, value}) => {
             if(payload) {
                 switch (payload.source) {
                     case 'confirm':
-                        completeSubject.next([123]);
+                        if(!value.error) {
+                            this.refetchListData();
+                        }
                         modalInstance.open({
                             render({modalInstance}) {
                                 return <SweetAlert 
                                     modalInstance={modalInstance}
-                                    icon="success"
-                                    title="Deleted"
-                                    text="Already moved to trash."></SweetAlert>
+                                    icon={value.error ? 'error': 'success'}
+                                    title={value.error ? 'Error' : 'Deleted'}
+                                    text={value.error ? value.error.message || 'Unknown error!' : 'Already moved to trash.'}
+                                    buttons={[false, true]}></SweetAlert>
                             }
                         });
                         break;
                     default:;
                 }
             }
-
-            return 123;
-        });
+            return Observable.of();
+        })).subscribe();
     }
 
     componentDidUpdate() {
         this.refetchListData();
     }
-
+    
     render() {
         return (
             <ManagementPageWrapper>
@@ -218,18 +242,18 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                             <div className="text-center">
                                 <div className="btn-group" role="group">
                                     <a href="javascript:void(0)" 
-                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostState.ONLINE}])}
-                                        onClick={() => this.filter({status: PostState.ONLINE})}>
+                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostStatus.ONLINE}])}
+                                        onClick={() => this.filter({status: PostStatus.ONLINE})}>
                                         Published
                                     </a>
                                     <a href="javascript:void(0)" 
-                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostState.OFFLINE}])}
-                                        onClick={() => this.filter({status: PostState.OFFLINE})}>
+                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostStatus.OFFLINE}])}
+                                        onClick={() => this.filter({status: PostStatus.OFFLINE})}>
                                         Drafts
                                     </a>
                                     <a href="javascript:void(0)" 
-                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostState.TRASHED}])}
-                                        onClick={() => this.filter({status: PostState.TRASHED})}>
+                                        className={classNames(['btn btn-primary btn-outline-primary', {active: this.state.filters.status === PostStatus.TRASHED}])}
+                                        onClick={() => this.filter({status: PostStatus.TRASHED})}>
                                         Trashed
                                     </a>
                                 </div>
@@ -238,10 +262,11 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                         <div className="card-body">
                             <div className="article-list" ref={this.listContainerRef} style={{height: '100%'}}>
                                 <Query query={gql`
-                                    query {
-                                        articles {
+                                    query articlesByStatus($status: ArticleStatus) {
+                                        articles(status: $status) {
                                             id,
                                             title,
+                                            status,
                                             author {
                                                 login
                                             },
@@ -249,7 +274,7 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                                         }
                                     }
                                 `} variables={{
-                                    
+                                    status: this.state.filters.status
                                 }}>
                                     {({loading, error, data, refetch}) => {
                                         if(loading) return <p>Loading...</p>;
@@ -302,12 +327,21 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                                                                 View
                                                             </a>
                                                         </li>
-                                                        <li className="move-to-trash">
-                                                            <a href="javascript: void(0)" onClick={() => this.moveToTrash(articles[index])}>
-                                                                <i className="action-icon icofont icofont-garbage"></i>
-                                                                Trash
-                                                            </a>
-                                                        </li>
+                                                        {
+                                                            this.state.filters.status === PostStatus.TRASHED ? 
+                                                            <li className="move-to-trash">
+                                                                <a href="javascript: void(0)" onClick={() => this.delete(articles[index])}>
+                                                                    <i className="action-icon icofont icofont-trash"></i>
+                                                                    Delete
+                                                                </a>
+                                                            </li> : 
+                                                            <li className="move-to-trash">
+                                                                <a href="javascript: void(0)" onClick={() => this.moveToTrash(articles[index])}>
+                                                                    <i className="action-icon icofont icofont-garbage"></i>
+                                                                    Trash
+                                                                </a>
+                                                            </li>
+                                                        }
                                                         <li>
                                                             <a href="javascript: void(0)">
                                                                 <i className="action-icon ti-more-alt"></i>

@@ -9,6 +9,7 @@ import isArray = require('lodash/isArray');
 import isString = require('lodash/isString');
 import isBoolean = require('lodash/isBoolean');
 import isObject = require('lodash/isObject');
+import { Subscription } from "rxjs";
 
 const CONFIRM_KEY = "confirm";
 const CANCEL_KEY = "cancel";
@@ -25,7 +26,8 @@ interface SweetAlertProps {
 
 interface SweetAlertStates {
     show: boolean,
-    hide: boolean
+    hide: boolean,
+    loading: boolean
 }
 
 const defaultButtonList: ButtonList = {
@@ -48,12 +50,14 @@ const defaultButtonList: ButtonList = {
 export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
 
     private buttons: ButtonList | Array<string | boolean> | boolean;
+    private completeSubscription: Subscription;
 
     constructor(props) {
         super(props);
         this.state = {
             show: false,
-            hide: false
+            hide: false,
+            loading: false
         };
         this.buttons = this.formatButtons();
         this.onAnimationEnd = this.onAnimationEnd.bind(this);
@@ -146,6 +150,12 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
         }, 150);
     }
 
+    componentWillUnmount() {
+        if(this.completeSubscription) {
+            this.completeSubscription.unsubscribe();
+        }
+    }
+
     onButtonClick(key: string) {
         
         if(key === CANCEL_KEY) {
@@ -166,12 +176,17 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
                 return (
                     Object.keys(this.buttons).map((key, index) => {
                         return (
-                            <div key={index} className="swal-button-container">
-                                <button className={`swal-button swal-button--${key === CONFIRM_KEY ? (this.props.dangerMode ? 'danger' : key) : key}`} autoFocus={key === focusKey} onClick={() => this.onButtonClick(key)}>
+                            <div key={index} className={classNames(['swal-button-container', {loading: this.state.loading}])}>
+                                <button disabled={this.state.loading} className={`swal-button swal-button--${key === CONFIRM_KEY ? (this.props.dangerMode ? 'danger' : key) : key}`} autoFocus={key === focusKey} onClick={() => this.onButtonClick(key)}>
                                     {this.buttons[key].text}
                                 </button>
-                                <div className="swal-button__loader">
-                                </div>
+                                {key === CONFIRM_KEY ?
+                                    <div className={classNames(['swal-button__loader', {loading: this.state.loading}])}>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div> : null
+                                }
                             </div>
                         );
                     })
@@ -252,21 +267,46 @@ export class SweetAlert extends Component<SweetAlertProps, SweetAlertStates> {
     }
 
     close<T = any>(key: string, data?: T) {
-        this.setState({
-            show: false,
-            hide: true
+
+        this.props.modalInstance.beforeClose<string, T>({
+            source: key,
+            data
         });
 
-        this.onAnimationEnd = () => {
-            if(this.state.hide) {
-                setTimeout(() => {
-                    this.props.modalInstance.close<string, T>({
-                        source: key,
-                        data
-                    });
-                }, 0);
+        this.setState({
+            loading: true
+        });
+
+        this.completeSubscription = this.props.modalInstance.completeObservable.subscribe((value) => {
+            this.setState({
+                show: false,
+                hide: true,
+                loading: false
+            });
+    
+            this.onAnimationEnd = () => {
+                if(this.state.hide) {
+                    setTimeout(() => {
+                        this.props.modalInstance.close();
+                    }, 0);
+                }
             }
-        }
+        }, () => {
+        }, () => {
+            this.setState({
+                show: false,
+                hide: true,
+                loading: false
+            });
+    
+            this.onAnimationEnd = () => {
+                if(this.state.hide) {
+                    setTimeout(() => {
+                        this.props.modalInstance.close();
+                    }, 0);
+                }
+            }
+        });
 
     }
 

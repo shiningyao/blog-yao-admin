@@ -34,7 +34,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
     }
     
     componentDidUpdate(prevProps) {
-        if(prevProps.article.content !== this.props.article.content) {
+        if((prevProps.article && this.props.article) && prevProps.article.content !== this.props.article.content) {
             this.setState({
                 article: this.props.article
             });
@@ -179,7 +179,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                     {'hidden': !this.state.editorLoaded},
                     {'empty': this.state.isEmpty}
                 ])}>
-                <div dangerouslySetInnerHTML={{__html: this.state.article.content}} ref={this.editorRef} placeholder="Write article content from here..." onBlur={this.onEditorBlur}>
+                <div dangerouslySetInnerHTML={this.state.article? {__html: this.state.article.content} : undefined} ref={this.editorRef} placeholder="Write article content from here..." onBlur={this.onEditorBlur}>
                 </div>
             </EditorWrapper>
         );
