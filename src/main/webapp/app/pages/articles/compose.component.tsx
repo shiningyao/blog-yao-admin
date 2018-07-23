@@ -71,7 +71,7 @@ class ComposePage extends Component<ComposePageProps, any> {
                 if(result.errors) {
                     reject(result.errors);
                 }
-                this.article = result.data.article;
+                this.article = Object.assign({}, result.data.article);
                 resolve(result.data.article);
             }, (reason) => {
                 reject(reason);

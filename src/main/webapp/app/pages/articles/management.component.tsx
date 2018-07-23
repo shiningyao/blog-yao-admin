@@ -268,6 +268,7 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                                             title,
                                             status,
                                             author {
+                                                id
                                                 login
                                             },
                                             publishDate

@@ -9,6 +9,8 @@ import com.yao.blog.domain.User;
 import com.yao.blog.repository.ArticleRepository;
 import com.yao.blog.repository.UserRepository;
 
+import org.json.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,7 +61,9 @@ public class ArticleResource {
         Article updatedArticle = null;
         if(this.articleRepository.existsById(id)) {
             Article article = this.articleRepository.findById(id).get();
-            article.setStatus(params.getStatus());
+            JSONObject jsonObj = new JSONObject(params);
+            jsonObj.keys();
+            BeanUtils.copyProperties(params, article, "id");
             updatedArticle = this.articleRepository.save(article);
         } else {
             status = HttpStatus.NOT_FOUND;
