@@ -12,6 +12,7 @@ import { RouteComponentProps } from 'react-router';
 import Http from '@/shared/utils/http';
 import client from '@/shared/utils/gql-client';
 import gql from 'graphql-tag';
+import { SERVER_API_URL } from '@/app.constants';
 
 interface ComposePageProps extends RouteComponentProps<any, any> {
     [key: string]: any
@@ -46,6 +47,10 @@ class ComposePage extends Component<ComposePageProps, any> {
         }
     }
 
+    componentWillUpdate() {
+        
+    }
+
     fetchData(articleId): Promise<Article> {
         
         return new Promise<Article>((resolve, reject) => {
@@ -55,10 +60,12 @@ class ComposePage extends Component<ComposePageProps, any> {
                 query: gql`
                     query fetchArticle($id: String) {
                         article(id: $id) {
+                            id,
                             title,
                             content,
                             publishDate,
                             author {
+                                id,
                                 login
                             }
                         }
@@ -94,7 +101,16 @@ class ComposePage extends Component<ComposePageProps, any> {
     }
 
     edit(article: Article){
-        alert('edit');
+        const { history } = this.props;
+        this.http.put<Article, Article>(`${SERVER_API_URL}/api/articles/${article.id}`, article, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).subscribe(() => {
+            history.push('/articles/management');
+        }, () => {
+            alert('error');
+        });
     }
 
     save(article: Article) {

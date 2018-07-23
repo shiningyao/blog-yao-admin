@@ -317,7 +317,12 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                                                     </div>
                                                     <ul className="operations-col">
                                                         <li>
-                                                            <NavLink to={`/articles/compose/${articles[index].id}`}>
+                                                            <NavLink to={{
+                                                                pathname: `/articles/compose/${articles[index].id}`,
+                                                                state: {
+                                                                    refresh: true
+                                                                }
+                                                            }}>
                                                                 <i className="action-icon icofont icofont-edit-alt"></i>
                                                                 Edit
                                                             </NavLink>
