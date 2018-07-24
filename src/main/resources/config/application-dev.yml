@@ -5,6 +5,9 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017
       database: blogyao
+server:
+  port: 8080
+  
 blogyao: 
   cache: 
     ehcache:

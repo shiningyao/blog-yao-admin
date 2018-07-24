@@ -1,3 +1,29 @@
 spring:
   profiles:
     active: prod
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017
+      database: blogyao
+server:
+  port: 8082
+  compression:
+        enabled: true
+        mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
+        min-response-size: 1024
+        
+blogyao: 
+  cache: 
+    ehcache:
+      time-to-live-seconds: 3600
+      max-entries: 100
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
+  security:
+      remember-me:
+          key: 69165b32927c3314832227a252fc64e15a8cb1b0

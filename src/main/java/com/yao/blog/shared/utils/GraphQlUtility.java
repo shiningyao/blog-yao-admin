@@ -1,7 +1,7 @@
 package com.yao.blog.shared.utils;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
@@ -83,8 +83,8 @@ public class GraphQlUtility {
     
     @PostConstruct
     public void createGraphQlObject() throws IOException {
-        File schemas = schemaResource.getFile();
-        TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(schemas);
+        InputStreamReader schemaReader = new InputStreamReader(schemaResource.getInputStream());
+        TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(schemaReader);
         RuntimeWiring wiring = buildRuntimeWiring();
         GraphQLSchema schema = new SchemaGenerator().makeExecutableSchema(typeRegistry, wiring);
         CachingProvider provider = Caching.getCachingProvider();
