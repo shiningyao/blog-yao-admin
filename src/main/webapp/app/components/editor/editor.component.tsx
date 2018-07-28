@@ -69,7 +69,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
             const Bold = require('@ckeditor/ckeditor5-basic-styles/src/bold').default;
             const Italic = require('@ckeditor/ckeditor5-basic-styles/src/italic').default;
             const Font = require('@ckeditor/ckeditor5-font/src/font').default;
-            const Hight = require('@ckeditor/ckeditor5-highlight/src/highlight').default;
+            // const Highlight = require('@ckeditor/ckeditor5-highlight/src/highlight').default;
             const Link = require('@ckeditor/ckeditor5-link/src/link').default;
             const List = require('@ckeditor/ckeditor5-list/src/list').default;
             const Image = require('@ckeditor/ckeditor5-image/src/image').default;
@@ -89,7 +89,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                     Bold,
                     Italic,
                     Font,
-                    Hight,
+                    // Highlight,
                     Link,
                     List,
                     Image,
@@ -117,7 +117,7 @@ export class ArticleEditor extends Component<ArticleEditorProps, ArticleEditorSt
                 },
                 toolbar: [  
                     'heading', '|', 
-                    'bold', 'italic', 'fontSize', 'fontFamily', 'highlight', '|', 
+                    'bold', 'italic', 'fontSize', 'fontFamily', /*'highlight',*/ '|', 
                     'link', 'bulletedList', 
                     'numberedList', 'imageUpload', 'blockquote',
                     'alignment:left', 'alignment:center', 'alignment:right', '|',

@@ -21,6 +21,13 @@
             "request": "attach",
             "hostName": "localhost",
             "port": 5005
+        },
+        {
+            "type": "java",
+            "name": "Debug Remote (Attach)",
+            "request": "attach",
+            "hostName": "www.yaoshining.com",
+            "port": 5005
         }
     ]
 }

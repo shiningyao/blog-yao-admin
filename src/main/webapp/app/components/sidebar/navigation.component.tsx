@@ -14,6 +14,7 @@ import isArray = require('lodash/isArray');
 import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { setBreadcrumbs } from '@/shared/actions';
+import { MENUS } from '@/shared/configs/menus';
 
 class SidebarNav extends Component<any, {
     menus: Object,
@@ -87,53 +88,54 @@ class SidebarNav extends Component<any, {
     }
 
     componentDidMount() {
-        this.http.getData<{
-             [category: string]: [Menu]
-        }>('/api/menus').subscribe(data => {
-            this.setState({
-                menus: data
-            });
-            const menus = [].concat(...Object.values(data));
-            const breadcrumbs = [];
-            const initMenus = (menus, parent?, location?) => {
-                breadcrumbs.length = 0;
-                location = location || this.props.location;
-                menus.forEach((menu) => {
-                    if(parent) {
-                        menu.$parent = parent;
-                    }
-
-                    function initBreadcrumbs(menu) {
-                        breadcrumbs.unshift(menu);
-                        if(menu.$parent) {
-                            menu.$parent.$isOpen = true;
-                            initBreadcrumbs(menu.$parent);
-                        }
-                    }
-    
-                    function isCurrent(currentPathname, menu) {
-                        const pathname = isObject(menu.to) ? menu.to.pathname : menu.to;
-                        const match = matchPath(currentPathname, {
-                            path: pathname,
-                            exact: false,
-                            strict: false
-                        });
-                        return match;
-                    }
-    
-                    if(isArray(menu.children) && menu.children.length > 0) {
-                        initMenus(menu.children, menu);
-                    } else {
-                        if(isCurrent(location.pathname, menu)) {
-                            initBreadcrumbs(menu);
-                        }
-                    }
-    
-                });
-            };
-            initMenus(menus);
-            this.props.setBreadcrumbs(breadcrumbs);
+        this.setState({
+            menus: MENUS
         });
+        const menus = [].concat(...Object.values(MENUS));
+        const breadcrumbs = [];
+        const initMenus = (menus, parent?, location?) => {
+            breadcrumbs.length = 0;
+            location = location || this.props.location;
+            menus.forEach((menu) => {
+                if(parent) {
+                    menu.$parent = parent;
+                }
+
+                function initBreadcrumbs(menu) {
+                    breadcrumbs.unshift(menu);
+                    if(menu.$parent) {
+                        menu.$parent.$isOpen = true;
+                        initBreadcrumbs(menu.$parent);
+                    }
+                }
+
+                function isCurrent(currentPathname, menu) {
+                    const pathname = isObject(menu.to) ? menu.to.pathname : menu.to;
+                    const match = matchPath(currentPathname, {
+                        path: pathname,
+                        exact: false,
+                        strict: false
+                    });
+                    return match;
+                }
+
+                if(isArray(menu.children) && menu.children.length > 0) {
+                    initMenus(menu.children, menu);
+                } else {
+                    if(isCurrent(location.pathname, menu)) {
+                        initBreadcrumbs(menu);
+                    }
+                }
+
+            });
+        };
+        initMenus(menus);
+        this.props.setBreadcrumbs(breadcrumbs);
+        // this.http.getData<{
+        //      [category: string]: [Menu]
+        // }>('/api/menus').subscribe(data => {
+            
+        // });
     }
 
     render() {
