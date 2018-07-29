@@ -3,6 +3,8 @@ package com.yao.blog.datafetchers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.yao.blog.domain.Article;
 import com.yao.blog.domain.QArticle;
 import com.yao.blog.domain.Article.Status;
@@ -26,9 +28,18 @@ public class ArticlesDataFetcher implements DataFetcher<List<Article>> {
 	@Override
 	public List<Article> get(DataFetchingEnvironment environment) {
 		List<Article> result = new ArrayList<>();
+		BooleanBuilder builder = new BooleanBuilder();
 		String status = environment.getArgument("status");
 		QArticle article = new QArticle("article");
-		articleRepository.findAll(article.status.eq(Status.valueOf(status))).forEach(result::add);
+		if(status != null) {
+			builder.and(article.status.eq(Status.valueOf(status)));
+		}
+		if(builder.hasValue()) {
+			Predicate predicate = builder.getValue();
+			articleRepository.findAll(predicate).forEach(result::add);
+		} else {
+			articleRepository.findAll().forEach(result::add);  // Should avoid fetch all posts, this place need edit;
+		}
 		return result;
 	}
     
