@@ -33,9 +33,7 @@ class BlogApp extends Component<AppProps, {}> {
                                 );
                             } else {
                                 return (
-                                    <div>
-                                        <PrivateRoute title="Home" {...props} component={AppLayout} />
-                                    </div>
+                                    <PrivateRoute title="Home" {...props} component={AppLayout} />
                                 );
                             }
                         }

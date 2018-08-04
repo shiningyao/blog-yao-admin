@@ -1,7 +1,5 @@
 package com.yao.blog.web.rest;
 
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import com.yao.blog.domain.Article;
@@ -10,7 +8,6 @@ import com.yao.blog.repository.ArticleRepository;
 import com.yao.blog.repository.UserRepository;
 import com.yao.blog.shared.utils.BeanUtils;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

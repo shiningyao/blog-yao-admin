@@ -25,7 +25,7 @@ public class TestArticle {
     public void readsFirstPageCorrectly() {
 
     //   Page<Article> articles = repository.findAll(PageRequest.of(0, 10));
-        Article article =  repository.findById(1L).get();
+        Article article =  repository.findAll().get(0);
         // assertThat(articles.isFirst(), is(true));
         assertThat(article.getId(), is(1));
     }

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Component } from 'react';
+import { Component, createElement } from 'react';
 import { Route, RouteProps, Redirect } from "react-router";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { identity } from '@/shared/actions';
+import { DefaultLayout } from '@/layout/layout.component';
 
 interface PrivateRouteProps extends RouteProps {
     [key: string]: any
@@ -31,7 +32,7 @@ class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<Priva
     }
 
     render() {
-        const {component: Component, ...rest} = this.props;
+        const {component: Component, layout, ...rest} = this.props;
         return (
             <Route
             {...rest}
@@ -41,6 +42,8 @@ class PrivateRoute<T extends PrivateRouteProps, S = any> extends Component<Priva
                         if(this.props.isAuthenticated) {
                             if(this.props.render) {
                                 return this.props.render(props);
+                            } else if (layout) {
+                                return createElement(layout, {}, <Component {...props} />);
                             } else {
                                 return (<Component {...props} />);
                             }

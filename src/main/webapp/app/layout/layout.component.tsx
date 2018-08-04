@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Switch, Redirect } from 'react-router-dom';
 import PrivateRoute from '@/shared/auth/route/private-route';
 import * as Loadable from 'react-loadable';
 import { ApolloProvider } from "react-apollo";
@@ -24,34 +24,78 @@ const EditorPage = Loadable({
     }
 });
 
+export class RootLayout extends Component<any, any> {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <Layout className="app-layout">
+                {this.props.children}
+            </Layout>
+        );
+    }
+
+}
+
+export class DefaultLayout extends Component<any, any> {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <Layout className="app-layout">
+                <header className="app-header">
+                    <Topbar></Topbar>
+                </header>
+                <main className="main-container">
+                    <Sidebar></Sidebar>
+                    <div className="main-content">
+                        {this.props.children}
+                    </div>
+                </main>
+            </Layout>
+        );
+    }
+}
+
 export default class AppLayout extends Component<{}, {}> {
 
     render() {
         return (
             <ApolloProvider client={client}>
-                <Layout className="app-layout">
-                    <header>
-                        <Topbar></Topbar>
-                    </header>
-                    <main className="main-container">
-                        <Sidebar></Sidebar>
-                        <div className="main-content">
-                            <Switch>
-                                <PrivateRoute exact path="/" render={
-                                    props => (
-                                        <Redirect to={{
-                                            pathname: '/dashboard'
-                                        }}></Redirect>
-                                    )
-                                }></PrivateRoute>
-                                <PrivateRoute path="/dashboard" component={Home}></PrivateRoute>
-                                <PrivateRoute path="/articles/compose/:articleId?" component={ComposePage}></PrivateRoute>
-                                <PrivateRoute path="/articles/editor" component={EditorPage}></PrivateRoute>
-                                <PrivateRoute path="/articles/management" forceRefresh={true} component={ArticleManagementPage}></PrivateRoute>
-                            </Switch>
-                        </div>
-                    </main>
-                </Layout>
+                <Switch>
+                    <PrivateRoute exact path="/" render={
+                        props => (
+                            <Redirect to={{
+                                pathname: '/dashboard'
+                            }}></Redirect>
+                        )
+                    }></PrivateRoute>
+                    <PrivateRoute path="/dashboard" component={Home} layout={DefaultLayout}></PrivateRoute>
+                    <PrivateRoute path="/articles/compose/:articleId?" component={ComposePage} layout={RootLayout}></PrivateRoute>
+                    <PrivateRoute path="/articles/editor" component={EditorPage} layout={DefaultLayout}></PrivateRoute>
+                    <PrivateRoute path="/articles/management" forceRefresh={true} component={ArticleManagementPage} layout={DefaultLayout}></PrivateRoute>
+                </Switch>
+                {/* <Switch>
+                    <Route>
+                        <Layout className="app-layout">
+                            <header className="app-header">
+                                <Topbar></Topbar>
+                            </header>
+                            <main className="main-container">
+                                <Sidebar></Sidebar>
+                                <div className="main-content">
+                                    
+                                </div>
+                            </main>
+                        </Layout>
+                    </Route>
+                </Switch> */}
             </ApolloProvider>
         )
     }

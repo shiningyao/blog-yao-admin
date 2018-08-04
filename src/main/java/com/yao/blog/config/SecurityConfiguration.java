@@ -124,7 +124,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .disable()
         .and()
             .authorizeRequests()
-            .antMatchers("/api/query").anonymous()
+            .antMatchers("/api/query").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/").authenticated();  // May change to real business pages.
 

@@ -128,7 +128,7 @@ class ComposePage extends Component<ComposePageProps, any> {
     render() {
         return (
             <EditorPageWrapper>
-                <PageHeader className="card">
+                {/* <PageHeader className="card">
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="page-header-title">
@@ -166,7 +166,7 @@ class ComposePage extends Component<ComposePageProps, any> {
                             </div>
                         </div>
                     </div>
-                </PageHeader>
+                </PageHeader> */}
                 <PageBody>
                     <div className="card">
                         <div className="card-header with-border">
