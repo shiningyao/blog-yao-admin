@@ -1,3 +1,24 @@
 .btn {
     border-radius: 2px;
+    &:focus, &:not(:disabled):not(.disabled):active {
+        box-shadow: none;
+    }
+}
+
+.btn-info {
+    &, &:hover, &:focus, &:not(:disabled):not(.disabled):active {
+        color: #fff;
+    }
+}
+
+.btn-success {
+    &, &:hover, &:not(:disabled):not(.disabled):active {
+        color: #fff;
+    }
+}
+
+.btn-outline-success {
+    color: $green;
+    background-color: #fff;
+    background-color: transparent;
 }
