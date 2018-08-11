@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Component } from "react";
+import { Component, SyntheticEvent } from "react";
 import { connect } from 'react-redux';
 import * as classNames from 'classnames';
 import { HeaderWrapper } from '@/components/editor/styles';
@@ -36,6 +36,7 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
             postDateFormated: this.postDate.format('ll')
         };
         this.onBlur = this.onBlur.bind(this);
+        this.onPaste = this.onPaste.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -78,6 +79,12 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
         }
     }
 
+    onPaste(e: SyntheticEvent) {
+        e.preventDefault();
+        var text = (e.nativeEvent as ClipboardEvent).clipboardData.getData("text/plain");
+        document.execCommand("insertHTML", false, text);
+    }
+
     render() {
         return (
             <HeaderWrapper className={classNames({focused: this.state.focused})}>
@@ -91,6 +98,7 @@ class HeaderEditor extends Component<HeaderEditorProps, HeaderEditorStates> {
                 <h2 className="article-title" 
                     onFocus={() => this.setState({focused: true})} 
                     onBlur={this.onBlur}
+                    onPaste={this.onPaste}
                     contentEditable={true} spellCheck={false}
                     suppressContentEditableWarning={true}
                     placeholder="Enter article title here.">
