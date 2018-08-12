@@ -95,6 +95,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
             .csrf()
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .ignoringAntMatchers("/api/query")
         .and()
             .addFilterBefore(corsFilter, CsrfFilter.class)
             .exceptionHandling()
