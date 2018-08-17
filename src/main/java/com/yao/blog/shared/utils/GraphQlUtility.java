@@ -117,7 +117,8 @@ public class GraphQlUtility {
                     .build();
     }
 
-	private RuntimeWiring buildRuntimeWiring() {
+	private RuntimeWiring buildRuntimeWiring() {       
+
         return newRuntimeWiring()
                     .type("Query", typeWiring -> typeWiring
                         .dataFetcher("users", allUsersDataFetcher)
@@ -130,7 +131,9 @@ public class GraphQlUtility {
                     )
                     .type("Article", typeWiring -> typeWiring
                         .dataFetcher("author", userDataFetcher)
-                    )   
+                        .dataFetcher("prev", articleDataFetcher)
+                        .dataFetcher("next", articleDataFetcher)
+                    )
                     .build();
 	}
 }

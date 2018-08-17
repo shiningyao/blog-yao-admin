@@ -10,10 +10,22 @@ enum ArticleStatus {
     TRASHED
 }
 
+input Pageable {
+    page: Int!,
+    size: Int!,
+    sort: [[String]]
+}
+
+type PageResult {
+    content: [PageableType!]
+}
+
+union PageableType = Article
+
 type Query {
     users: [User]
     user(login: String): User
-    articles(status: ArticleStatus): [Article],
+    articles(status: ArticleStatus, pageable: Pageable): [Article],
     article(id: String): Article
 }
 
@@ -39,5 +51,7 @@ type Article {
     content: String,
     publishDate: String,
     status: ArticleStatus,
+    prev: Article,
+    next: Article,
     author: User
 }

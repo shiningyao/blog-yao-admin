@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -43,6 +44,12 @@ public class Article extends AbstractAuditingEntity {
     private Instant publishDate;
 
     private Status status;
+
+    @Transient
+    private Article prev;
+
+    @Transient
+    private Article next;
 
     @DBRef
     private User author;

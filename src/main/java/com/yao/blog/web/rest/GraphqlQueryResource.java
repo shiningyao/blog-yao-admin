@@ -1,7 +1,6 @@
 package com.yao.blog.web.rest;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +14,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,12 +65,7 @@ public class GraphqlQueryResource {
             Map<String, Object> variables = new HashMap<>();
             if(jsonObject.has("variables")) {
                 JSONObject variablesJsonObject = jsonObject.getJSONObject("variables");
-                if(variablesJsonObject != null) {
-                    for(Iterator<String> it = variablesJsonObject.keys();it.hasNext();) {
-                        String key = it.next();
-                        variables.put(key, variablesJsonObject.get(key));
-                    }
-                }
+                variables = variablesJsonObject.toMap();
             }
             ExecutionResult executionResult = graphQL.execute(
                 new ExecutionInput(query, null, 
@@ -84,4 +82,5 @@ public class GraphqlQueryResource {
             result.put("data", executionResult.getData());
             return ResponseEntity.status(resultStatus).body(result);
     }
+    
 }
