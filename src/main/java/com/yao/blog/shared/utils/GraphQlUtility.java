@@ -20,6 +20,7 @@ import com.yao.blog.datafetchers.ArticleDataFetcher;
 import com.yao.blog.datafetchers.ArticlesDataFetcher;
 import com.yao.blog.datafetchers.AuthoritiesDataFetcher;
 import com.yao.blog.datafetchers.UserDataFetcher;
+import com.yao.blog.shared.TypeResolvers.PageTypeResolver;
 
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
@@ -133,6 +134,9 @@ public class GraphQlUtility {
                         .dataFetcher("author", userDataFetcher)
                         .dataFetcher("prev", articleDataFetcher)
                         .dataFetcher("next", articleDataFetcher)
+                    )
+                    .type("PageableType", typeWiring -> typeWiring
+                        .typeResolver(new PageTypeResolver())
                     )
                     .build();
 	}

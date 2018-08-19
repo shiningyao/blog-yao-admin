@@ -17,15 +17,21 @@ input Pageable {
 }
 
 type PageResult {
-    content: [PageableType!]
+    content: [PageableType!],
+    totalPages: Int,
+    totalElements: Int,
+    size: Int,
+    numberOfElements: Int,
+    first: Boolean,
+    last: Boolean
 }
 
-union PageableType = Article
+union PageableType = Article | User
 
 type Query {
     users: [User]
     user(login: String): User
-    articles(status: ArticleStatus, pageable: Pageable): [Article],
+    articles(status: ArticleStatus, pageable: Pageable): PageResult,
     article(id: String): Article
 }
 

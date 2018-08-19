@@ -1,17 +1,10 @@
 package com.yao.blog.datafetchers;
 
-import java.util.Optional;
-
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import com.yao.blog.domain.Article;
-import com.yao.blog.domain.QArticle;
 import com.yao.blog.domain.Article.Status;
 import com.yao.blog.repository.ArticleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
 import graphql.language.Field;

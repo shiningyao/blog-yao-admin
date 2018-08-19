@@ -262,26 +262,40 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                         <div className="card-body">
                             <div className="article-list" ref={this.listContainerRef} style={{height: '100%'}}>
                                 <Query query={gql`
-                                    query articlesByStatus($status: ArticleStatus) {
-                                        articles(status: $status) {
-                                            id,
-                                            title,
-                                            status,
-                                            author {
-                                                id
-                                                login
+                                    query articlesByStatus($status: ArticleStatus, $pageable: Pageable) {
+                                        articles(status: $status, pageable: $pageable) {
+                                            content {
+                                                ... on Article {
+                                                    id,
+                                                    title,
+                                                    status,
+                                                    author {
+                                                        id
+                                                        login
+                                                    },
+                                                    publishDate
+                                                }
                                             },
-                                            publishDate
+                                            totalPages,
+                                            totalElements,
+                                            size,
+                                            numberOfElements,
+                                            first,
+                                            last
                                         }
                                     }
                                 `} variables={{
-                                    status: this.state.filters.status
+                                    status: this.state.filters.status,
+                                    pageable: {
+                                        page: 0,
+                                        size: 10
+                                    }
                                 }}>
                                     {({loading, error, data, refetch}) => {
                                         if(loading) return <p>Loading...</p>;
                                         if(error) return <p>{error.message}</p>;
 
-                                        const articles = data.articles || [];
+                                        const articles = data.articles.content || [];
                                         this.refetchListData = refetch;
                                         
                                         function rowRenderer({
