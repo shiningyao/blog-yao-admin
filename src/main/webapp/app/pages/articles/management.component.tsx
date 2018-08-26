@@ -73,7 +73,7 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
         totalPages: number
     } = {
         page: 0,
-        size: 3,
+        size: 10,
         first: true,
         last: false,
         totalPages: 0
