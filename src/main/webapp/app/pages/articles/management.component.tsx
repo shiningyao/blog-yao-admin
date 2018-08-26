@@ -33,11 +33,51 @@ interface ArticleManagementPageProps extends ModalProps<{}> {
     [key: string]: any
 }
 
+const articleQuery = gql`
+query articlesByStatus($status: ArticleStatus, $pageable: Pageable) {
+    articles(status: $status, pageable: $pageable) {
+        content {
+            ... on Article {
+                id,
+                title,
+                status,
+                author {
+                    id
+                    login
+                },
+                publishDate
+            }
+        },
+        totalPages,
+        totalElements,
+        size,
+        numberOfElements,
+        first,
+        last
+    }
+}
+`;
+
 class ArticleManagementPage extends Component<ArticleManagementPageProps, ArticleManagementPageStates> {
 
     private listContainerRef: React.RefObject<HTMLDivElement>;
     private refetchListData: (variables?: {}) => Promise<{}> = () => new Promise((resolve) => resolve());
+    private loadMore: Function;
     private http: Http;
+    private resizeSubscription: Observable.Subscription;
+    private pageInfo: {
+        page: number,
+        size: number,
+        first: boolean,
+        last: boolean,
+        totalPages: number
+    } = {
+        page: 0,
+        size: 3,
+        first: true,
+        last: false,
+        totalPages: 0
+    };
 
     constructor(props) {
         super(props);
@@ -53,6 +93,8 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
         this.filter = this.filter.bind(this);
         this.http = new Http();
         this.moveToTrash = this.moveToTrash.bind(this);
+        this.prevPage = this.prevPage.bind(this);
+        this.nextPage = this.nextPage.bind(this);
     }
 
     componentDidMount() {
@@ -63,14 +105,14 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
             });
         };
         resetSize();
-        window.addEventListener('resize', function() {
-            resetSize();
-        });
+        this.resizeSubscription = Observable.fromEvent(window, 'resize').subscribe(resetSize);
     }
 
     filter(condition: ArticleManagementPageStates["filters"]) {
         Object.assign(this.state.filters, condition);
-        this.setState(this.state);
+        this.setState({
+            filters: this.state.filters
+        });
         // this.refetchListData();
     }
     
@@ -149,9 +191,33 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
     }
 
     componentDidUpdate() {
-        this.refetchListData();
+        // this.refetchListData();
     }
     
+    pageTo(pageNum) {
+        if (this.pageInfo.page < 0 || this.pageInfo.page === pageNum) {
+            return false;
+        }
+        this.pageInfo.page = pageNum;
+        this.loadMore();
+    }
+
+    prevPage() {
+        if (this.pageInfo.first) {
+            return false;
+        }
+        this.pageInfo.page--;
+        this.loadMore();
+    }
+
+    nextPage() {
+        if (this.pageInfo.last) {
+            return false;
+        }
+        this.pageInfo.page++;
+        this.loadMore();
+    }
+
     render() {
         return (
             <ManagementPageWrapper>
@@ -261,42 +327,41 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                         </div>
                         <div className="card-body">
                             <div className="article-list" ref={this.listContainerRef} style={{height: '100%'}}>
-                                <Query query={gql`
-                                    query articlesByStatus($status: ArticleStatus, $pageable: Pageable) {
-                                        articles(status: $status, pageable: $pageable) {
-                                            content {
-                                                ... on Article {
-                                                    id,
-                                                    title,
-                                                    status,
-                                                    author {
-                                                        id
-                                                        login
-                                                    },
-                                                    publishDate
-                                                }
-                                            },
-                                            totalPages,
-                                            totalElements,
-                                            size,
-                                            numberOfElements,
-                                            first,
-                                            last
-                                        }
-                                    }
-                                `} variables={{
+                                <Query query={articleQuery} variables={{
                                     status: this.state.filters.status,
                                     pageable: {
-                                        page: 0,
-                                        size: 10
+                                        page: this.pageInfo.page,
+                                        size: this.pageInfo.size
                                     }
-                                }}>
-                                    {({loading, error, data, refetch}) => {
+                                }} fetchPolicy="cache-and-network">
+                                    {({loading, error, data, refetch, fetchMore}) => {
                                         if(loading) return <p>Loading...</p>;
                                         if(error) return <p>{error.message}</p>;
 
                                         const articles = data.articles.content || [];
+                                        const {content, ...articlePage} = data.articles;
+                                        Object.assign(this.pageInfo, articlePage);
                                         this.refetchListData = refetch;
+                                        this.loadMore = () => {
+                                            return fetchMore({
+                                                query: articleQuery,
+                                                variables: {
+                                                    status: this.state.filters.status,
+                                                    pageable: {
+                                                        page: this.pageInfo.page,
+                                                        size: this.pageInfo.size
+                                                    }
+                                                },
+                                                updateQuery: (prev, { fetchMoreResult }) => {
+                                                    if (!fetchMoreResult) {
+                                                        return prev;
+                                                    }
+                                                    const {content, ...pageInfo} = fetchMoreResult.articles;
+                                                    Object.assign(this.pageInfo, pageInfo);
+                                                    return fetchMoreResult;
+                                                }
+                                            });
+                                        };
                                         
                                         function rowRenderer({
                                             key,         // Unique key within array of rows
@@ -387,10 +452,43 @@ class ArticleManagementPage extends Component<ArticleManagementPageProps, Articl
                                 </Query>
                             </div>
                         </div>
+                        <div className="card-footer">
+                            <nav aria-label="Page navigation example">
+                                <ul className="pagination pull-right">
+                                    <li className="page-item">
+                                        <a onClick={this.prevPage} className="page-link" href="javascript:void(0)" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span className="sr-only">Previous</span>
+                                        </a>
+                                    </li>
+                                    <li className="page-item">
+                                        <a className="page-link" href="javascript:void(0)" onClick={() => this.pageTo(0)}>1</a>
+                                    </li>
+                                    <li className="page-item">
+                                        <a className="page-link" href="javascript:void(0)" onClick={() => this.pageTo(1)}>2</a>
+                                    </li>
+                                    <li className="page-item">
+                                        <a className="page-link" href="javascript:void(0)" onClick={() => this.pageTo(2)}>3</a>
+                                    </li>
+                                    <li className="page-item">
+                                        <a onClick={this.nextPage} className="page-link" href="javascript:void(0)" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span className="sr-only">Next</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </PageBody>
             </ManagementPageWrapper>
         );
+    }
+
+    componentWillUnmount() {
+        if(this.resizeSubscription) {
+            this.resizeSubscription.unsubscribe();
+        }
     }
 
 }

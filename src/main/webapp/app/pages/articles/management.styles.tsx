@@ -166,6 +166,20 @@ export const ManagementPageWrapper = styled(PageWrapper)`
     .card-body {
         padding: 0;
     }
+
+    .card-footer {
+        border-top: 1px solid rgba(178,186,194,.15);
+        background-color: #FFFFFF;
+        .pagination {
+            margin-bottom: 0;
+        }
+
+        .page-link {
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
 `;
 
 export const ManagementPageHeader = styled(PageHeader)`

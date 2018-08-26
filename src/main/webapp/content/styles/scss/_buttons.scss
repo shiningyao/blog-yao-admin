@@ -22,3 +22,9 @@
     background-color: #fff;
     background-color: transparent;
 }
+
+.btn-outline-primary:not(:disabled):not(.disabled):active:focus, 
+.btn-outline-primary:not(:disabled):not(.disabled).active:focus, 
+.show > .btn-outline-primary.dropdown-toggle:focus {
+    box-shadow: none;
+}
